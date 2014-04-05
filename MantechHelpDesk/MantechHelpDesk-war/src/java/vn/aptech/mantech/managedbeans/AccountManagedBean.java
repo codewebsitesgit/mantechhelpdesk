@@ -18,7 +18,7 @@ import javax.faces.bean.SessionScoped;
 public class AccountManagedBean {
 
     private String username;
-    private String password;
+    private String passwor;
     /**
      * Creates a new instance of AccountManagedBean
      */
