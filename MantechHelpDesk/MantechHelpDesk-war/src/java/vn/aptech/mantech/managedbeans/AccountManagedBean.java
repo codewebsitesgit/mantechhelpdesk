@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package vn.aptech.mantech.managedbeans;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import vn.aptech.mantech.entity.UserAccount;
+import vn.aptech.mantech.session.bean.UserAccountFacadeLocal;
 
 /**
  *
@@ -17,8 +19,14 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class AccountManagedBean {
 
+    @EJB
+    private UserAccountFacadeLocal userAccountFacade;
+
     private String username;
     private String password;
+    private static final int ROLE_ADMIN = 1;
+    private static final int ROLE_USER = 2;
+
     /**
      * Creates a new instance of AccountManagedBean
      */
@@ -52,13 +60,18 @@ public class AccountManagedBean {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public String checkLogin() {
-        if ("admin".equals(username) && "admin".equals(password)) {
-            return "administrator";
-        }
-        if ("user".equals(username) && "user".equals(password)) {
-            return "registeredUser";
+        UserAccount account = userAccountFacade.getUserAccount(username);
+        if (account != null) {
+            if (account.getPassword().equals(password)) {
+                if (account.getRoleID().getRoleID() == ROLE_ADMIN) {
+                    return "administrator";
+                }
+                if (account.getRoleID().getRoleID() == ROLE_USER) {
+                    return "registeredUser";
+                }
+            }
         }
         return "loginFailed";
     }
