@@ -7,6 +7,7 @@
 package vn.aptech.mantech.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,11 +15,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -45,8 +47,8 @@ public class UserRole implements Serializable {
     @Size(max = 150)
     @Column(name = "RoleDesc")
     private String roleDesc;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "roleID")
-    private UserAccount userAccount;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleID")
+    private Collection<UserAccount> userAccountCollection;
 
     public UserRole() {
     }
@@ -79,12 +81,13 @@ public class UserRole implements Serializable {
         this.roleDesc = roleDesc;
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
+    @XmlTransient
+    public Collection<UserAccount> getUserAccountCollection() {
+        return userAccountCollection;
     }
 
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public void setUserAccountCollection(Collection<UserAccount> userAccountCollection) {
+        this.userAccountCollection = userAccountCollection;
     }
 
     @Override
