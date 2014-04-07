@@ -25,7 +25,8 @@ public class AccountManagedBean {
     private String username;
     private String password;
     private static final int ROLE_ADMIN = 1;
-    private static final int ROLE_USER = 2;
+    private static final int ROLE_USER = 3;
+    private static final int ROLE_TECHNICIAN = 2;
 
     /**
      * Creates a new instance of AccountManagedBean
@@ -70,6 +71,9 @@ public class AccountManagedBean {
                 }
                 if (account.getRoleID().getRoleID() == ROLE_USER) {
                     return "registeredUser";
+                }
+                if (account.getRoleID().getRoleID() == ROLE_TECHNICIAN) {
+                    return "technician";
                 }
             }
         }
