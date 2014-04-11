@@ -41,10 +41,14 @@ public class UserRole implements Serializable {
     @NotNull
     @Column(name = "RoleID")
     private Integer roleID;
-    @Size(max = 50)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "RoleName")
     private String roleName;
-    @Size(max = 150)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 200)
     @Column(name = "RoleDesc")
     private String roleDesc;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleID")
@@ -55,6 +59,12 @@ public class UserRole implements Serializable {
 
     public UserRole(Integer roleID) {
         this.roleID = roleID;
+    }
+
+    public UserRole(Integer roleID, String roleName, String roleDesc) {
+        this.roleID = roleID;
+        this.roleName = roleName;
+        this.roleDesc = roleDesc;
     }
 
     public Integer getRoleID() {

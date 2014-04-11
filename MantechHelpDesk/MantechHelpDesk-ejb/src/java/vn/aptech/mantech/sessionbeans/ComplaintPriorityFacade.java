@@ -4,19 +4,19 @@
  * and open the template in the editor.
  */
 
-package vn.aptech.mantech.session.bean;
+package vn.aptech.mantech.sessionbeans;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import vn.aptech.mantech.entity.Department;
+import vn.aptech.mantech.entity.ComplaintPriority;
 
 /**
  *
  * @author TruongLQ
  */
 @Stateless
-public class DepartmentFacade extends AbstractFacade<Department> implements DepartmentFacadeLocal {
+public class ComplaintPriorityFacade extends AbstractFacade<ComplaintPriority> implements ComplaintPriorityFacadeLocal {
     @PersistenceContext(unitName = "MantechHelpDesk-ejbPU")
     private EntityManager em;
 
@@ -25,8 +25,8 @@ public class DepartmentFacade extends AbstractFacade<Department> implements Depa
         return em;
     }
 
-    public DepartmentFacade() {
-        super(Department.class);
+    public ComplaintPriorityFacade() {
+        super(ComplaintPriority.class);
     }
     
 }

@@ -46,7 +46,9 @@ public class Department implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "DepartmentName")
     private String departmentName;
-    @Size(max = 150)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 200)
     @Column(name = "DepartmentDesc")
     private String departmentDesc;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "departmentID")
@@ -59,9 +61,10 @@ public class Department implements Serializable {
         this.departmentID = departmentID;
     }
 
-    public Department(Integer departmentID, String departmentName) {
+    public Department(Integer departmentID, String departmentName, String departmentDesc) {
         this.departmentID = departmentID;
         this.departmentName = departmentName;
+        this.departmentDesc = departmentDesc;
     }
 
     public Integer getDepartmentID() {

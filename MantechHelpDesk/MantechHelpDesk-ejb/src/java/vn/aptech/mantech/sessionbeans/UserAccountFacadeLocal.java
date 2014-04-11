@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package vn.aptech.mantech.session.bean;
+package vn.aptech.mantech.sessionbeans;
 
 import java.util.List;
 import javax.ejb.Local;
@@ -30,7 +30,6 @@ public interface UserAccountFacadeLocal {
     List<UserAccount> findRange(int[] range);
 
     int count();
-
-    UserAccount getUserAccount(String username);
     
+    UserAccount getUserAccount(String username);
 }

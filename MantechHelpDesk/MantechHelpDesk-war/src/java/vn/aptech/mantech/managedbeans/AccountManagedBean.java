@@ -9,7 +9,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import vn.aptech.mantech.entity.UserAccount;
-import vn.aptech.mantech.session.bean.UserAccountFacadeLocal;
+import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
 
 /**
  *

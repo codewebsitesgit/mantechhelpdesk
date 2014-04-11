@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package vn.aptech.mantech.session.bean;
+package vn.aptech.mantech.sessionbeans;
 
 import java.util.List;
 import javax.ejb.Local;

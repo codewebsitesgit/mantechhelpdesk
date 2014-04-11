@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package vn.aptech.mantech.session.bean;
+package vn.aptech.mantech.sessionbeans;
 
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -12,9 +12,11 @@ import javax.persistence.EntityManager;
 /**
  *
  * @author TruongLQ
+ * @param <T>
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractFacade<T> {
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;

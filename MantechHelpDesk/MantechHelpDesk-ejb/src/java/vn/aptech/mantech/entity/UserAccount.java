@@ -7,8 +7,10 @@
 package vn.aptech.mantech.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,12 +18,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -100,6 +104,14 @@ public class UserAccount implements Serializable {
     @JoinColumn(name = "DepartmentID", referencedColumnName = "DepartmentID")
     @ManyToOne(optional = false)
     private Department departmentID;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "articleOwner")
+    private Collection<Article> articleCollection;
+    @OneToMany(mappedBy = "technician")
+    private Collection<Complaint> complaintCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "complaintOwner")
+    private Collection<Complaint> complaintCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccountID")
+    private Collection<ComplaintHistory> complaintHistoryCollection;
 
     public UserAccount() {
     }
@@ -215,6 +227,42 @@ public class UserAccount implements Serializable {
 
     public void setDepartmentID(Department departmentID) {
         this.departmentID = departmentID;
+    }
+
+    @XmlTransient
+    public Collection<Article> getArticleCollection() {
+        return articleCollection;
+    }
+
+    public void setArticleCollection(Collection<Article> articleCollection) {
+        this.articleCollection = articleCollection;
+    }
+
+    @XmlTransient
+    public Collection<Complaint> getComplaintCollection() {
+        return complaintCollection;
+    }
+
+    public void setComplaintCollection(Collection<Complaint> complaintCollection) {
+        this.complaintCollection = complaintCollection;
+    }
+
+    @XmlTransient
+    public Collection<Complaint> getComplaintCollection1() {
+        return complaintCollection1;
+    }
+
+    public void setComplaintCollection1(Collection<Complaint> complaintCollection1) {
+        this.complaintCollection1 = complaintCollection1;
+    }
+
+    @XmlTransient
+    public Collection<ComplaintHistory> getComplaintHistoryCollection() {
+        return complaintHistoryCollection;
+    }
+
+    public void setComplaintHistoryCollection(Collection<ComplaintHistory> complaintHistoryCollection) {
+        this.complaintHistoryCollection = complaintHistoryCollection;
     }
 
     @Override

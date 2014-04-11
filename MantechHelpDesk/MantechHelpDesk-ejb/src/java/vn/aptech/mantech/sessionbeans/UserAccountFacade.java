@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package vn.aptech.mantech.session.bean;
+package vn.aptech.mantech.sessionbeans;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -29,12 +29,11 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
     public UserAccountFacade() {
         super(UserAccount.class);
     }
-
+    
     @Override
     public UserAccount getUserAccount(String username) {
         Query query = em.createQuery("SELECT u from UserAccount u WHERE u.username=:userName");
         query.setParameter("userName", username);
         return (UserAccount)query.getSingleResult();
     }
-    
 }
