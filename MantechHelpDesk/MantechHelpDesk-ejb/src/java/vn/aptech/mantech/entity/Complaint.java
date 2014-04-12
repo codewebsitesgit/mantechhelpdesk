@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -212,4 +213,15 @@ public class Complaint implements Serializable {
         return "vn.aptech.mantech.entity.Complaint[ complaintID=" + complaintID + " ]";
     }
     
+    @Transient
+    private boolean notResend;
+
+    public boolean isNotResend() {
+        return notResend;
+    }
+
+    public void setNotResend(boolean notResend) {
+        this.notResend = notResend;
+    }
+
 }

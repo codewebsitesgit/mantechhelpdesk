@@ -5,9 +5,12 @@
  */
 package vn.aptech.mantech.managedbeans;
 
+import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import vn.aptech.mantech.entity.UserAccount;
 import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
 
@@ -17,7 +20,7 @@ import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
  */
 @ManagedBean(name = "account")
 @SessionScoped
-public class AccountManagedBean {
+public class AccountManagedBean implements Serializable {
 
     @EJB
     private UserAccountFacadeLocal userAccountFacade;
@@ -64,19 +67,35 @@ public class AccountManagedBean {
 
     public String checkLogin() {
         UserAccount account = userAccountFacade.getUserAccount(username);
-        if (account != null) {
-            if (account.getPassword().equals(password)) {
-                if (account.getRoleID().getRoleID() == ROLE_ADMIN) {
-                    return "administrator";
-                }
-                if (account.getRoleID().getRoleID() == ROLE_USER) {
-                    return "registeredUser";
-                }
-                if (account.getRoleID().getRoleID() == ROLE_TECHNICIAN) {
-                    return "technician";
-                }
+        if (account != null && account.getPassword().equals(password)) {
+            HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+                    .getExternalContext().getSession(true);
+            session.setAttribute("userSession", account);
+            if (account.getRoleID().getRoleID() == ROLE_ADMIN) {
+                return "administrator";
+            }
+            if (account.getRoleID().getRoleID() == ROLE_USER) {
+                return "registeredUser";
+            }
+            if (account.getRoleID().getRoleID() == ROLE_TECHNICIAN) {
+                return "technician";
             }
         }
         return "loginFailed";
+    }
+
+    public String logout() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(false);
+
+        if (session != null) {
+            session.removeAttribute("userSession");
+            session.invalidate();
+        }
+        return "index";
+    }
+
+    public String changeUserPassword() {
+        return "changeUserPassword";
     }
 }

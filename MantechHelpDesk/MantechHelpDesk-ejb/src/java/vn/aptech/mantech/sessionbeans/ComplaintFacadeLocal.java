@@ -6,6 +6,7 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import vn.aptech.mantech.entity.Complaint;
@@ -30,5 +31,13 @@ public interface ComplaintFacadeLocal {
     List<Complaint> findRange(int[] range);
 
     int count();
+
+    int getMaxComplaintID();
+
+    List<Complaint> findAllLatest();
+
+    List<Complaint> findTopFiveLatest();
+
+    List<Complaint> getAllSearchedComplaints(Integer complainID, String subject, Date creationDate, Integer statusID);
     
 }

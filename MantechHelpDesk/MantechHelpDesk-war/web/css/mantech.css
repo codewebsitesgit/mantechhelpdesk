@@ -13,11 +13,20 @@ and open the template in the editor.
     margin-top: 150px;
 }
 
-.bodyLogin {
-    background-image: url('../images/login-background.jpg');
+body {
     background-color:#F1F1F1;
+    color: #404040;
 }
 
-.bodyAdmin {
-    background-color:#ffffff;
+.HeaderTemplate{
+    height: 150px;
+    width: 100%;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.FooterTemplate{
+    height: 100px;
+    width: 100%;
+    background-color: #E0E0E0;
+    border-radius: 5px 5px 5px 5px;
 }
