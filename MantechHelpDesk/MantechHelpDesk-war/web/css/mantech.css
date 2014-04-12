@@ -30,3 +30,16 @@ body {
     background-color: #E0E0E0;
     border-radius: 5px 5px 5px 5px;
 }
+
+.center_content {
+    width: 80%;
+    margin: auto;
+}
+
+.table_insert_update tr:first-child > td:first-child {
+    width: 30%;
+}
+
+.table_insert_update tr:first-child > td:last-child {
+    width: 100%;
+}

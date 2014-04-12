@@ -1,53 +1,20 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>MantechHelpDesk: Create new Complaint</title>
-        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/mantech.css" />
-    </h:head>
-    <h:body>
+<ui:composition template="/template/user.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title">MantechHelpDesk: Create new complaint</ui:define>
+    <ui:define name="content">
         <f:view>
             <h:form id="form1">
-                <table class="HeaderTemplate">
-                    <tr>
-                        <td><img src="images/banner.jpg" width="100%" height="100%"/></td>
-                    </tr>
-                </table>  
-                <p:menubar>  
-                    <p:submenu label="Complaints" icon="ui-icon-document">  
-                        <p:submenu label="New" icon="ui-icon-contact">  
-                            <p:menuitem value="Complaint" actionListener="#{complaint.newComplaint}" />  
-                        </p:submenu>  
-                    </p:submenu>  
-
-                    <p:submenu label="View" icon="ui-icon-pencil">  
-                        <p:menuitem value="All complaints" actionListener="#{complaint.viewComplaint}" 
-                                    icon="ui-icon-arrowreturnthick-1-w" />  
-                    </p:submenu>  
-
-                    <p:submenu label="Profiles" icon="ui-icon-gear">  
-                        <p:menuitem value="Change password" actionListener="#{account.changeUserPassword}" 
-                                    icon="ui-icon-pencil" />  
-                    </p:submenu>
-
-                    <p:submenu label="Help" icon="ui-icon-help">  
-                        <p:menuitem value="User Guide" actionListener="#{help.viewUserGuide}" />  
-                    </p:submenu>  
-
-                    <f:facet name="options">  
-                        <p:inputText style="margin-right:10px"/>  
-                        <p:commandButton value="Logout" icon="ui-icon-extlink" actionListener="#{account.logout}"/>  
-                    </f:facet>  
-                </p:menubar>
                 <h1><h:outputText value="Create new complaint"/></h1>
 
-                <p:panelGrid columns="3" id="panelSendComplaint">
+                <p:panelGrid columns="3" id="panelSendComplaint" styleClass="table_insert_update">
                     <h:outputLabel value="Complaint ID *:" for="complaintID" />
                     <p:outputLabel id="complaintID" value="#{complaint.curComplaint.complaintID}" 
-                                 title="ComplaintID"/>
+                                   title="ComplaintID"/>
                     <p:message for="complaintID"/>
                     <h:outputLabel value="Category *:" for="complaintCategory" />
                     <p:selectOneMenu id="complaintCategory" value="#{complaint.complaintCategory}" 
@@ -79,6 +46,8 @@
                     <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
                                      update="panelSendComplaint,complaintTable"
                                      icon="ui-icon-check" style="margin: 0"/>
+                    <h:outputText />
+                    <h:outputText />
                 </p:panelGrid>
 
 
@@ -120,7 +89,7 @@
 
             </h:form>
         </f:view>
+    </ui:define>
 
-    </h:body>
-</html>
+</ui:composition>
 
