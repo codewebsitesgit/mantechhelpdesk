@@ -23,24 +23,24 @@
                         </tr>
                     </table>
                     <p:menubar style="padding-left: 10%" rendered="${not empty userSession}">  
-                        <p:submenu label="Complaints" icon="ui-icon-document">  
-                            <p:submenu label="New" icon="ui-icon-contact" rendered="${userSession.roleID.roleID == 3}">  
-                                <p:menuitem value="Complaint" action="#{complaint.newComplaint}" />  
+                        <p:submenu label="Complaints" icon="ui-icon ui-icon-home">  
+                            <p:submenu label="New" rendered="${userSession.roleID.roleID == 3}">  
+                                <p:menuitem value="Complaint" action="#{complaint.newComplaint}" icon="ui-icon-circle-plus"/>  
                             </p:submenu>  
                             <p:menuitem value="All History" action="#{complaint.viewComplaintHistory}" 
-                                        rendered="${userSession.roleID.roleID == 1}"/>
+                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon ui-icon-refresh"/>
                             <p:menuitem value="All Assignments" action="#{complaint.viewComplaintAssignment}" 
-                                        rendered="${userSession.roleID.roleID == 2}"/>
+                                        rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh"/>
                         </p:submenu>  
 
-                        <p:submenu label="Accounts" icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 1}">  
-                            <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-arrowreturnthick-1-w" />
+                        <p:submenu label="Accounts" icon="ui-icon-person" rendered="${userSession.roleID.roleID == 1}">  
+                            <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-circle-plus" />
                             <p:separator />
-                            <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" />
                         </p:submenu>
                         
-                        <p:submenu label="View" icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 3}">  
-                            <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-arrowreturnthick-1-w" />  
+                        <p:submenu label="View" icon="ui-icon-contact" rendered="${userSession.roleID.roleID == 3}">  
+                            <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" />  
                         </p:submenu>  
 
                         <p:submenu label="Profiles" icon="ui-icon-gear">  
@@ -48,9 +48,9 @@
                         </p:submenu>
 
                         <p:submenu label="Help" icon="ui-icon-help">  
-                            <p:menuitem value="User Guide" action="#{help.viewUserGuide}" /> 
+                            <p:menuitem value="User Guide" action="#{help.viewUserGuide}" icon="ui-icon-newwin"/> 
                             <p:separator />
-                            <p:menuitem value="FAQs" action="#{help.viewFAQs}"/>
+                            <p:menuitem value="FAQs" action="#{help.viewFAQs}" icon="ui-icon-transferthick-e-w"/>
                         </p:submenu> 
 
                         <f:facet name="options">  
