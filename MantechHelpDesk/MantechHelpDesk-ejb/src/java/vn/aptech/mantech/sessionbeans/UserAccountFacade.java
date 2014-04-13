@@ -34,6 +34,10 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
     public UserAccount getUserAccount(String username) {
         Query query = em.createQuery("SELECT u from UserAccount u WHERE u.username=:userName");
         query.setParameter("userName", username);
-        return (UserAccount)query.getSingleResult();
+        try {
+            return (UserAccount)query.getSingleResult();
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

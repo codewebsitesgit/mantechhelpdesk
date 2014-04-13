@@ -214,14 +214,14 @@ public class Complaint implements Serializable {
     }
     
     @Transient
-    private boolean notResend;
+    private boolean resend;
 
-    public boolean isNotResend() {
-        return notResend;
+    public boolean isResend() {
+        return resend;
     }
 
-    public void setNotResend(boolean notResend) {
-        this.notResend = notResend;
+    public void setResend(boolean resend) {
+        this.resend = resend;
     }
 
 }

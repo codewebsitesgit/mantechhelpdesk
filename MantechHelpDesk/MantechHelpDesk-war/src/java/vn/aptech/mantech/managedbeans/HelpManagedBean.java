@@ -27,4 +27,8 @@ public class HelpManagedBean implements Serializable {
     public String viewUserGuide() {
         return "userGuide";
     }
+    
+    public String viewFAQs() {
+        return "faqs";
+    }
 }

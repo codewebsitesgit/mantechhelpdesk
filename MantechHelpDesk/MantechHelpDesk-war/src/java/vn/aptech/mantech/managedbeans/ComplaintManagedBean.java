@@ -236,8 +236,8 @@ public class ComplaintManagedBean implements Serializable {
                     long currentTime = Calendar.getInstance().getTimeInMillis();
                     long loggingDate = cp.getLodgingDate().getTime();
                     long distance = currentTime - loggingDate;
-                    boolean isNotResent = distance < 2 * 24 * 60 * 60 * 100;
-                    cp.setNotResend(isNotResent);//greater than 2 days
+                    boolean resent = distance >= 2 * 24 * 3600 * 1000; //greater than 2 days
+                    cp.setResend(resent);
                 }
             }
         }

@@ -18,6 +18,7 @@ import vn.aptech.mantech.entity.Complaint;
  *
  * @author TruongLQ
  */
+@SuppressWarnings("unchecked")
 @Stateless
 public class ComplaintFacade extends AbstractFacade<Complaint> implements ComplaintFacadeLocal {
     @PersistenceContext(unitName = "MantechHelpDesk-ejbPU")

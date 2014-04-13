@@ -12,8 +12,8 @@
         <f:view>
             <h:form>
                 <p:panel header="Login panel" styleClass="panelGridCenter">
-                    <p:messages autoUpdate="true"/>
-                    <p:panelGrid columns="2" id="panelLogin">
+                    <p:messages autoUpdate="true" closable="true" />
+                    <p:panelGrid columns="2" id="panelLogin" >
                         <h:outputText value="Username"/>
                         <p:inputText id="userName" value="#{account.username}" required="true"
                                      requiredMessage="Username cannot be blank."/>

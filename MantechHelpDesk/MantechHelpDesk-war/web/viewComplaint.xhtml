@@ -54,11 +54,8 @@
                     <p:column headerText="Status">
                         #{item.status.statusName}
                     </p:column>
-                    <p:column headerText="Action">
-                        <c:if test="${not item.notResend}" >
-                            <p:commandLink value="Resend" 
-                                           actionListener="#{complaint.resend(item.complaintID)}"/>
-                        </c:if>
+                    <p:column headerText="Action" >
+                        #{item.resend}
                     </p:column>
                     <p:column headerText="Priority">
                         #{item.priority.priorityName}

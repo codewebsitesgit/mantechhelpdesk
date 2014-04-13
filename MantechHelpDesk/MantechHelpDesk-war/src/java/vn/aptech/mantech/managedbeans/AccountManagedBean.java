@@ -7,6 +7,7 @@ package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -67,9 +68,9 @@ public class AccountManagedBean implements Serializable {
 
     public String checkLogin() {
         UserAccount account = userAccountFacade.getUserAccount(username);
-        if (account != null && account.getPassword().equals(password)) {
-            HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                     .getExternalContext().getSession(true);
+        if (account != null && account.getPassword().equals(password)) {
             session.setAttribute("userSession", account);
             if (account.getRoleID().getRoleID() == ROLE_ADMIN) {
                 return "administrator";
@@ -81,7 +82,10 @@ public class AccountManagedBean implements Serializable {
                 return "technician";
             }
         }
-        return "loginFailed";
+        session.setAttribute("userSession", null);
+        FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+                FacesMessage.SEVERITY_ERROR, "Invalid Username or Password!","Please check again input Username and Password!"));
+        return "index";
     }
 
     public String logout() {
