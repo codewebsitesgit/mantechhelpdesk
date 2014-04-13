@@ -6,7 +6,7 @@
                 xmlns:p="http://primefaces.org/ui"
 
                 xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <ui:define name="title">MantechHelpDesk: All complaints</ui:define>
+    <ui:define name="title">MantechHelpDesk: View all complaints</ui:define>
     <ui:define name="content">
         <f:view>
             <h:form>
@@ -29,10 +29,10 @@
                 <h1><h:outputText value="All complaints"/></h1>
                 <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
                              rowKey="#{item.complaintID}" selectionMode="single" 
-                             paginator="true" rows="5"  
+                             paginator="true" rows="10"  
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                              rowsPerPageTemplate="5,10,15">
-                    <p:column headerText="Complaint ID">
+                    <p:column headerText="ID">
                         #{item.complaintID}
                     </p:column>
                     <p:column headerText="Subject">

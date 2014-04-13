@@ -12,14 +12,14 @@
                 <h1><h:outputText value="Create new complaint"/></h1>
 
                 <p:panelGrid columns="3" id="panelSendComplaint" styleClass="table_insert_update">
-                    <h:outputLabel value="Complaint ID *:" for="complaintID" />
+                    <h:outputLabel value="ID *:" for="complaintID" />
                     <p:outputLabel id="complaintID" value="#{complaint.curComplaint.complaintID}" 
                                    title="ComplaintID"/>
                     <p:message for="complaintID"/>
                     <h:outputLabel value="Category *:" for="complaintCategory" />
                     <p:selectOneMenu id="complaintCategory" value="#{complaint.complaintCategory}" 
                                      label="ComplaintCategory" required="true" 
-                                     requiredMessage="The ComplaintCategory field is required.">
+                                     requiredMessage="The Category field is required.">
                         <f:selectItems value="#{complaint.complaintCats}" var="cat"
                                        itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
                     </p:selectOneMenu>
@@ -34,13 +34,13 @@
                     <h:outputLabel value="Subject *:" for="complaintSubject" />
                     <p:inputText id="complaintSubject" value="#{complaint.curComplaint.complaintSubject}" 
                                  title="ComplaintSubject" required="true" 
-                                 requiredMessage="The ComplaintSubject field is required."
+                                 requiredMessage="The Subject field is required."
                                  maxlength="150" size="60"/>
                     <p:message for="complaintSubject" />
                     <h:outputLabel value="Contents *:" for="complaintContents" />
                     <p:inputTextarea id="complaintContents" value="#{complaint.curComplaint.complaintContents}" 
                                      title="ComplaintContents" required="true" 
-                                     requiredMessage="The ComplaintContents field is required."
+                                     requiredMessage="The Contents field is required."
                                      maxlength="1000" rows="13" cols="80"/>
                     <p:message for="complaintContents" />
                     <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
@@ -51,12 +51,12 @@
                 </p:panelGrid>
 
 
-                <h1><h:outputText value="All complaints"/></h1>
+                <h1><h:outputText value="Top 5 your latest complaints"/></h1>
 
                 <p:dataTable value="#{complaint.topFiveComplaints}" var="item" 
                              id="complaintTable"
                              rowKey="#{item.complaintID}" selectionMode="single" >
-                    <p:column headerText="Complaint ID">
+                    <p:column headerText="ID">
                         #{item.complaintID}
                     </p:column>
                     <p:column headerText="Subject">
