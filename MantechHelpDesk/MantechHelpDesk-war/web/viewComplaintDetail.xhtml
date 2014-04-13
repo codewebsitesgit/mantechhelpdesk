@@ -1,0 +1,62 @@
+<ui:composition template="/template/user.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title">MantechHelpDesk: Administrator >> Complaint's Details</ui:define>
+    <ui:define name="content">
+        <h1>Complaint's Details</h1>
+        <f:view>
+            <h:form>
+                <h:panelGrid columns="2" id="panelUpdateCamplaint">
+                    <p:outputLabel value="ComplaintID" for="complaintID" />
+                    <p:inputText id="complaintID" value="#{complaint.adminComplaintDetail.complaintID}" 
+                                 title="ComplaintID" readonly="true"/>
+                    <p:outputLabel value="Subject" for="complaintSubject" />
+                    <p:inputText id="complaintSubject" value="#{complaint.adminComplaintDetail.complaintSubject}"
+                                 title="ComplaintSubject" readonly="true"/>
+                    <p:outputLabel value="Contents" for="complaintContents" />
+                    <p:inputText id="complaintContents" value="#{complaint.adminComplaintDetail.complaintContents}" 
+                                 title="ComplaintContents" readonly="true"/>
+                    <p:outputLabel value="Technician" for="technician" />
+                    <p:selectOneMenu id="technician" value="#{complaint.adminComplaintDetail.technician}"  >
+                        <f:selectItems value="#{account.allTechnicians}" var="acc"
+                                       itemLabel="#{acc.name}" itemValue="#{acc}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Username" />
+                    <p:inputText value="#{complaint.adminComplaintDetail.complaintOwner.username}" readonly="true"/>
+                    <p:outputLabel value="Full name"/>
+                    <p:inputText value="#{complaint.adminComplaintDetail.complaintOwner.name}" readonly="true"/>
+                    <p:outputLabel value="Status" for="status" />
+                    <p:selectOneMenu id="status" value="#{complaint.adminComplaintDetail.status}" required="true" requiredMessage="The Status field is required.">
+                        <f:selectItems value="#{status.allStatus}" var="stt"
+                                       itemLabel="#{stt.statusName}" itemValue="#{stt}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Priority" for="priority" />
+                    <p:selectOneMenu id="priority" value="#{complaint.adminComplaintDetail.priority}" required="true" requiredMessage="The Priority field is required.">
+                        <f:selectItems value="#{priority.allPriorities}" var="prio"
+                                       itemLabel="#{prio.priorityName}" itemValue="#{prio}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Category" for="complaintCategory" />
+                    <p:inputText id="complaintCategory" value="#{complaint.adminComplaintDetail.complaintCategory.categoryName}" 
+                                 readonly="true"/>
+                    <p:outputLabel value="Reasons" for="reasons" />
+                    <p:inputTextarea id="reasons" value="#{complaint.adminComplaintDetail.reasons}" 
+                                     title="Reasons" rows="5" cols="60" readonly="true"/>
+                    <p:outputLabel value="LodgingDate" for="lodgingDate" />
+                    <p:outputLabel id="lodgingDate" value="#{complaint.adminComplaintDetail.lodgingDate}" title="LodgingDate" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                    </p:outputLabel>
+                    <p:outputLabel value="ClosingDate" for="closingDate" />
+                    <p:outputLabel id="closingDate" value="#{complaint.adminComplaintDetail.closingDate}" title="ClosingDate" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                    </p:outputLabel>
+                </h:panelGrid>
+            </h:form>
+        </f:view>
+
+
+    </ui:define>
+</ui:composition>

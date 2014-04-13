@@ -6,10 +6,12 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import vn.aptech.mantech.constants.MantechConstants;
 import vn.aptech.mantech.entity.UserAccount;
 
 /**
@@ -40,4 +42,14 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
             return null;
         }
     }
+
+    @Override
+    public List<UserAccount> getAllTechnicians() {
+        Query query = em.createQuery("SELECT u from UserAccount u WHERE u.roleID.roleID =:userRole");
+        query.setParameter("userRole", MantechConstants.ROLE_TECHNICIAN);
+        return query.getResultList();
+    }
+    
+    
+    
 }

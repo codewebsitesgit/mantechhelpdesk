@@ -30,5 +30,15 @@ public interface ActivityFacadeLocal {
     List<Activity> findRange(int[] range);
 
     int count();
+
+    Activity getResendComplaint();
+
+    Activity getChangeStatus();
+
+    Activity getNewComplaint();
+
+    Activity getUpdateRootCause();
+
+    Activity getChangePriority();
     
 }

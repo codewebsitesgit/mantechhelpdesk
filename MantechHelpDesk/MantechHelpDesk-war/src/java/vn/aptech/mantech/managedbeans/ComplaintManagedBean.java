@@ -6,6 +6,7 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,12 +17,16 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
+import vn.aptech.mantech.entity.Activity;
 import vn.aptech.mantech.entity.Complaint;
 import vn.aptech.mantech.entity.ComplaintCategory;
+import vn.aptech.mantech.entity.ComplaintHistory;
 import vn.aptech.mantech.entity.ComplaintPriority;
 import vn.aptech.mantech.entity.UserAccount;
+import vn.aptech.mantech.sessionbeans.ActivityFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintCategoryFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintFacadeLocal;
+import vn.aptech.mantech.sessionbeans.ComplaintHistoryFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintPriorityFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintStatusFacadeLocal;
 
@@ -32,6 +37,11 @@ import vn.aptech.mantech.sessionbeans.ComplaintStatusFacadeLocal;
 @ManagedBean(name = "complaint")
 @SessionScoped
 public class ComplaintManagedBean implements Serializable {
+
+    @EJB
+    private ActivityFacadeLocal activityFacade;
+    @EJB
+    private ComplaintHistoryFacadeLocal complaintHistoryFacade;
 
     @EJB
     private ComplaintStatusFacadeLocal complaintStatusFacade;
@@ -60,6 +70,16 @@ public class ComplaintManagedBean implements Serializable {
 
     private int resentComplaintId;
 
+    private Complaint adminComplaintDetail;
+
+    public Complaint getAdminComplaintDetail() {
+        return adminComplaintDetail;
+    }
+
+    public void setAdminComplaintDetail(Complaint adminComplaintDetail) {
+        this.adminComplaintDetail = adminComplaintDetail;
+    }
+    
     public int getResentComplaintId() {
         return resentComplaintId;
     }
@@ -117,10 +137,24 @@ public class ComplaintManagedBean implements Serializable {
             curComplaint.setPriority(priority);
             curComplaint.setLodgingDate(Calendar.getInstance().getTime());
             curComplaint.setStatus(complaintStatusFacade.find(PENDING_STATUS));
-            HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                    .getExternalContext().getSession(true);
-            curComplaint.setComplaintOwner((UserAccount) session.getAttribute("userSession"));
+            curComplaint.setComplaintOwner(getSessionUserAccount());
+            
             complaintFacade.create(curComplaint);
+            // save to history table
+            UserAccount user = getSessionUserAccount();
+            ComplaintHistory hist = new ComplaintHistory();
+            hist.setHistoryID(complaintHistoryFacade.getMaxHistoryID());
+            Activity newComplaintAction = activityFacade.getNewComplaint();
+            hist.setActionID(newComplaintAction);
+            hist.setDetails(newComplaintAction.getActionDesc());
+            hist.setUserAccountID(user);
+            hist.setLastModifiedDate(Calendar.getInstance().getTime());
+            
+            // find history for complaint
+            Complaint cmp = complaintFacade.find(curComplaint.getComplaintID());
+            hist.setComplaintID(cmp);
+            complaintHistoryFacade.create(hist);
+            
             ut.commit();
         } catch (Exception e) {
             try {
@@ -131,6 +165,12 @@ public class ComplaintManagedBean implements Serializable {
             e.printStackTrace();
         }
         return newComplaint();
+    }
+
+    private static UserAccount getSessionUserAccount() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(true);
+        return (UserAccount) session.getAttribute("userSession");
     }
 
     public List<Complaint> getAllComplaints() {
@@ -245,15 +285,19 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String resend(int complaintID) {
-        System.out.println("Resend: " +complaintID);
+        System.out.println("Resend: " + complaintID);
         return "viewComplaint";
     }
-    
+
     public String viewComplaintHistory() {
         return "viewComplaintHistory";
     }
-    
+
     public String viewComplaintAssignment() {
         return "viewComplaintAssignment";
+    }
+    
+    public String viewComplaintDetail() {
+        return "viewComplaintDetail";
     }
 }

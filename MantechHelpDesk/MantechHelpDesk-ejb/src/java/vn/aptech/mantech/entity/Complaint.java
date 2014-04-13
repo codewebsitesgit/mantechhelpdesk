@@ -43,6 +43,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Complaint.findByLodgingDate", query = "SELECT c FROM Complaint c WHERE c.lodgingDate = :lodgingDate"),
     @NamedQuery(name = "Complaint.findByClosingDate", query = "SELECT c FROM Complaint c WHERE c.closingDate = :closingDate")})
 public class Complaint implements Serializable {
+    @Size(max = 300)
+    @Column(name = "Reasons")
+    private String reasons;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -222,6 +225,14 @@ public class Complaint implements Serializable {
 
     public void setResend(boolean resend) {
         this.resend = resend;
+    }
+
+    public String getReasons() {
+        return reasons;
+    }
+
+    public void setReasons(String reasons) {
+        this.reasons = reasons;
     }
 
 }

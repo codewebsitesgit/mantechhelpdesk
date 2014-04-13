@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,6 +35,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ComplaintHistory.findByHistoryID", query = "SELECT c FROM ComplaintHistory c WHERE c.historyID = :historyID"),
     @NamedQuery(name = "ComplaintHistory.findByLastModifiedDate", query = "SELECT c FROM ComplaintHistory c WHERE c.lastModifiedDate = :lastModifiedDate")})
 public class ComplaintHistory implements Serializable {
+    @Size(max = 300)
+    @Column(name = "Details")
+    private String details;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -130,6 +134,14 @@ public class ComplaintHistory implements Serializable {
     @Override
     public String toString() {
         return "vn.aptech.mantech.entity.ComplaintHistory[ historyID=" + historyID + " ]";
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
     
 }

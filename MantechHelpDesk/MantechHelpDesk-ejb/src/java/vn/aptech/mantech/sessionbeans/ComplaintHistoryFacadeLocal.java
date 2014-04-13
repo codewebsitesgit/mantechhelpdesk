@@ -30,5 +30,9 @@ public interface ComplaintHistoryFacadeLocal {
     List<ComplaintHistory> findRange(int[] range);
 
     int count();
+
+    int getMaxHistoryID();
+
+    List<ComplaintHistory> getAllSortedComplaintHistories();
     
 }

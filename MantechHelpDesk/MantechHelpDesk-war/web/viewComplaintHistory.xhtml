@@ -7,6 +7,40 @@
                 >
     <ui:define name="title">MantechHelpDesk: Administrator >> All Complaints Histories</ui:define>
     <ui:define name="content">
-        <h1>View all complaints histories so that the Administrator can change status, priority, assign to technician</h1>
+        <h1>All latest histories of complaints raised by users and technicians.</h1>
+        
+        <f:view>
+            <h:form>
+                <p:dataTable value="#{complaintHistory.allHistory}" var="item" id="historyTable"
+                             rowKey="#{item.historyID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15">
+                    <p:column headerText="ID">
+                        #{item.historyID}
+                    </p:column>
+                    <p:column headerText="Employee's Logging Name">
+                        #{item.userAccountID.username}
+                    </p:column>
+                    <p:column headerText="Employee's Name">
+                        #{item.userAccountID.name}
+                    </p:column>
+                    <p:column headerText="Details">
+                        #{item.details}
+                    </p:column>
+                    <p:column headerText="ComplaintID">
+                        <p:commandLink value="#{item.complaintID.complaintID}" action="#{complaint.viewComplaintDetail}">
+                            <f:setPropertyActionListener target="#{complaint.adminComplaintDetail}" 
+                                                         value="#{item.complaintID}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="Action Date">
+                        <h:outputText value="#{item.lastModifiedDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </f:view>
     </ui:define>
 </ui:composition>

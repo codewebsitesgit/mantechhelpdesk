@@ -32,4 +32,6 @@ public interface UserAccountFacadeLocal {
     int count();
     
     UserAccount getUserAccount(String username);
+
+    List<UserAccount> getAllTechnicians();
 }

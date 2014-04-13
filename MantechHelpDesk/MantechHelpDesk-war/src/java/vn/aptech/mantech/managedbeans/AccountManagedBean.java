@@ -6,12 +6,14 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import vn.aptech.mantech.constants.MantechConstants;
 import vn.aptech.mantech.entity.UserAccount;
 import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
 
@@ -28,10 +30,7 @@ public class AccountManagedBean implements Serializable {
 
     private String username;
     private String password;
-    private static final int ROLE_ADMIN = 1;
-    private static final int ROLE_USER = 3;
-    private static final int ROLE_TECHNICIAN = 2;
-
+   
     /**
      * Creates a new instance of AccountManagedBean
      */
@@ -72,13 +71,13 @@ public class AccountManagedBean implements Serializable {
                     .getExternalContext().getSession(true);
         if (account != null && account.getPassword().equals(password)) {
             session.setAttribute("userSession", account);
-            if (account.getRoleID().getRoleID() == ROLE_ADMIN) {
+            if (account.getRoleID().getRoleID() == MantechConstants.ROLE_ADMIN) {
                 return "administrator";
             }
-            if (account.getRoleID().getRoleID() == ROLE_USER) {
+            if (account.getRoleID().getRoleID() == MantechConstants.ROLE_USER) {
                 return "registeredUser";
             }
-            if (account.getRoleID().getRoleID() == ROLE_TECHNICIAN) {
+            if (account.getRoleID().getRoleID() == MantechConstants.ROLE_TECHNICIAN) {
                 return "technician";
             }
         }
@@ -109,5 +108,9 @@ public class AccountManagedBean implements Serializable {
     
     public String viewAccounts() {
         return "viewAccounts";
+    }
+    
+    public List<UserAccount> getAllTechnicians() {
+        return userAccountFacade.getAllTechnicians();
     }
 }

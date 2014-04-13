@@ -6,9 +6,11 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import vn.aptech.mantech.entity.ComplaintHistory;
 
 /**
@@ -28,5 +30,22 @@ public class ComplaintHistoryFacade extends AbstractFacade<ComplaintHistory> imp
     public ComplaintHistoryFacade() {
         super(ComplaintHistory.class);
     }
+
+    @Override
+    public int getMaxHistoryID() {
+        Query query = em.createQuery("SELECT MAX(ch.historyID) from ComplaintHistory ch");
+        Object obj= query.getSingleResult();
+        if (obj == null) {
+            return 1;
+        }
+        return Integer.parseInt(obj.toString()) + 1;
+    }
+
+    @Override
+    public List<ComplaintHistory> getAllSortedComplaintHistories() {
+        Query query = em.createQuery("SELECT ch from ComplaintHistory ch ORDER BY ch.lastModifiedDate DESC");
+        return query.getResultList();
+    }
+    
     
 }
