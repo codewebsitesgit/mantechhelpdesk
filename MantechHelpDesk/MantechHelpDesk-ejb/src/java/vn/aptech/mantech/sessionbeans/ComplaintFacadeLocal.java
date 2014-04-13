@@ -36,9 +36,12 @@ public interface ComplaintFacadeLocal {
 
     List<Complaint> findAllLatest();
 
-    List<Complaint> findTopFiveLatest();
+    List<Complaint> findTopFiveLatest(int accountID);
 
-    List<Complaint> getAllSearchedComplaints(Integer complainID, String subject, Date creationDate, Integer statusID);
+    List<Complaint> getAllSearchedComplaints(
+            Integer complainID, String subject, 
+            Date creationDate, Integer statusID, 
+            int accountID);
 
     List<Complaint> getAllTechnicianAssignments(int accountID);
 

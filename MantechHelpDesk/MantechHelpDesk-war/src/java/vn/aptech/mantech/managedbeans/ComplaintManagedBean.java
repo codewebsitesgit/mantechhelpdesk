@@ -179,6 +179,9 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String viewComplaint() {
+        searchedComplaintID = null;
+        searchedSubject = null;
+        statusID = null;
         return "viewComplaint";
     }
 
@@ -251,7 +254,8 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public List<Complaint> getTopFiveComplaints() {
-        return complaintFacade.findTopFiveLatest();
+        return complaintFacade.findTopFiveLatest(
+                getSessionUserAccount().getAccountID());
     }
 
     /**
@@ -342,7 +346,9 @@ public class ComplaintManagedBean implements Serializable {
      * @return the allSearchedComplaints
      */
     public List<Complaint> getAllSearchedComplaints() {
-        List<Complaint> allComplaints = complaintFacade.getAllSearchedComplaints(searchedComplaintID, searchedSubject, null, statusID);
+        List<Complaint> allComplaints = complaintFacade.getAllSearchedComplaints(
+                searchedComplaintID, searchedSubject, null, statusID, 
+                getSessionUserAccount().getAccountID());
         if (allComplaints != null && !allComplaints.isEmpty()) {
             for (Complaint cp : allComplaints) {
                 if (cp.getStatus().getStatusID() == 1) {

@@ -16,12 +16,6 @@
             <p:column headerText="ComplaintID">
                 #{item.complaintID}
             </p:column>
-            <p:column headerText="Action">
-                <p:commandLink value="Details" action="#{complaint.viewTechComplaintDetail}">
-                    <f:setPropertyActionListener target="#{complaint.techComplaintDetail}" 
-                                                 value="#{item}"/>
-                </p:commandLink>
-            </p:column>
             <p:column headerText="Subject">
                 #{item.complaintSubject}
             </p:column>
@@ -43,6 +37,12 @@
                 <h:outputText value="#{item.closingDate}">
                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                 </h:outputText>
+            </p:column>
+            <p:column headerText="Action">
+                <p:commandLink value="Update" action="#{complaint.viewTechComplaintDetail}">
+                    <f:setPropertyActionListener target="#{complaint.techComplaintDetail}" 
+                                                 value="#{item}"/>
+                </p:commandLink>
             </p:column>
         </p:dataTable>
     </ui:define>

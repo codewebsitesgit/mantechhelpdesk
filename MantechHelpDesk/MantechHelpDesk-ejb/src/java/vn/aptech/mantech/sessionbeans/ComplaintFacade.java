@@ -50,15 +50,16 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
     }
 
     @Override
-    public List<Complaint> findTopFiveLatest() {
-        Query query = em.createQuery("SELECT q from Complaint q ORDER BY q.lodgingDate DESC");
+    public List<Complaint> findTopFiveLatest(int accountID) {
+        Query query = em.createQuery("SELECT q from Complaint q WHERE q.complaintOwner.accountID =:account ORDER BY q.lodgingDate DESC");
+        query.setParameter("account", accountID);
         query.setMaxResults(5);
         return query.getResultList();
     }
 
     @Override
     public List<Complaint> getAllSearchedComplaints(Integer complainID,
-            String subject, Date creationDate, Integer statusID) {
+            String subject, Date creationDate, Integer statusID, int accountID) {
         String sql = "SELECT q from Complaint q WHERE 1=1";
         if (complainID != null && complainID != 0) {
             sql += " AND q.complaintID=:compID";
@@ -72,8 +73,10 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
         if (statusID != null) {
             sql += " AND q.status.statusID=:sttID";
         }
+        sql += " AND q.complaintOwner.accountID =:account";
         sql += " ORDER BY q.lodgingDate DESC";
         Query query = em.createQuery(sql);
+        query.setParameter("account", accountID);
         if (complainID != null && complainID != 0) {
             query.setParameter("compID", complainID);
         }
