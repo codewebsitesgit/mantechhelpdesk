@@ -11,7 +11,10 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import vn.aptech.mantech.entity.ComplaintHistory;
+import vn.aptech.mantech.entity.UserAccount;
 import vn.aptech.mantech.sessionbeans.ComplaintHistoryFacadeLocal;
 
 /**
@@ -32,6 +35,16 @@ public class ComplaintHistoryManagedBean implements Serializable{
     }
     
     public List<ComplaintHistory> getAllHistory() {
-        return complaintHistoryFacade.getAllSortedComplaintHistories();
+        
+        UserAccount acc = getSessionUserAccount();
+        return complaintHistoryFacade.getAllNotSelfMadeSortedComplaintHistories(acc.getAccountID());
+        //complaintHistoryFacade.getAllSortedComplaintHistories();
     }
+    
+    private static UserAccount getSessionUserAccount() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(true);
+        return (UserAccount) session.getAttribute("userSession");
+    }
+    
 }

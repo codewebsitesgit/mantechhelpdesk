@@ -6,22 +6,24 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
+import vn.aptech.mantech.constants.MantechConstants;
 import vn.aptech.mantech.entity.Activity;
 import vn.aptech.mantech.entity.Complaint;
 import vn.aptech.mantech.entity.ComplaintCategory;
 import vn.aptech.mantech.entity.ComplaintHistory;
 import vn.aptech.mantech.entity.ComplaintPriority;
+import vn.aptech.mantech.entity.ComplaintStatus;
 import vn.aptech.mantech.entity.UserAccount;
 import vn.aptech.mantech.sessionbeans.ActivityFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintCategoryFacadeLocal;
@@ -29,6 +31,7 @@ import vn.aptech.mantech.sessionbeans.ComplaintFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintHistoryFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintPriorityFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintStatusFacadeLocal;
+import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
 
 /**
  *
@@ -37,6 +40,9 @@ import vn.aptech.mantech.sessionbeans.ComplaintStatusFacadeLocal;
 @ManagedBean(name = "complaint")
 @SessionScoped
 public class ComplaintManagedBean implements Serializable {
+
+    @EJB
+    private UserAccountFacadeLocal userAccountFacade;
 
     @EJB
     private ActivityFacadeLocal activityFacade;
@@ -72,6 +78,72 @@ public class ComplaintManagedBean implements Serializable {
 
     private Complaint adminComplaintDetail;
 
+    private Integer adminSelectedTechnician;
+    private int adminSelectedStatusId;
+    private int adminSelectedPriorityId;
+
+    private Complaint techComplaintDetail;
+
+    private int techSelectedStatusId;
+    private int techSelectedCategory;
+    private String techInputReasons;
+
+    public int getTechSelectedStatusId() {
+        return techSelectedStatusId;
+    }
+
+    public void setTechSelectedStatusId(int techSelectedStatusId) {
+        this.techSelectedStatusId = techSelectedStatusId;
+    }
+
+    public int getTechSelectedCategory() {
+        return techSelectedCategory;
+    }
+
+    public void setTechSelectedCategory(int techSelectedCategory) {
+        this.techSelectedCategory = techSelectedCategory;
+    }
+
+    public String getTechInputReasons() {
+        return techInputReasons;
+    }
+
+    public void setTechInputReasons(String techInputReasons) {
+        this.techInputReasons = techInputReasons;
+    }
+
+    public Complaint getTechComplaintDetail() {
+        return techComplaintDetail;
+    }
+
+    public void setTechComplaintDetail(Complaint techComplaintDetail) {
+        this.techComplaintDetail = techComplaintDetail;
+    }
+
+    public Integer getAdminSelectedTechnician() {
+        return adminSelectedTechnician;
+    }
+
+    public void setAdminSelectedTechnician(Integer adminSelectedTechnician) {
+        this.adminSelectedTechnician = adminSelectedTechnician;
+    }
+
+    public int getAdminSelectedStatusId() {
+        return adminSelectedStatusId;
+    }
+
+    public void setAdminSelectedStatusId(int adminSelectedStatusId) {
+        this.adminSelectedStatusId = adminSelectedStatusId;
+    }
+
+    public int getAdminSelectedPriorityId() {
+        return adminSelectedPriorityId;
+    }
+
+    public void setAdminSelectedPriorityId(int adminSelectedPriorityId) {
+        this.adminSelectedPriorityId = adminSelectedPriorityId;
+    }
+
     public Complaint getAdminComplaintDetail() {
         return adminComplaintDetail;
     }
@@ -79,7 +151,7 @@ public class ComplaintManagedBean implements Serializable {
     public void setAdminComplaintDetail(Complaint adminComplaintDetail) {
         this.adminComplaintDetail = adminComplaintDetail;
     }
-    
+
     public int getResentComplaintId() {
         return resentComplaintId;
     }
@@ -135,10 +207,11 @@ public class ComplaintManagedBean implements Serializable {
             ComplaintPriority priority = complaintPriorityFacade.find(complaintPriority);
             curComplaint.setComplaintCategory(category);
             curComplaint.setPriority(priority);
-            curComplaint.setLodgingDate(Calendar.getInstance().getTime());
+            Date modifiedDate = Calendar.getInstance().getTime();
+            curComplaint.setLodgingDate(modifiedDate);
             curComplaint.setStatus(complaintStatusFacade.find(PENDING_STATUS));
             curComplaint.setComplaintOwner(getSessionUserAccount());
-            
+            curComplaint.setLastModified(modifiedDate);
             complaintFacade.create(curComplaint);
             // save to history table
             UserAccount user = getSessionUserAccount();
@@ -148,13 +221,13 @@ public class ComplaintManagedBean implements Serializable {
             hist.setActionID(newComplaintAction);
             hist.setDetails(newComplaintAction.getActionDesc());
             hist.setUserAccountID(user);
-            hist.setLastModifiedDate(Calendar.getInstance().getTime());
-            
+            hist.setLastModifiedDate(modifiedDate);
+
             // find history for complaint
             Complaint cmp = complaintFacade.find(curComplaint.getComplaintID());
             hist.setComplaintID(cmp);
             complaintHistoryFacade.create(hist);
-            
+
             ut.commit();
         } catch (Exception e) {
             try {
@@ -296,8 +369,246 @@ public class ComplaintManagedBean implements Serializable {
     public String viewComplaintAssignment() {
         return "viewComplaintAssignment";
     }
-    
+
     public String viewComplaintDetail() {
+        adminSelectedPriorityId = adminComplaintDetail.getPriority().getPriorityID();
+        adminSelectedStatusId = adminComplaintDetail.getStatus().getStatusID();
+        UserAccount tech = adminComplaintDetail.getTechnician();
+        if (tech != null) {
+            adminSelectedTechnician = tech.getAccountID();
+        }
+
         return "viewComplaintDetail";
+    }
+
+    public String viewTechComplaintDetail() {
+        techInputReasons = techComplaintDetail.getReasons();
+        techSelectedCategory = techComplaintDetail.getComplaintCategory().getCategoryID();
+        techSelectedStatusId = techComplaintDetail.getStatus().getStatusID();
+        return "viewTechComplaintDetail";
+    }
+
+    public String updateAdminComplaintDetail() {
+        boolean hasChangedTech = checkChangeTech();
+        boolean hasChangedStatus = checkChangeStatus();
+        boolean hasChangedPriority = checkChangePriority();
+
+        if (!hasChangedTech && !hasChangedStatus && !hasChangedPriority) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
+            return "viewComplaintDetail";
+        }
+
+        try {
+            ut.begin();
+            // get technician
+            // check if there's change in technician
+
+            if (adminSelectedTechnician == null) {
+                adminComplaintDetail.setTechnician(null);
+            } else {
+                UserAccount tech = userAccountFacade.find(adminSelectedTechnician);
+                adminComplaintDetail.setTechnician(tech);
+            }
+
+            // update history
+            // get status
+            // check if there's change in status
+            Date modifiedDate = Calendar.getInstance().getTime();
+            if (hasChangedStatus) {
+                ComplaintStatus status = complaintStatusFacade.find(adminSelectedStatusId);
+                if (adminSelectedStatusId == MantechConstants.COMPLAINT_STATUS_DONE) {
+                    adminComplaintDetail.setClosingDate(modifiedDate);
+                } else{
+                    if (adminComplaintDetail.getStatus().getStatusID().intValue() == MantechConstants.COMPLAINT_STATUS_DONE) {
+                        // select back to not done
+                        adminComplaintDetail.setClosingDate(null);
+                    }
+                }
+                adminComplaintDetail.setStatus(status);
+            }
+            // get priority
+            // check if there's change in priority
+
+            if (hasChangedPriority) {
+                ComplaintPriority prio = complaintPriorityFacade.find(adminSelectedPriorityId);
+                adminComplaintDetail.setPriority(prio);
+            }
+            adminComplaintDetail.setLastModified(modifiedDate);
+            complaintFacade.edit(adminComplaintDetail);
+
+            Complaint savedComplaint = complaintFacade.find(adminComplaintDetail.getComplaintID());
+
+            // update histories
+            if (hasChangedTech) {
+                updateHistory(savedComplaint, activityFacade.getAssignTechnician());
+            }
+
+            if (hasChangedStatus) {
+                updateHistory(savedComplaint, activityFacade.getChangeStatus());
+            }
+
+            if (hasChangedPriority) {
+                updateHistory(savedComplaint, activityFacade.getChangePriority());
+            }
+
+            ut.commit();
+        } catch (Exception e) {
+            try {
+                ut.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+
+        return "administrator";
+    }
+
+    private boolean checkChangeTech() {
+        UserAccount curTech = adminComplaintDetail.getTechnician();
+        if (curTech != null) {
+            if (adminSelectedTechnician == null) {
+                return true;
+            } else {
+                return curTech.getAccountID().intValue() != adminSelectedTechnician.intValue();
+            }
+        }
+        return adminSelectedTechnician != null;
+
+    }
+
+    private boolean checkChangeStatus() {
+        ComplaintStatus status = adminComplaintDetail.getStatus();
+        if (status != null) {
+            return status.getStatusID().intValue() != adminSelectedStatusId;
+        }
+        return false;
+    }
+
+    private boolean checkChangePriority() {
+        ComplaintPriority prio = adminComplaintDetail.getPriority();
+        if (prio != null) {
+            return prio.getPriorityID().intValue() != adminSelectedPriorityId;
+        }
+        return false;
+    }
+
+    public List<Complaint> getTechnicianAssignments() {
+        return complaintFacade.getAllTechnicianAssignments(getSessionUserAccount().getAccountID());
+    }
+
+    public String updateTechComplaintDetail() {
+        boolean hasChangedStatus = checkTechChangeStatus();
+        boolean hasChangedCategory = checkTechChangeCategory();
+        boolean hasChangedReasons = checkTechChangeReasons();
+
+        if (!hasChangedStatus && !hasChangedCategory && !hasChangedReasons) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
+            return "viewTechComplaintDetail";
+        }
+
+        try {
+            ut.begin();
+            // update history
+            // get status
+            // check if there's change in status
+            Date modifiedDate = Calendar.getInstance().getTime();
+            if (hasChangedStatus) {
+                ComplaintStatus status = complaintStatusFacade.find(techSelectedStatusId);
+                if (techSelectedStatusId == MantechConstants.COMPLAINT_STATUS_DONE) {
+                    techComplaintDetail.setClosingDate(modifiedDate);
+                } else{
+                    if (techComplaintDetail.getStatus().getStatusID().intValue() == MantechConstants.COMPLAINT_STATUS_DONE) {
+                        // select back to not done
+                        techComplaintDetail.setClosingDate(null);
+                    }
+                }
+                techComplaintDetail.setStatus(status);
+            }
+            // get category
+            // check if there's change in category
+
+            if (hasChangedCategory) {
+                ComplaintCategory cat = complaintCategoryFacade.find(techSelectedCategory);
+                techComplaintDetail.setComplaintCategory(cat);
+            }
+
+            if (hasChangedReasons) {
+                techComplaintDetail.setReasons(techInputReasons);
+            }
+            techComplaintDetail.setLastModified(modifiedDate);
+            complaintFacade.edit(techComplaintDetail);
+
+            Complaint savedComplaint = complaintFacade.find(techComplaintDetail.getComplaintID());
+
+            // update histories
+            if (hasChangedStatus) {
+                updateHistory(savedComplaint, activityFacade.getChangeStatus());
+            }
+
+            if (hasChangedCategory) {
+                updateHistory(savedComplaint, activityFacade.getChangeCategory());
+            }
+
+            if (hasChangedReasons) {
+                updateHistory(savedComplaint, activityFacade.getUpdateRootCause());
+            }
+
+            ut.commit();
+        } catch (Exception e) {
+            try {
+                ut.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        return "technician";
+    }
+
+    private boolean checkTechChangeStatus() {
+        ComplaintStatus status = techComplaintDetail.getStatus();
+        if (status != null) {
+            return status.getStatusID().intValue() != techSelectedStatusId;
+        }
+        return false;
+    }
+
+    private boolean checkTechChangeCategory() {
+        ComplaintCategory cat = techComplaintDetail.getComplaintCategory();
+        if (cat != null) {
+            return cat.getCategoryID().intValue() != techSelectedCategory;
+        }
+        return false;
+    }
+
+    private boolean checkTechChangeReasons() {
+        String reason = techComplaintDetail.getReasons();
+        if (reason != null) {
+            return !reason.equals(techInputReasons);
+        } 
+        
+        return techInputReasons != null && !techInputReasons.trim().isEmpty();
+    }
+
+    private void updateHistory(Complaint savedComplaint, Activity act) {
+        ComplaintHistory hist = new ComplaintHistory();
+        hist.setActionID(act);
+        hist.setHistoryID(complaintHistoryFacade.getMaxHistoryID());
+        hist.setDetails(act.getActionDesc());
+        hist.setComplaintID(savedComplaint);
+        hist.setLastModifiedDate(Calendar.getInstance().getTime());
+        hist.setUserAccountID(getSessionUserAccount());
+        complaintHistoryFacade.edit(hist);
+    }
+    
+    public String viewLastModifiedComplaints() {
+        return "viewLastModifiedComplaints";
+    }
+    
+    public List<Complaint> getAllLatestModifiedComplaints() {
+        return complaintFacade.getLastModifiedComplaints();
     }
 }

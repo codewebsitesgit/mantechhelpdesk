@@ -7,6 +7,43 @@
                 >
     <ui:define name="title">MantechHelpDesk: Technician >> All Assignments</ui:define>
     <ui:define name="content">
-        <h1>View all tasks assignments from Administrator</h1>
+        <h1>View all task assignments from Administrator</h1>
+        <p:dataTable value="#{complaint.technicianAssignments}" var="item" id="assignmentTable"
+                     rowKey="#{item.complaintID}" selectionMode="single" 
+                     paginator="true" rows="5"  
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                     rowsPerPageTemplate="5,10,15">
+            <p:column headerText="ComplaintID">
+                #{item.complaintID}
+            </p:column>
+            <p:column headerText="Action">
+                <p:commandLink value="Details" action="#{complaint.viewTechComplaintDetail}">
+                    <f:setPropertyActionListener target="#{complaint.techComplaintDetail}" 
+                                                 value="#{item}"/>
+                </p:commandLink>
+            </p:column>
+            <p:column headerText="Subject">
+                #{item.complaintSubject}
+            </p:column>
+            <p:column headerText="Category">
+                #{item.complaintCategory.categoryName}
+            </p:column>
+            <p:column headerText="Priority">
+                #{item.priority.priorityName}
+            </p:column>
+            <p:column headerText="Status">
+                #{item.status.statusName}
+            </p:column>
+            <p:column headerText="LodgingDate">
+                <h:outputText value="#{item.lodgingDate}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                </h:outputText>
+            </p:column>
+            <p:column headerText="ClosingDate">
+                <h:outputText value="#{item.closingDate}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
     </ui:define>
 </ui:composition>

@@ -54,5 +54,15 @@ public class ActivityFacade extends AbstractFacade<Activity> implements Activity
     public Activity getChangePriority() {
         return em.find(Activity.class, MantechConstants.ACTION_CHANGE_PRIORITY_COMPLAINT);
     }
+
+    @Override
+    public Activity getAssignTechnician() {
+        return em.find(Activity.class, MantechConstants.ACTION_CHANGE_TECHNICIAN);
+    }
+
+    @Override
+    public Activity getChangeCategory() {
+        return em.find(Activity.class, MantechConstants.ACTION_CHANGE_COMPLAINT_CATEGORY);
+    }
     
 }

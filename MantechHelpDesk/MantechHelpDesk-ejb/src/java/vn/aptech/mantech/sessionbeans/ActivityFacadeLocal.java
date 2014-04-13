@@ -41,4 +41,7 @@ public interface ActivityFacadeLocal {
 
     Activity getChangePriority();
     
+    Activity getAssignTechnician();
+
+    Activity getChangeCategory();
 }

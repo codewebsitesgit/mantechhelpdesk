@@ -46,6 +46,20 @@ public class ComplaintHistoryFacade extends AbstractFacade<ComplaintHistory> imp
         Query query = em.createQuery("SELECT ch from ComplaintHistory ch ORDER BY ch.lastModifiedDate DESC");
         return query.getResultList();
     }
+
+    @Override
+    public List<ComplaintHistory> getAllNotSelfMadeSortedComplaintHistories(int accountID) {
+        Query query = em.createQuery("SELECT ch from ComplaintHistory ch WHERE ch.userAccountID.accountID <>:accountId ORDER BY ch.lastModifiedDate DESC");
+        query.setParameter("accountId", accountID);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<ComplaintHistory> getAllSelfMadeSortedComplaintHistories(int accountID) {
+        Query query = em.createQuery("SELECT ch from ComplaintHistory ch WHERE ch.userAccountID.accountID =:accountId ORDER BY ch.lastModifiedDate DESC");
+        query.setParameter("accountId", accountID);
+        return query.getResultList();
+    }
     
     
 }

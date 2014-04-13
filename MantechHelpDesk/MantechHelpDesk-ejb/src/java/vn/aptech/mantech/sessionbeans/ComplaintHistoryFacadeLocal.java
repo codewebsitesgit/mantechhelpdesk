@@ -34,5 +34,9 @@ public interface ComplaintHistoryFacadeLocal {
     int getMaxHistoryID();
 
     List<ComplaintHistory> getAllSortedComplaintHistories();
+
+    List<ComplaintHistory> getAllNotSelfMadeSortedComplaintHistories(int accountID);
+
+    List<ComplaintHistory> getAllSelfMadeSortedComplaintHistories(int accountID);
     
 }

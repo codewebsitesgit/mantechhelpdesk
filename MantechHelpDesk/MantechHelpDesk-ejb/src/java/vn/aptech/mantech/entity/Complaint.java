@@ -43,6 +43,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Complaint.findByLodgingDate", query = "SELECT c FROM Complaint c WHERE c.lodgingDate = :lodgingDate"),
     @NamedQuery(name = "Complaint.findByClosingDate", query = "SELECT c FROM Complaint c WHERE c.closingDate = :closingDate")})
 public class Complaint implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "LastModified")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModified;
     @Size(max = 300)
     @Column(name = "Reasons")
     private String reasons;
@@ -233,6 +238,14 @@ public class Complaint implements Serializable {
 
     public void setReasons(String reasons) {
         this.reasons = reasons;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
 }

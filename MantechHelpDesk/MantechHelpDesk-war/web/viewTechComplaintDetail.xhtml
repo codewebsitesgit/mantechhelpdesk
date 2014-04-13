@@ -1,0 +1,64 @@
+<ui:composition template="/template/user.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title">MantechHelpDesk: Technician >> Complaint's Details</ui:define>
+    <ui:define name="content">
+        <f:view>
+            <h:form>
+                <p:panel id="updateComplaintOfTechPanel" header="Complaint's Details">
+                    <p:messages autoUpdate="true" closable="true" showDetail="true"/>
+                    <h:panelGrid columns="2" id="panelUpdateCamplaint" cellspacing="8">
+                        <p:outputLabel value="ComplaintID" for="complaintID" />
+                        <p:outputLabel id="complaintID" value="#{complaint.techComplaintDetail.complaintID}" 
+                                       title="ComplaintID"/>
+                        <p:outputLabel value="Subject" for="complaintSubject" />
+                        <p:inputText id="complaintSubject" value="#{complaint.techComplaintDetail.complaintSubject}"
+                                     title="ComplaintSubject" readonly="true" size="45"/>
+                        <p:outputLabel value="Contents" for="complaintContents" />
+                        <p:inputTextarea id="complaintContents" value="#{complaint.techComplaintDetail.complaintContents}" 
+                                         title="ComplaintContents" readonly="true" rows="7" cols="60"/>
+                        <p:outputLabel value="Assign to" for="technician" />
+                        <p:outputLabel value="#{complaint.techComplaintDetail.technician.name}" id="technician"/>
+                        <p:outputLabel value="From employee" />
+                        <p:outputLabel value="#{complaint.techComplaintDetail.complaintOwner.username}" />
+                        <p:outputLabel value="Full employee's name"/>
+                        <p:outputLabel value="#{complaint.techComplaintDetail.complaintOwner.name}" />
+                        <p:outputLabel value="Status" for="status" />
+                        <p:selectOneMenu id="status" value="#{complaint.techSelectedStatusId}" 
+                                         required="true" requiredMessage="The Status field is required.">
+                            <f:selectItems value="#{status.allStatus}" var="stt"
+                                           itemLabel="#{stt.statusName}" itemValue="#{stt.statusID}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Priority" for="priority" />
+                        <p:outputLabel value="#{complaint.techComplaintDetail.priority.priorityName}" id="priority"/>
+                        <p:outputLabel value="Category" for="complaintCategory" />
+                        <p:selectOneMenu id="complaintCategory" value="#{complaint.techSelectedCategory}" 
+                                         required="true" requiredMessage="The Category field is required.">
+                            <f:selectItems value="#{complaint.complaintCats}" var="cat"
+                                       itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Reasons" for="reasons" />
+                        <p:inputTextarea id="reasons" value="#{complaint.techInputReasons}" 
+                                         title="Reasons" rows="5" cols="60" />
+                        <p:outputLabel value="LodgingDate" for="lodgingDate" />
+                        <p:outputLabel id="lodgingDate" value="#{complaint.techComplaintDetail.lodgingDate}" title="LodgingDate" >
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </p:outputLabel>
+                        <p:commandButton id="btnUpdateComplaint" value="Update complaint" 
+                                         action="#{complaint.updateTechComplaintDetail}" 
+                                         icon="ui-icon-check"/>
+                        <p:commandButton id="btnCancelUpdate" value="Cancel" 
+                                         action="technician" 
+                                         icon="ui-icon-arrowreturnthick-1-w"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </f:view>
+
+
+    </ui:define>
+</ui:composition>

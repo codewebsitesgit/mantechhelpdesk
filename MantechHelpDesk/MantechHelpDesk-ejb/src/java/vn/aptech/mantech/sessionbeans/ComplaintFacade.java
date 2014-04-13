@@ -88,5 +88,18 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
         }
         return query.getResultList();
     }
+
+    @Override
+    public List<Complaint> getAllTechnicianAssignments(int accountID) {
+        Query query = em.createQuery("SELECT q from Complaint q WHERE q.technician.accountID=:account ORDER BY q.lodgingDate DESC");
+        query.setParameter("account", accountID);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getLastModifiedComplaints() {
+        Query query = em.createQuery("SELECT q from Complaint q ORDER BY q.lastModified DESC");
+        return query.getResultList();
+    }
     
 }
