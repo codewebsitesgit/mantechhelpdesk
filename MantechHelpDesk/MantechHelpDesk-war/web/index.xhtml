@@ -6,20 +6,26 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Welcome to MantechHelpDesk System. Your voice, Our care!</title>
-         <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/mantech.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/mantech.css" />
     </h:head>
     <h:body>
         <f:view>
             <h:form>
-                <p:panelGrid columns="2" id="panelLogin" styleClass="panelGridCenter">
-                    <h:outputText value="Username"/>
-                    <h:inputText value="#{account.username}"/>
-                    <h:outputText value="Password"/>
-                    <h:inputSecret value="#{account.password}"/>
-                    <h:outputText value=""/>
-                    <p:commandButton value="Login" action="#{account.checkLogin}" 
-                                     icon="ui-icon-check" style="margin: 0"/>
-                </p:panelGrid>
+                <p:panel header="Login panel" styleClass="panelGridCenter">
+                    <p:messages autoUpdate="true"/>
+                    <p:panelGrid columns="2" id="panelLogin">
+                        <h:outputText value="Username"/>
+                        <p:inputText id="userName" value="#{account.username}" required="true"
+                                     requiredMessage="Username cannot be blank."/>
+                        <h:outputText value="Password"/>
+                        <p:password id="password" value="#{account.password}" required="true"
+                                    requiredMessage="Password cannot be blank."/>
+                        <h:outputText value=""/>
+                        <p:commandButton id="btnLogin" value="Login" 
+                                         action="#{account.checkLogin}" 
+                                         icon="ui-icon-check" style="margin: 0"/>
+                    </p:panelGrid>
+                </p:panel>
             </h:form>
         </f:view>
     </h:body>
