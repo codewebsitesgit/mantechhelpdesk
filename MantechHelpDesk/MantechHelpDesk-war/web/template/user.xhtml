@@ -38,6 +38,17 @@
                             <p:menuitem value="All Assignments" action="#{complaint.viewComplaintAssignment}" 
                                         rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh"/>
                         </p:submenu>  
+                        
+                        <p:submenu label="Articles" icon="ui-icon-signal-diag">  
+                            <p:menuitem value="Read articles" action="#{article.readArticle}" 
+                                        icon="ui-icon-comment"/>
+                            <p:separator rendered="${userSession.roleID.roleID == 2}"/>
+                            <p:menuitem value="New article" action="#{article.newArticle}" 
+                                        icon="ui-icon-circle-plus" rendered="${userSession.roleID.roleID == 2}"/>
+                            <p:separator rendered="${userSession.roleID.roleID == 2}"/>
+                            <p:menuitem value="Maintain article" action="#{article.maintainArticle}" 
+                                        icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 2}"/>
+                        </p:submenu>
 
                         <p:submenu label="Accounts" icon="ui-icon-person" rendered="${userSession.roleID.roleID == 1}">  
                             <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-circle-plus" />
