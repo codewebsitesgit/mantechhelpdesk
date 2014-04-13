@@ -30,5 +30,7 @@ public interface FaqsFacadeLocal {
     List<Faqs> findRange(int[] range);
 
     int count();
+
+    List<Faqs> searchFaqs(String searchedKeyword);
     
 }

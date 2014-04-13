@@ -617,4 +617,8 @@ public class ComplaintManagedBean implements Serializable {
     public List<Complaint> getAllLatestModifiedComplaints() {
         return complaintFacade.getLastModifiedComplaints();
     }
+    
+    public String generateReports() {
+        return "generateReports";
+    }
 }

@@ -6,9 +6,11 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import vn.aptech.mantech.entity.Faqs;
 
 /**
@@ -27,6 +29,20 @@ public class FaqsFacade extends AbstractFacade<Faqs> implements FaqsFacadeLocal 
 
     public FaqsFacade() {
         super(Faqs.class);
+    }
+
+    @Override
+    public List<Faqs> searchFaqs(String searchedKeyword) {
+        String sql = "SELECT f from Faqs f";
+        if (searchedKeyword != null && !searchedKeyword.isEmpty()) {
+            sql = "SELECT f from Faqs f WHERE f.faqSubject like :keywordVal OR f.faqContents LIKE :keywordVal";
+        }
+        Query query = em.createQuery(sql);
+        if (searchedKeyword != null && !searchedKeyword.isEmpty()) {
+            query.setParameter("keywordVal", "%" +searchedKeyword+"%");
+        }
+        
+        return query.getResultList();
     }
     
 }

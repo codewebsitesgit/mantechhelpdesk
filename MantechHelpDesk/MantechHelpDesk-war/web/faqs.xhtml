@@ -8,5 +8,35 @@
     <ui:define name="title">MantechHelpDesk: FAQs</ui:define>
     <ui:define name="content">
         <h1>Welcome FAQs page</h1>
+        <h:form id="formFaqs">
+
+            <p:dataTable id="faqsTable" var="faq" value="#{faqs.allFaqs}">
+
+                <p:column style="width:3%">
+                    <p:rowToggler />
+                </p:column>
+
+                <p:column style="width:72%">
+                    <f:facet name="header">
+                        Question
+                    </f:facet>
+                    <h:outputText value="#{faq.faqSubject}" />
+                </p:column>
+
+                <p:column style="width:25%">
+                    <f:facet name="header">
+                        Creation Date
+                    </f:facet>
+                    <h:outputText value="#{faq.creationDate}" />
+                </p:column>
+
+                <p:rowExpansion>
+                    <h:panelGrid id="display">
+                        <p:inputTextarea value="#{faq.faqContents}" id="contentArea" 
+                                         rows="8" cols="85" readonly="true"/>
+                    </h:panelGrid>
+                </p:rowExpansion>
+            </p:dataTable>
+        </h:form>
     </ui:define>
 </ui:composition>

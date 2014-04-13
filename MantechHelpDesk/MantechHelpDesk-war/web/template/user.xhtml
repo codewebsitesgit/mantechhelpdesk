@@ -29,8 +29,12 @@
                             </p:submenu> 
                             <p:menuitem value="Handle complaints" action="#{complaint.viewLastModifiedComplaints}" 
                                         rendered="${userSession.roleID.roleID == 1}" icon="ui-icon ui-icon-refresh"/>
+                            <p:separator rendered="${userSession.roleID.roleID == 1}"/>
                             <p:menuitem value="History trackings" action="#{complaint.viewComplaintHistory}" 
                                         rendered="${userSession.roleID.roleID == 1}" icon="ui-icon ui-icon-refresh"/>
+                            <p:separator rendered="${userSession.roleID.roleID == 1}"/>
+                            <p:menuitem value="Generate reports" action="#{complaint.generateReports}" 
+                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon-disk"/>
                             <p:menuitem value="All Assignments" action="#{complaint.viewComplaintAssignment}" 
                                         rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh"/>
                         </p:submenu>  
@@ -56,7 +60,12 @@
                         </p:submenu> 
 
                         <f:facet name="options">  
-                            <p:inputText style="margin-right:10px"/>  
+                            <p:commandButton value="FAQs" icon="ui-icon-search" 
+                                             action="#{faqs.searchFaqs}" ajax="true"/> 
+                            <p:inputText style="margin-right:10px" id="faqFocus" 
+                                         value="#{faqs.searchQuestionKeyword}"
+                                         title="Enter keyword to search the question"/> 
+                            <p:tooltip for="faqFocus" showEffect="slide" hideEffect="slide"/>
                             <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{account.logout}"/>  
                         </f:facet>  
                     </p:menubar>
