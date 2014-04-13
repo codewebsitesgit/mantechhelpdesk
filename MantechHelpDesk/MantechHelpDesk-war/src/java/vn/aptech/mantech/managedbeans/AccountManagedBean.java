@@ -102,4 +102,12 @@ public class AccountManagedBean implements Serializable {
     public String changeUserPassword() {
         return "changeUserPassword";
     }
+    
+    public String newAccount() {
+        return "newAccount";
+    }
+    
+    public String viewAccounts() {
+        return "viewAccounts";
+    }
 }

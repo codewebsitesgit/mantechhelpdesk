@@ -248,4 +248,12 @@ public class ComplaintManagedBean implements Serializable {
         System.out.println("Resend: " +complaintID);
         return "viewComplaint";
     }
+    
+    public String viewComplaintHistory() {
+        return "viewComplaintHistory";
+    }
+    
+    public String viewComplaintAssignment() {
+        return "viewComplaintAssignment";
+    }
 }
