@@ -62,7 +62,8 @@
                             <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
                                            action="#{complaint.resendComplaintItem}" ajax="true">
                                 <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
-                                                             value="#{item.complaintID}"/>
+                                                             value="#{item.complaintID}" 
+                                                             rendered="${item.resend}"/>
                             </p:commandLink>
                         </p:column>
                         <p:column headerText="Priority">
