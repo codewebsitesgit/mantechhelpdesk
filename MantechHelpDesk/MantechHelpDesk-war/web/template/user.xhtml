@@ -38,7 +38,7 @@
                             <p:menuitem value="All Assignments" action="#{complaint.viewComplaintAssignment}" 
                                         rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh"/>
                         </p:submenu>  
-                        
+
                         <p:submenu label="Articles" icon="ui-icon-signal-diag">  
                             <p:menuitem value="Read articles" action="#{article.readArticle}" 
                                         icon="ui-icon-comment"/>
@@ -55,7 +55,7 @@
                             <p:separator />
                             <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" />
                         </p:submenu>
-                        
+
                         <p:submenu label="View" icon="ui-icon-contact" rendered="${userSession.roleID.roleID == 3}">  
                             <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" />  
                         </p:submenu>  
@@ -72,7 +72,12 @@
 
                         <f:facet name="options">  
                             <p:commandButton value="FAQs" icon="ui-icon-search" 
-                                             action="#{faqs.searchFaqs}" ajax="true"/> 
+                                             action="#{faqs.searchFaqs}" ajax="true"
+                                             rendered="${view.viewId != '/faqs.xhtml'}"/> 
+                            <p:commandButton value="FAQs" icon="ui-icon-search" 
+                                             update=":formFaqs:faqsTable"
+                                             action="#{faqs.searchFaqs}" ajax="true"
+                                             rendered="${view.viewId == '/faqs.xhtml'}"/> 
                             <p:inputText style="margin-right:10px" id="faqFocus" 
                                          value="#{faqs.searchQuestionKeyword}"
                                          title="Enter keyword to search the question"/> 
