@@ -27,7 +27,7 @@
                     </p:panelGrid>
                 </p:panel>
                 <p:panel id="panelAllSearchedComplaint" header="All complaints">
-                    <p:growl id="resendMessage" showSummary="true" autoUpdate="true"/>
+                    <p:growl id="resendMessage" showSummary="true" autoUpdate="true" showDetail="true"/>
                     <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
                                  rowKey="#{item.complaintID}" selectionMode="single" 
                                  paginator="true" rows="10"  
@@ -39,17 +39,22 @@
                         <p:column headerText="Subject">
                             #{item.complaintSubject}
                         </p:column>
-                        <p:column headerText="LodgingDate">
+                        <p:column headerText="Creation Date">
                             <h:outputText value="#{item.lodgingDate}">
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="ClosingDate">
+                        <p:column headerText="Last Modified Date">
+                            <h:outputText value="#{item.lastModified}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Closing Date">
                             <h:outputText value="#{item.closingDate}">
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="ActualTakenTime">
+                        <p:column headerText="Actual Taken Time">
                             <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
                         </p:column>
                         <p:column headerText="Technician">

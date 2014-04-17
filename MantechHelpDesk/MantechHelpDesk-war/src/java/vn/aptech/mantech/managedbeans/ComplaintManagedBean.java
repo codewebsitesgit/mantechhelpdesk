@@ -351,7 +351,7 @@ public class ComplaintManagedBean implements Serializable {
             for (Complaint cp : allComplaints) {
                 //in milliseconds
                 if (cp.getStatus().getStatusID() == MantechConstants.COMPLAINT_STATUS_PENDING) {
-                    long diffResend = Calendar.getInstance().getTimeInMillis() - cp.getLodgingDate().getTime();
+                    long diffResend = Calendar.getInstance().getTimeInMillis() - cp.getLastModified().getTime();
                     long diffDays = diffResend / (24 * 60 * 60 * 1000);
                     cp.setResend(diffDays >= 2L); //greater than 2 days
                 } else if (cp.getStatus().getStatusID() == MantechConstants.COMPLAINT_STATUS_DONE) {
@@ -371,10 +371,12 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String resendComplaintItem() {
-        System.out.println("resendComplaintID: " + resendComplaintId);
         Complaint cmp = complaintFacade.find(resendComplaintId);
         cmp.setLastModified(Calendar.getInstance().getTime());
         complaintFacade.edit(cmp);
+        
+        // save history
+        updateHistory(cmp, activityFacade.getResendComplaint());
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                     FacesMessage.SEVERITY_WARN, "Resend the complaint successfully!", 
                 "Because the complaint has been pending >= 2 days!"));
