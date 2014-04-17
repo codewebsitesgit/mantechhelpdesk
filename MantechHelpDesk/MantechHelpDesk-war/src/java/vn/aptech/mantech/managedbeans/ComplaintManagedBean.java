@@ -63,18 +63,14 @@ public class ComplaintManagedBean implements Serializable {
     private int complaintPriority;
 
     private int complaintCategory;
-    private static final int PRIORITY_NORMAL = 2;
 
     @Resource
     UserTransaction ut;
-    private static final int PENDING_STATUS = 1;
 
     private Integer searchedComplaintID = null;
     private String searchedSubject;
     private Date creationDate;
     private Integer statusID = null;
-
-    private int resentComplaintId;
 
     private Complaint adminComplaintDetail;
 
@@ -87,6 +83,16 @@ public class ComplaintManagedBean implements Serializable {
     private int techSelectedStatusId;
     private int techSelectedCategory;
     private String techInputReasons;
+    
+    private int resendComplaintId;
+
+    public int getResendComplaintId() {
+        return resendComplaintId;
+    }
+
+    public void setResendComplaintId(int resendComplaintId) {
+        this.resendComplaintId = resendComplaintId;
+    }
 
     public int getTechSelectedStatusId() {
         return techSelectedStatusId;
@@ -152,14 +158,6 @@ public class ComplaintManagedBean implements Serializable {
         this.adminComplaintDetail = adminComplaintDetail;
     }
 
-    public int getResentComplaintId() {
-        return resentComplaintId;
-    }
-
-    public void setResentComplaintId(int resentComplaintId) {
-        this.resentComplaintId = resentComplaintId;
-    }
-
     /**
      * Creates a new instance of ComplaintManagedBean
      */
@@ -174,7 +172,7 @@ public class ComplaintManagedBean implements Serializable {
     private void setUpNewComplaint() {
         final Complaint cmpl = new Complaint();
         cmpl.setComplaintID(complaintFacade.getMaxComplaintID());
-        setComplaintPriority(PRIORITY_NORMAL);
+        setComplaintPriority(MantechConstants.COMPLAINT_PRIORITY_NORMAL);
         setCurComplaint(cmpl);
     }
 
@@ -212,7 +210,7 @@ public class ComplaintManagedBean implements Serializable {
             curComplaint.setPriority(priority);
             Date modifiedDate = Calendar.getInstance().getTime();
             curComplaint.setLodgingDate(modifiedDate);
-            curComplaint.setStatus(complaintStatusFacade.find(PENDING_STATUS));
+            curComplaint.setStatus(complaintStatusFacade.find(MantechConstants.COMPLAINT_STATUS_PENDING));
             curComplaint.setComplaintOwner(getSessionUserAccount());
             curComplaint.setLastModified(modifiedDate);
             complaintFacade.create(curComplaint);
@@ -347,24 +345,40 @@ public class ComplaintManagedBean implements Serializable {
      */
     public List<Complaint> getAllSearchedComplaints() {
         List<Complaint> allComplaints = complaintFacade.getAllSearchedComplaints(
-                searchedComplaintID, searchedSubject, null, statusID, 
+                searchedComplaintID, searchedSubject, null, statusID,
                 getSessionUserAccount().getAccountID());
         if (allComplaints != null && !allComplaints.isEmpty()) {
             for (Complaint cp : allComplaints) {
-                if (cp.getStatus().getStatusID() == 1) {
-                    long currentTime = Calendar.getInstance().getTimeInMillis();
-                    long loggingDate = cp.getLodgingDate().getTime();
-                    long distance = currentTime - loggingDate;
-                    boolean resent = distance >= 2 * 24 * 3600 * 1000; //greater than 2 days
-                    cp.setResend(resent);
+                //in milliseconds
+                if (cp.getStatus().getStatusID() == MantechConstants.COMPLAINT_STATUS_PENDING) {
+                    long diffResend = Calendar.getInstance().getTimeInMillis() - cp.getLodgingDate().getTime();
+                    long diffDays = diffResend / (24 * 60 * 60 * 1000);
+                    cp.setResend(diffDays >= 2L); //greater than 2 days
+                } else if (cp.getStatus().getStatusID() == MantechConstants.COMPLAINT_STATUS_DONE) {
+                    long diffActualTaken = cp.getClosingDate().getTime() - cp.getLodgingDate().getTime();
+                    long diffSeconds = diffActualTaken / 1000 % 60;
+                    long diffMinutes = diffActualTaken / (60 * 1000) % 60;
+                    long diffHours = diffActualTaken / (60 * 60 * 1000) % 24;
+                    long diffDays = diffActualTaken / (24 * 60 * 60 * 1000);
+                    cp.setActualTakenDays(diffDays);
+                    cp.setActualTakenHours(diffHours);
+                    cp.setActualTakenMinutes(diffMinutes);
+                    cp.setActualTakenSeconds(diffSeconds);
                 }
             }
         }
         return allComplaints;
     }
 
-    public String resend(int complaintID) {
-        System.out.println("Resend: " + complaintID);
+    public String resendComplaintItem() {
+        System.out.println("resendComplaintID: " + resendComplaintId);
+        Complaint cmp = complaintFacade.find(resendComplaintId);
+        cmp.setLastModified(Calendar.getInstance().getTime());
+        complaintFacade.edit(cmp);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_WARN, "Resend the complaint successfully!", 
+                "Because the complaint has been pending >= 2 days!"));
+            
         return "viewComplaint";
     }
 
@@ -425,7 +439,7 @@ public class ComplaintManagedBean implements Serializable {
                 ComplaintStatus status = complaintStatusFacade.find(adminSelectedStatusId);
                 if (adminSelectedStatusId == MantechConstants.COMPLAINT_STATUS_DONE) {
                     adminComplaintDetail.setClosingDate(modifiedDate);
-                } else{
+                } else {
                     if (adminComplaintDetail.getStatus().getStatusID().intValue() == MantechConstants.COMPLAINT_STATUS_DONE) {
                         // select back to not done
                         adminComplaintDetail.setClosingDate(null);
@@ -525,7 +539,7 @@ public class ComplaintManagedBean implements Serializable {
                 ComplaintStatus status = complaintStatusFacade.find(techSelectedStatusId);
                 if (techSelectedStatusId == MantechConstants.COMPLAINT_STATUS_DONE) {
                     techComplaintDetail.setClosingDate(modifiedDate);
-                } else{
+                } else {
                     if (techComplaintDetail.getStatus().getStatusID().intValue() == MantechConstants.COMPLAINT_STATUS_DONE) {
                         // select back to not done
                         techComplaintDetail.setClosingDate(null);
@@ -594,8 +608,8 @@ public class ComplaintManagedBean implements Serializable {
         String reason = techComplaintDetail.getReasons();
         if (reason != null) {
             return !reason.equals(techInputReasons);
-        } 
-        
+        }
+
         return techInputReasons != null && !techInputReasons.trim().isEmpty();
     }
 
@@ -609,15 +623,15 @@ public class ComplaintManagedBean implements Serializable {
         hist.setUserAccountID(getSessionUserAccount());
         complaintHistoryFacade.edit(hist);
     }
-    
+
     public String viewLastModifiedComplaints() {
         return "viewLastModifiedComplaints";
     }
-    
+
     public List<Complaint> getAllLatestModifiedComplaints() {
         return complaintFacade.getLastModifiedComplaints();
     }
-    
+
     public String generateReports() {
         return "generateReports";
     }

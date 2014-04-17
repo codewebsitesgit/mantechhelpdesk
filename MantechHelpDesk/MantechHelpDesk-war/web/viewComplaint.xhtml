@@ -10,61 +10,69 @@
     <ui:define name="content">
         <f:view>
             <h:form>
-                <h1><h:outputText value="Search a complaint"/></h1>
-                <p:panelGrid columns="2" id="panelSearchCriteria">
-                    <h:outputText value="Complaint ID:"/>
-                    <p:inputText value="#{complaint.searchedComplaintID}" id="searchedComplaintID"/>
-                    <h:outputText value="Subject:"/>
-                    <p:inputText value="#{complaint.searchedSubject}" id="searchedSubject"/>
-                    <h:outputText value="Status:"/>
-                    <p:selectOneMenu id="status" value="#{complaint.statusID}" label="Status">
-                        <f:selectItems value="#{status.allStatus}" var="st"
-                                       itemLabel="#{st.statusName}" itemValue="#{st.statusID}"/>
-                    </p:selectOneMenu>
-                    <p:commandButton value="Search" action="viewComplaint" 
-                                     update="complaintTable"
-                                     icon="ui-icon-check" style="margin: 0"/>
-                </p:panelGrid>
-
-                <h1><h:outputText value="All complaints"/></h1>
-                <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
-                             rowKey="#{item.complaintID}" selectionMode="single" 
-                             paginator="true" rows="10"  
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                             rowsPerPageTemplate="5,10,15">
-                    <p:column headerText="ID">
-                        #{item.complaintID}
-                    </p:column>
-                    <p:column headerText="Subject">
-                        #{item.complaintSubject}
-                    </p:column>
-                    <p:column headerText="LodgingDate">
-                        <h:outputText value="#{item.lodgingDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="ClosingDate">
-                        <h:outputText value="#{item.closingDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Technician">
-                        #{item.technician.name}
-                    </p:column>
-                    <p:column headerText="Status">
-                        #{item.status.statusName}
-                    </p:column>
-                    <p:column headerText="Action" >
-                        #{item.resend}
-                    </p:column>
-                    <p:column headerText="Priority">
-                        #{item.priority.priorityName}
-                    </p:column>
-                    <p:column headerText="Category">
-                        #{item.complaintCategory.categoryName}
-                    </p:column>
-                </p:dataTable>
-
+                <p:panel id="panelSearchComplaint" header="Search a complaint">
+                    <p:panelGrid columns="2" id="panelSearchCriteria">
+                        <h:outputText value="Complaint ID:"/>
+                        <p:inputText value="#{complaint.searchedComplaintID}" id="searchedComplaintID"/>
+                        <h:outputText value="Subject:"/>
+                        <p:inputText value="#{complaint.searchedSubject}" id="searchedSubject"/>
+                        <h:outputText value="Status:"/>
+                        <p:selectOneMenu id="status" value="#{complaint.statusID}" label="Status">
+                            <f:selectItems value="#{status.allStatus}" var="st"
+                                           itemLabel="#{st.statusName}" itemValue="#{st.statusID}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Search" action="viewComplaint" 
+                                         update="complaintTable"
+                                         icon="ui-icon-check" style="margin: 0"/>
+                    </p:panelGrid>
+                </p:panel>
+                <p:panel id="panelAllSearchedComplaint" header="All complaints">
+                    <p:growl id="resendMessage" showSummary="true" autoUpdate="true"/>
+                    <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
+                                 rowKey="#{item.complaintID}" selectionMode="single" 
+                                 paginator="true" rows="10"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="ID">
+                            #{item.complaintID}
+                        </p:column>
+                        <p:column headerText="Subject">
+                            #{item.complaintSubject}
+                        </p:column>
+                        <p:column headerText="LodgingDate">
+                            <h:outputText value="#{item.lodgingDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="ClosingDate">
+                            <h:outputText value="#{item.closingDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="ActualTakenTime">
+                            <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
+                        </p:column>
+                        <p:column headerText="Technician">
+                            #{item.technician.name}
+                        </p:column>
+                        <p:column headerText="Status">
+                            #{item.status.statusName}
+                        </p:column>
+                        <p:column headerText="Action" >
+                            <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
+                                           action="#{complaint.resendComplaintItem}" ajax="true">
+                                <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
+                                                             value="#{item.complaintID}"/>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column headerText="Priority">
+                            #{item.priority.priorityName}
+                        </p:column>
+                        <p:column headerText="Category">
+                            #{item.complaintCategory.categoryName}
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
             </h:form>
         </f:view>
     </ui:define>

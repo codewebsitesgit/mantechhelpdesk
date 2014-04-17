@@ -247,5 +247,50 @@ public class Complaint implements Serializable {
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
+    
+    @Transient
+    private long actualTakenDays;
 
+    @Transient
+    private long actualTakenHours;
+    
+    @Transient
+    private long actualTakenMinutes;
+    
+    @Transient
+    private long actualTakenSeconds;
+
+    public long getActualTakenDays() {
+        return actualTakenDays;
+    }
+
+    public void setActualTakenDays(long actualTakenDays) {
+        this.actualTakenDays = actualTakenDays;
+    }
+
+    public long getActualTakenHours() {
+        return actualTakenHours;
+    }
+
+    public void setActualTakenHours(long actualTakenHours) {
+        this.actualTakenHours = actualTakenHours;
+    }
+
+    public long getActualTakenMinutes() {
+        return actualTakenMinutes;
+    }
+
+    public void setActualTakenMinutes(long actualTakenMinutes) {
+        this.actualTakenMinutes = actualTakenMinutes;
+    }
+
+    public long getActualTakenSeconds() {
+        return actualTakenSeconds;
+    }
+
+    public void setActualTakenSeconds(long actualTakenSeconds) {
+        this.actualTakenSeconds = actualTakenSeconds;
+    }
+
+    
 }

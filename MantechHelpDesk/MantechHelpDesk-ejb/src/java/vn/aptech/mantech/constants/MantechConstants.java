@@ -25,4 +25,7 @@ public interface MantechConstants {
     public static final int ROLE_TECHNICIAN = 2;
     
     public static final int COMPLAINT_STATUS_DONE = 4;
+    public static final int COMPLAINT_STATUS_PENDING = 1;
+    
+    public static final int COMPLAINT_PRIORITY_NORMAL = 2;
 }

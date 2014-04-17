@@ -9,83 +9,81 @@
     <ui:define name="content">
         <f:view>
             <h:form id="form1">
-                <h1><h:outputText value="Create new complaint"/></h1>
-
-                <p:panelGrid columns="3" id="panelSendComplaint" styleClass="table_insert_update">
-                    <h:outputLabel value="ID *:" for="complaintID" />
-                    <p:outputLabel id="complaintID" value="#{complaint.curComplaint.complaintID}" 
-                                   title="ComplaintID"/>
-                    <p:message for="complaintID"/>
-                    <h:outputLabel value="Category *:" for="complaintCategory" />
-                    <p:selectOneMenu id="complaintCategory" value="#{complaint.complaintCategory}" 
-                                     label="ComplaintCategory" required="true" 
-                                     requiredMessage="The Category field is required.">
-                        <f:selectItems value="#{complaint.complaintCats}" var="cat"
-                                       itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
-                    </p:selectOneMenu>
-                    <p:message for="complaintCategory" />
-                    <h:outputLabel value="Priority *:" for="priority" />
-                    <p:selectOneMenu id="priority" value="#{complaint.complaintPriority}" label="Priority" 
-                                     required="true" requiredMessage="The Priority field is required.">
-                        <f:selectItems value="#{priority.allPriorities}" var="prio"
-                                       itemLabel="#{prio.priorityName}" itemValue="#{prio.priorityID}"/>
-                    </p:selectOneMenu>
-                    <p:message for="priority" />
-                    <h:outputLabel value="Subject *:" for="complaintSubject" />
-                    <p:inputText id="complaintSubject" value="#{complaint.curComplaint.complaintSubject}" 
-                                 title="ComplaintSubject" required="true" 
-                                 requiredMessage="The Subject field is required."
-                                 maxlength="150" size="60"/>
-                    <p:message for="complaintSubject" />
-                    <h:outputLabel value="Contents *:" for="complaintContents" />
-                    <p:inputTextarea id="complaintContents" value="#{complaint.curComplaint.complaintContents}" 
-                                     title="ComplaintContents" required="true" 
-                                     requiredMessage="The Contents field is required."
-                                     maxlength="1000" rows="13" cols="80"/>
-                    <p:message for="complaintContents" />
-                    <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
-                                     update="panelSendComplaint,complaintTable"
-                                     icon="ui-icon-check" style="margin: 0"/>
-                    <h:outputText />
-                    <h:outputText />
-                </p:panelGrid>
-
-
-                <h1><h:outputText value="Top 5 your latest complaints"/></h1>
-
-                <p:dataTable value="#{complaint.topFiveComplaints}" var="item" 
-                             id="complaintTable"
-                             rowKey="#{item.complaintID}" selectionMode="single" >
-                    <p:column headerText="ID">
-                        #{item.complaintID}
-                    </p:column>
-                    <p:column headerText="Subject">
-                        #{item.complaintSubject}
-                    </p:column>
-                    <p:column headerText="LodgingDate">
-                        <h:outputText value="#{item.lodgingDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="ClosingDate">
-                        <h:outputText value="#{item.closingDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Technician">
-                        #{item.technician.name}
-                    </p:column>
-                    <p:column headerText="Status">
-                        #{item.status.statusName}
-                    </p:column>
-                    <p:column headerText="Priority">
-                        #{item.priority.priorityName}
-                    </p:column>
-                    <p:column headerText="Category">
-                        #{item.complaintCategory.categoryName}
-                    </p:column>
-                </p:dataTable>
-
+                <p:panel id="panelCreateNewComplaint" header="Create new complaint">
+                    <p:panelGrid columns="3" id="panelSendComplaint" styleClass="table_insert_update">
+                        <h:outputLabel value="ID *:" for="complaintID" />
+                        <p:outputLabel id="complaintID" value="#{complaint.curComplaint.complaintID}" 
+                                       title="ComplaintID"/>
+                        <p:message for="complaintID"/>
+                        <h:outputLabel value="Category *:" for="complaintCategory" />
+                        <p:selectOneMenu id="complaintCategory" value="#{complaint.complaintCategory}" 
+                                         label="ComplaintCategory" required="true" 
+                                         requiredMessage="The Category field is required.">
+                            <f:selectItems value="#{complaint.complaintCats}" var="cat"
+                                           itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
+                        </p:selectOneMenu>
+                        <p:message for="complaintCategory" />
+                        <h:outputLabel value="Priority *:" for="priority" />
+                        <p:selectOneMenu id="priority" value="#{complaint.complaintPriority}" label="Priority" 
+                                         required="true" requiredMessage="The Priority field is required.">
+                            <f:selectItems value="#{priority.allPriorities}" var="prio"
+                                           itemLabel="#{prio.priorityName}" itemValue="#{prio.priorityID}"/>
+                        </p:selectOneMenu>
+                        <p:message for="priority" />
+                        <h:outputLabel value="Subject *:" for="complaintSubject" />
+                        <p:inputText id="complaintSubject" value="#{complaint.curComplaint.complaintSubject}" 
+                                     title="ComplaintSubject" required="true" 
+                                     requiredMessage="The Subject field is required."
+                                     maxlength="150" size="60"/>
+                        <p:message for="complaintSubject" />
+                        <h:outputLabel value="Contents *:" for="complaintContents" />
+                        <p:inputTextarea id="complaintContents" value="#{complaint.curComplaint.complaintContents}" 
+                                         title="ComplaintContents" required="true" 
+                                         requiredMessage="The Contents field is required."
+                                         maxlength="1000" rows="13" cols="80"/>
+                        <p:message for="complaintContents" />
+                        <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
+                                         update="panelSendComplaint,complaintTable"
+                                         icon="ui-icon-check" style="margin: 0"/>
+                        <h:outputText />
+                        <h:outputText />
+                    </p:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel id="panelTop5Complaints" header="Top 5 your latest complaints">
+                    <p:dataTable value="#{complaint.topFiveComplaints}" var="item" 
+                                 id="complaintTable"
+                                 rowKey="#{item.complaintID}" selectionMode="single" >
+                        <p:column headerText="ID">
+                            #{item.complaintID}
+                        </p:column>
+                        <p:column headerText="Subject">
+                            #{item.complaintSubject}
+                        </p:column>
+                        <p:column headerText="LodgingDate">
+                            <h:outputText value="#{item.lodgingDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="ClosingDate">
+                            <h:outputText value="#{item.closingDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Technician">
+                            #{item.technician.name}
+                        </p:column>
+                        <p:column headerText="Status">
+                            #{item.status.statusName}
+                        </p:column>
+                        <p:column headerText="Priority">
+                            #{item.priority.priorityName}
+                        </p:column>
+                        <p:column headerText="Category">
+                            #{item.complaintCategory.categoryName}
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
 
             </h:form>
         </f:view>

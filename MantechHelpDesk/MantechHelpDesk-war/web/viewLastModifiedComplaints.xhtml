@@ -10,50 +10,50 @@
     <ui:define name="content">
         <f:view>
             <h:form>
-                <h1><h:outputText value="All latest modified complaints"/></h1>
-                <p:dataTable value="#{complaint.allLatestModifiedComplaints}" var="item" id="complaintTable"
-                             rowKey="#{item.complaintID}" selectionMode="single" 
-                             paginator="true" rows="10"  
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                             rowsPerPageTemplate="5,10,15">
-                    <p:column headerText="ID">
-                        #{item.complaintID}
-                    </p:column>
-                    <p:column headerText="Subject">
-                        #{item.complaintSubject}
-                    </p:column>
-                    <p:column headerText="From user">
-                        #{item.complaintOwner.name}
-                    </p:column>
-                    <p:column headerText="Department">
-                        #{item.complaintOwner.departmentID.departmentName}
-                    </p:column>
-                    <p:column headerText="Category">
-                        #{item.complaintCategory.categoryName}
-                    </p:column>
-                    <p:column headerText="LastModifiedDate">
-                        <h:outputText value="#{item.lastModified}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Priority">
-                        #{item.priority.priorityName}
-                    </p:column>
-                    <p:column headerText="Technician">
-                        #{item.technician.name}
-                    </p:column>
-                    <p:column headerText="Status">
-                        #{item.status.statusName}
-                    </p:column>
-                    <p:column headerText="Action">
-                        <p:commandLink value="Handle" action="#{complaint.viewComplaintDetail}">
-                            <f:setPropertyActionListener target="#{complaint.adminComplaintDetail}" 
-                                                         value="#{item}"/>
-                        </p:commandLink>
-                    </p:column>
-                    
-                </p:dataTable>
+                <p:panel id="latestModifiedComplaintPanel" header="All latest modified complaints">
+                    <p:dataTable value="#{complaint.allLatestModifiedComplaints}" var="item" id="complaintTable"
+                                 rowKey="#{item.complaintID}" selectionMode="single" 
+                                 paginator="true" rows="10"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="ID">
+                            #{item.complaintID}
+                        </p:column>
+                        <p:column headerText="Subject">
+                            #{item.complaintSubject}
+                        </p:column>
+                        <p:column headerText="From user">
+                            #{item.complaintOwner.name}
+                        </p:column>
+                        <p:column headerText="Department">
+                            #{item.complaintOwner.departmentID.departmentName}
+                        </p:column>
+                        <p:column headerText="Category">
+                            #{item.complaintCategory.categoryName}
+                        </p:column>
+                        <p:column headerText="LastModifiedDate">
+                            <h:outputText value="#{item.lastModified}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Priority">
+                            #{item.priority.priorityName}
+                        </p:column>
+                        <p:column headerText="Technician">
+                            #{item.technician.name}
+                        </p:column>
+                        <p:column headerText="Status">
+                            #{item.status.statusName}
+                        </p:column>
+                        <p:column headerText="Action">
+                            <p:commandLink value="Handle" action="#{complaint.viewComplaintDetail}">
+                                <f:setPropertyActionListener target="#{complaint.adminComplaintDetail}" 
+                                                             value="#{item}"/>
+                            </p:commandLink>
+                        </p:column>
 
+                    </p:dataTable>
+                </p:panel>
             </h:form>
         </f:view>
     </ui:define>
