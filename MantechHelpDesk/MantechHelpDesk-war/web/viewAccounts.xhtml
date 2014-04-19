@@ -4,9 +4,83 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                >
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+                
     <ui:define name="title">MantechHelpDesk: Administrator >> Search account</ui:define>
     <ui:define name="content">
         <h1>View all employee's account and search account.</h1>
+        <f:view>
+            <h:form>
+                <p:panel id="panelSearchAccount" header="Search Account">
+                    <p:panelGrid columns="2" id="panelSearchCriteria">
+                        <h:outputText value="Account ID:"/>
+                        <p:inputText value="#{complaint.searchedComplaintID}" id="searchedComplaintID"/>
+                        <h:outputText value="Username:"/>
+                        <p:inputText value="#{complaint.searchedSubject}" id="searchedSubject"/>
+                        <h:outputText value="Name:"/>
+                        <p:selectOneMenu id="status" value="#{complaint.statusID}" label="Status">
+                            <f:selectItems value="#{status.allStatus}" var="st"
+                                           itemLabel="#{st.statusName}" itemValue="#{st.statusID}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Search" action="viewAccounts" 
+                                         update="complaintTable"
+                                         icon="ui-icon-check" style="margin: 0"/>
+                    </p:panelGrid>
+                </p:panel>
+                <p:panel id="panelAllSearchedAccount" header="All Account">
+                    <p:growl id="resendMessage" showSummary="true" autoUpdate="true" showDetail="true"/>
+                    <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
+                                 rowKey="#{item.complaintID}" selectionMode="single" 
+                                 paginator="true" rows="10"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="Account ID">
+                            #{item.complaintID}
+                        </p:column>
+                        <p:column headerText="Username">
+                            #{item.complaintSubject}
+                        </p:column>
+                        <p:column headerText="DeparmentID">
+                            <h:outputText value="#{item.lodgingDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="RoleID">
+                            <h:outputText value="#{item.lastModified}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Name">
+                            <h:outputText value="#{item.closingDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Brithday">
+                            <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
+                        </p:column>
+                        <p:column headerText="Gender">
+                            #{item.technician.name}
+                        </p:column>
+                        <p:column headerText="Address">
+                            #{item.status.statusName}
+                        </p:column>
+                        <p:column headerText="Phone" >
+                            <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
+                                           action="#{complaint.resendComplaintItem}" ajax="true">
+                                <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
+                                                             value="#{item.complaintID}" 
+                                                             rendered="${item.resend}"/>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column headerText="Email">
+                            #{item.priority.priorityName}
+                        </p:column>
+                        <p:column headerText="Status">
+                            #{item.complaintCategory.categoryName}
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </f:view>
     </ui:define>
 </ui:composition>
