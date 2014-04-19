@@ -33,6 +33,16 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
     }
     
     @Override
+    public int getNextAccountID() {
+        Query query = em.createQuery("SELECT MAX(u.accountID) from UserAccount u");
+        Object obj= query.getSingleResult();
+        if (obj == null) {
+            return 1;
+        }
+        return Integer.parseInt(obj.toString()) + 1;
+    }
+    
+    @Override
     public UserAccount getUserAccount(String username) {
         Query query = em.createQuery("SELECT u from UserAccount u WHERE u.username=:userName");
         query.setParameter("userName", username);

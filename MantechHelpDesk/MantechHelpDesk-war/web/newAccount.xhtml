@@ -9,7 +9,7 @@
     <ui:define name="content">
         <h1>Create new employee's account</h1>
         <p:panel id="panelCreateNewUserAccount" header="Create new account">
-            <p:panelGrid columns="3" id="panelSendComplaint" styleClass="table_insert_update">
+            <p:panelGrid columns="3" id="panelCreateNewUserAccountID" styleClass="table_insert_update">
                 <h:outputLabel value="ID *:" for="AccountID" />
                 <p:outputLabel id="AccountID" value="#{account.curUser.accountID}" 
                                title="Account ID"/>
@@ -26,6 +26,66 @@
                             title="Password" required="true" 
                             requiredMessage="The Password field is required."/>
                 <p:message for="Password" />
+
+                <h:outputLabel value="Department *:" for="Department" />
+                <p:selectOneMenu id="Department" value="#{account.curUser.departmentID}">
+                    <f:selectItems value="#{department.allDepartment}" var="d"
+                                   itemLabel="#{d.departmentName}" itemValue="#{d.departmentID}"/>
+                </p:selectOneMenu>
+                <h:outputText />
+
+                <h:outputLabel value="Role *:" for="Role" />
+                <p:selectOneMenu id="Role" value="#{account.curUser.roleID}">
+                    <f:selectItems value="#{role.allRole}" var="r"
+                                   itemLabel="#{r.roleName}" itemValue="#{r.roleID}"/>
+                </p:selectOneMenu>
+                <h:outputText />
+
+                <h:outputLabel value="Name *:" for="Name" />
+                <p:inputText id="Name" value="#{account.curUser.name}" 
+                             title="Name" required="true" 
+                             requiredMessage="The Name field is required."/>
+                <p:message for="Name" />
+
+                <h:outputLabel value="Birthday *:" for="Birthday" />
+                <p:calendar id="Birthday" value="#{account.curUser.birthday}" 
+                            title="Birthday" required="true" 
+                            requiredMessage="The Birthday field is required.">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </p:calendar>
+                <p:message for="Birthday" />
+
+                <h:outputLabel value="Gender *:" for="Gender" />
+                <p:selectOneRadio id="Gender" value="#{account.curUser.gender}">
+                    <f:selectItem itemLabel="Unknow" itemValue="0" />
+                    <f:selectItem itemLabel="Male" itemValue="1" />
+                    <f:selectItem itemLabel="Female" itemValue="2" />
+                </p:selectOneRadio>
+                <h:outputText />
+
+                <h:outputLabel value="Address *:" for="Address" />
+                <p:inputText id="Address" value="#{account.curUser.address}" 
+                             title="Address" required="true" 
+                             requiredMessage="The Address field is required."/>
+                <p:message for="Address" />
+
+                <h:outputLabel value="Phone *:" for="Phone" />
+                <p:inputText id="Phone" value="#{account.curUser.phone}" 
+                             title="Phone" required="true" 
+                             requiredMessage="The Phone field is required."/>
+                <p:message for="Phone" />
+
+                <h:outputLabel value="Email *:" for="Address" />
+                <p:inputText id="Email" value="#{account.curUser.email}" 
+                             title="Email" required="true" 
+                             requiredMessage="The Email field is required."/>
+                <p:message for="Email" />
+
+                <p:commandButton value="Create" actionListener="#{account.createUser()}" 
+                                 update="panelCreateNewUserAccountID"
+                                 icon="ui-icon-check" style="margin: 0"/>
+                <h:outputText />
+                <h:outputText />
             </p:panelGrid>
         </p:panel>
     </ui:define>

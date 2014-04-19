@@ -6,6 +6,7 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -44,7 +45,7 @@ public class AccountManagedBean implements Serializable {
     UserTransaction ut;
 
     public String createUser() {
-        userAccountFacade.create(curUser);
+        //userAccountFacade.create(curUser);
         return "viewAccounts";
     }
 
