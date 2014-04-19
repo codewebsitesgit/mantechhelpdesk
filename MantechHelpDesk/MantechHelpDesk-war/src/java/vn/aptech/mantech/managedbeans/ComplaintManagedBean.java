@@ -6,6 +6,7 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import vn.aptech.mantech.entity.ComplaintHistory;
 import vn.aptech.mantech.entity.ComplaintPriority;
 import vn.aptech.mantech.entity.ComplaintStatus;
 import vn.aptech.mantech.entity.UserAccount;
+import vn.aptech.mantech.reports.ReportKind;
 import vn.aptech.mantech.sessionbeans.ActivityFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintCategoryFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintFacadeLocal;
@@ -62,7 +64,7 @@ public class ComplaintManagedBean implements Serializable {
 
     private int complaintPriority;
 
-    private int complaintCategory;
+    private Integer complaintCategory;
 
     @Resource
     UserTransaction ut;
@@ -84,8 +86,48 @@ public class ComplaintManagedBean implements Serializable {
     private int techSelectedCategory;
     private String techInputReasons;
     
+    private int selectedKindOfReport;
+    
     private int resendComplaintId;
 
+    public List<ReportKind> getAllKindsOfReport() {
+        List<ReportKind> kindsOfReport = new ArrayList<ReportKind>();
+        kindsOfReport.add(new ReportKind(ReportKind.DAILY_WEEKLY_MONTHY_REPORT, 
+                ReportKind.DAILY_WEEKLY_MONTHY_REPORT_DESC));
+        
+        kindsOfReport.add(new ReportKind(ReportKind.PENDING_COMPLAINT_REPORT, 
+                ReportKind.PENDING_COMPLAINT_REPORT_DESC));
+        
+        kindsOfReport.add(new ReportKind(ReportKind.DEPARTMENT_WISE_REPORT, 
+                ReportKind.DEPARTMENT_WISE_REPORT_DESC));
+        
+        kindsOfReport.add(new ReportKind(ReportKind.TECHNICIAN_WISE_REPORT, 
+                ReportKind.TECHNICIAN_WISE_REPORT_DESC));
+        
+        kindsOfReport.add(new ReportKind(ReportKind.COMPLAINT_CATEGORY_WISE_REPORT, 
+                ReportKind.COMPLAINT_CATEGORY_WISE_REPORT_DESC));
+        return kindsOfReport;
+    }
+    
+    public List<Complaint> getAllKindReportComplaints() {
+        List<Complaint> allComplaints = complaintFacade.findAll();
+        return allComplaints;
+    }
+    
+    public List<Complaint> getDailyWeeklyMonthlySummary() {
+        List<Complaint> allComplaints = complaintFacade.findAll();
+        return allComplaints;
+    }
+    
+    public List<Complaint> getDailyWeeklyMonthlyDetail() {
+        List<Complaint> allComplaints = complaintFacade.findAll();
+        return allComplaints;
+    }
+    
+    public String previewReport() {
+        return "generateReports";
+    }
+    
     public int getResendComplaintId() {
         return resendComplaintId;
     }
@@ -204,7 +246,7 @@ public class ComplaintManagedBean implements Serializable {
     public String sendComplaint() {
         try {
             ut.begin();
-            ComplaintCategory category = complaintCategoryFacade.find(complaintCategory);
+            ComplaintCategory category = complaintCategoryFacade.find(complaintCategory.intValue());
             ComplaintPriority priority = complaintPriorityFacade.find(complaintPriority);
             curComplaint.setComplaintCategory(category);
             curComplaint.setPriority(priority);
@@ -241,6 +283,10 @@ public class ComplaintManagedBean implements Serializable {
         return newComplaint();
     }
 
+    public  void select(){
+        
+    }
+    
     private static UserAccount getSessionUserAccount() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);
@@ -273,14 +319,14 @@ public class ComplaintManagedBean implements Serializable {
     /**
      * @return the complaintCategory
      */
-    public int getComplaintCategory() {
+    public Integer getComplaintCategory() {
         return complaintCategory;
     }
 
     /**
      * @param complaintCategory the complaintCategory to set
      */
-    public void setComplaintCategory(int complaintCategory) {
+    public void setComplaintCategory(Integer complaintCategory) {
         this.complaintCategory = complaintCategory;
     }
 
@@ -351,7 +397,7 @@ public class ComplaintManagedBean implements Serializable {
             for (Complaint cp : allComplaints) {
                 //in milliseconds
                 if (cp.getStatus().getStatusID() == MantechConstants.COMPLAINT_STATUS_PENDING) {
-                    long diffResend = Calendar.getInstance().getTimeInMillis() - cp.getLodgingDate().getTime();
+                    long diffResend = Calendar.getInstance().getTimeInMillis() - cp.getLastModified().getTime();
                     long diffDays = diffResend / (24 * 60 * 60 * 1000);
                     cp.setResend(diffDays >= 2L); //greater than 2 days
                 } else if (cp.getStatus().getStatusID() == MantechConstants.COMPLAINT_STATUS_DONE) {
@@ -371,14 +417,12 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String resendComplaintItem() {
-        System.out.println("resendComplaintID: " + resendComplaintId);
         Complaint cmp = complaintFacade.find(resendComplaintId);
         cmp.setLastModified(Calendar.getInstance().getTime());
         complaintFacade.edit(cmp);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_WARN, "Resend the complaint successfully!", 
-                "Because the complaint has been pending >= 2 days!"));
-            
+        
+        // save history
+        updateHistory(cmp, activityFacade.getResendComplaint());
         return "viewComplaint";
     }
 
@@ -634,5 +678,19 @@ public class ComplaintManagedBean implements Serializable {
 
     public String generateReports() {
         return "generateReports";
+    }
+
+    /**
+     * @return the selectedKindOfReport
+     */
+    public int getSelectedKindOfReport() {
+        return selectedKindOfReport;
+    }
+
+    /**
+     * @param selectedKindOfReport the selectedKindOfReport to set
+     */
+    public void setSelectedKindOfReport(int selectedKindOfReport) {
+        this.selectedKindOfReport = selectedKindOfReport;
     }
 }

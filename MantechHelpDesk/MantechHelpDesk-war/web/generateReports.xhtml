@@ -7,6 +7,79 @@
                 >
     <ui:define name="title">MantechHelpDesk: Administrator >> Generate reports</ui:define>
     <ui:define name="content">
-        <h1>Generate different kinds of reports</h1>
+            <p:panel id="reportPanel" header="Generate different kinds of reports">
+                <p:panelGrid columns="3" id="reportSelectKindSection">
+                    <p:outputLabel value="Select kind of report" for="reportKinds" />
+                    <p:selectOneMenu id="reportKinds" value="#{complaint.selectedKindOfReport}">
+                        <f:selectItems value="#{complaint.allKindsOfReport}" var="kind"
+                                       itemLabel="#{kind.name}" itemValue="#{kind.kindId}"/>
+                    </p:selectOneMenu>
+                    <p:commandButton id="btnPreview" value="Preview"
+                                     action="#{complaint.previewReport}" ajax="true"
+                                     update="dailyWeeklyMonthlySummary,dailyWeeklyMonthlyDetail"/>
+                </p:panelGrid>
+            </p:panel>
+            <br/>
+            <p:panel id="reportResultTable" header="Preview report">
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
+                             var="item" id="dailyWeeklyMonthlySummary"
+                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15">
+                    <p:column headerText="Total no.">
+                        Total no. of complaints
+                    </p:column>
+                    <p:column headerText="Daily">
+                        12
+                    </p:column>
+                    <p:column headerText="Weekly">
+                        24
+                    </p:column>
+                    <p:column headerText="Monthly">
+                        56
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Save"/>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlyDetail}" 
+                             var="item" id="dailyWeeklyMonthlyDetail"
+                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15" >
+                    <p:column headerText="Complaint No">
+                        #{item.complaintID}
+                    </p:column>
+                    <p:column headerText="Complaint Category">
+                        #{item.complaintCategory.categoryName}
+                    </p:column>
+                    <p:column headerText="LodgingDate">
+                        <h:outputText value="#{item.lodgingDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="ClosingDate">
+                        <h:outputText value="#{item.closingDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Department of User">
+                        #{item.complaintOwner.departmentID.departmentName}
+                    </p:column>
+                    <p:column headerText="Technician">
+                        #{item.technician.name}
+                    </p:column>
+                    <p:column headerText="Actual Taken Time">
+                        <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
+                    </p:column>
+                    <p:column headerText="Employee No.">
+                        #{item.complaintOwner.accountID}
+                    </p:column>
+                    <p:column headerText="Employee Name">
+                        #{item.complaintOwner.name}
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Save"/>
+            </p:panel>
     </ui:define>
 </ui:composition>

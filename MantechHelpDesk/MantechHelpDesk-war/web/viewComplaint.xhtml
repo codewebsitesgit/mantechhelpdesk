@@ -9,7 +9,7 @@
     <ui:define name="title">MantechHelpDesk: View all complaints</ui:define>
     <ui:define name="content">
         <f:view>
-            <h:form>
+            <h:form id="viewComplaintFormID">
                 <p:panel id="panelSearchComplaint" header="Search a complaint">
                     <p:panelGrid columns="2" id="panelSearchCriteria">
                         <h:outputText value="Complaint ID:"/>
@@ -27,29 +27,23 @@
                     </p:panelGrid>
                 </p:panel>
                 <p:panel id="panelAllSearchedComplaint" header="All complaints">
-                    <p:growl id="resendMessage" showSummary="true" autoUpdate="true"/>
                     <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
                                  rowKey="#{item.complaintID}" selectionMode="single" 
                                  paginator="true" rows="10"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                                 rowsPerPageTemplate="5,10,15">
+                                 rowsPerPageTemplate="5,10,15"
+                                 selection="#{complaint.curComplaint}">
+                        <p:ajax event="rowSelect"
+                                update=":viewComplaintFormID:panelComplaintDetail" oncomplete="PF('panelComplaintDetail').show();" />  
+
                         <p:column headerText="ID">
                             #{item.complaintID}
                         </p:column>
                         <p:column headerText="Subject">
                             #{item.complaintSubject}
                         </p:column>
-                        <p:column headerText="LodgingDate">
-                            <h:outputText value="#{item.lodgingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="ClosingDate">
-                            <h:outputText value="#{item.closingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="ActualTakenTime">
+
+                        <p:column headerText="Actual Taken Time">
                             <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
                         </p:column>
                         <p:column headerText="Technician">
@@ -60,20 +54,62 @@
                         </p:column>
                         <p:column headerText="Action" >
                             <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
-                                           action="#{complaint.resendComplaintItem}" ajax="true">
+                                           action="#{complaint.resendComplaintItem}" ajax="true"
+                                           update=":viewComplaintFormID:complaintTable, :viewComplaintFormID:resendMessage">
                                 <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
                                                              value="#{item.complaintID}" 
                                                              rendered="${item.resend}"/>
                             </p:commandLink>
                         </p:column>
-                        <p:column headerText="Priority">
-                            #{item.priority.priorityName}
-                        </p:column>
-                        <p:column headerText="Category">
-                            #{item.complaintCategory.categoryName}
-                        </p:column>
                     </p:dataTable>
                 </p:panel>
+                <p:dialog header="Complaint's details" widgetVar="panelComplaintDetail" 
+                          showEffect="explode"
+                          modal="true" height="400" width="800" id="dialogComplaintDetailID">  
+                    <h:panelGrid columns="3" id="panelComplaintDetail" cellspacing="8">
+                        <p:outputLabel value="ComplaintID" />
+                        <p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.complaintID}" 
+                                       title="ComplaintID"/>
+                        <p:outputLabel value="Category" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.complaintCategory.categoryName}" />
+                        <p:outputLabel value="Subject" /><p:outputLabel value=":" />
+                        <p:inputText value="#{complaint.curComplaint.complaintSubject}"
+                                     title="ComplaintSubject" readonly="true" size="45"/>
+                        <p:outputLabel value="Contents" /><p:outputLabel value=":" />
+                        <p:inputTextarea value="#{complaint.curComplaint.complaintContents}" 
+                                         title="ComplaintContents" readonly="true" rows="7" cols="60"/>
+                        <p:outputLabel value="Technician" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.technician.name}"/>
+                        <p:outputLabel value="Employee's Username" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.complaintOwner.username}" />
+                        <p:outputLabel value="Employee's Full name"/><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.complaintOwner.name}" />
+                        <p:outputLabel value="Status" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.status.statusName}" />
+                        <p:outputLabel value="Priority" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.priority.priorityName}" />
+                        <p:outputLabel value="Reasons" /><p:outputLabel value=":" />
+                        <p:inputTextarea value="#{complaint.curComplaint.reasons}" 
+                                         title="Reasons" rows="5" cols="60" readonly="true"/>
+                        <p:outputLabel value="LodgingDate" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.lodgingDate}" title="LodgingDate" >
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </p:outputLabel>
+                        <p:outputLabel value="Last Modified Date" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.lastModified}" title="Last modified date" >
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </p:outputLabel>
+                        <p:outputLabel value="ClosingDate" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.closingDate}" title="ClosingDate" >
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </p:outputLabel>
+                        <p:outputLabel value="Actual Taken Time" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.actualTakenDays}d:#{complaint.curComplaint.actualTakenHours}h:#{complaint.curComplaint.actualTakenMinutes}m:#{complaint.curComplaint.actualTakenSeconds}s" 
+                                       rendered="${complaint.curComplaint.status.statusID == 4}"/>
+                    </h:panelGrid>    
+
+                </p:dialog>
             </h:form>
         </f:view>
     </ui:define>
