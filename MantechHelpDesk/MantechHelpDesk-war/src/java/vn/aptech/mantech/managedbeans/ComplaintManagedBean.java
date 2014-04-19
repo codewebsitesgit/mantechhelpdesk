@@ -114,6 +114,16 @@ public class ComplaintManagedBean implements Serializable {
         return allComplaints;
     }
     
+    public List<Complaint> getDailyWeeklyMonthlySummary() {
+        List<Complaint> allComplaints = complaintFacade.findAll();
+        return allComplaints;
+    }
+    
+    public List<Complaint> getDailyWeeklyMonthlyDetail() {
+        List<Complaint> allComplaints = complaintFacade.findAll();
+        return allComplaints;
+    }
+    
     public String previewReport() {
         return "generateReports";
     }
