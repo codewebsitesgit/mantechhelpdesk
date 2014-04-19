@@ -18,14 +18,15 @@
                         <h:outputLabel value="Category *:" for="complaintCategory" />
                         <p:selectOneMenu id="complaintCategory" value="#{complaint.complaintCategory}" 
                                          label="ComplaintCategory" required="true" 
-                                         requiredMessage="The Category field is required.">
+                                         requiredMessage="The Category must be selected.">
+                            <f:selectItem noSelectionOption="true" itemLabel="Select one"/>
                             <f:selectItems value="#{complaint.complaintCats}" var="cat"
                                            itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
                         </p:selectOneMenu>
                         <p:message for="complaintCategory" />
                         <h:outputLabel value="Priority *:" for="priority" />
                         <p:selectOneMenu id="priority" value="#{complaint.complaintPriority}" label="Priority" 
-                                         required="true" requiredMessage="The Priority field is required.">
+                                         required="true" requiredMessage="The Priority must be selected.">
                             <f:selectItems value="#{priority.allPriorities}" var="prio"
                                            itemLabel="#{prio.priorityName}" itemValue="#{prio.priorityID}"/>
                         </p:selectOneMenu>
@@ -33,13 +34,12 @@
                         <h:outputLabel value="Subject *:" for="complaintSubject" />
                         <p:inputText id="complaintSubject" value="#{complaint.curComplaint.complaintSubject}" 
                                      title="ComplaintSubject" required="true" 
-                                     requiredMessage="The Subject field is required."
+                                     requiredMessage="The Subject cannot be blank."
                                      maxlength="150" size="60"/>
                         <p:message for="complaintSubject" />
-                        <h:outputLabel value="Contents *:" for="complaintContents" />
+                        <h:outputLabel value="Contents:" for="complaintContents" />
                         <p:inputTextarea id="complaintContents" value="#{complaint.curComplaint.complaintContents}" 
-                                         title="ComplaintContents" required="true" 
-                                         requiredMessage="The Contents field is required."
+                                         title="ComplaintContents" 
                                          maxlength="1000" rows="13" cols="80"/>
                         <p:message for="complaintContents" />
                         <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
@@ -59,16 +59,6 @@
                         </p:column>
                         <p:column headerText="Subject">
                             #{item.complaintSubject}
-                        </p:column>
-                        <p:column headerText="LodgingDate">
-                            <h:outputText value="#{item.lodgingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="ClosingDate">
-                            <h:outputText value="#{item.closingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
                         </p:column>
                         <p:column headerText="Technician">
                             #{item.technician.name}
