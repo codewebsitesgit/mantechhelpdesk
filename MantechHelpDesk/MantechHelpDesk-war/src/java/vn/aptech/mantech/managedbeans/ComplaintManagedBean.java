@@ -64,7 +64,7 @@ public class ComplaintManagedBean implements Serializable {
 
     private int complaintPriority;
 
-    private int complaintCategory;
+    private Integer complaintCategory;
 
     @Resource
     UserTransaction ut;
@@ -246,7 +246,7 @@ public class ComplaintManagedBean implements Serializable {
     public String sendComplaint() {
         try {
             ut.begin();
-            ComplaintCategory category = complaintCategoryFacade.find(complaintCategory);
+            ComplaintCategory category = complaintCategoryFacade.find(complaintCategory.intValue());
             ComplaintPriority priority = complaintPriorityFacade.find(complaintPriority);
             curComplaint.setComplaintCategory(category);
             curComplaint.setPriority(priority);
@@ -283,6 +283,10 @@ public class ComplaintManagedBean implements Serializable {
         return newComplaint();
     }
 
+    public  void select(){
+        
+    }
+    
     private static UserAccount getSessionUserAccount() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);
@@ -315,14 +319,14 @@ public class ComplaintManagedBean implements Serializable {
     /**
      * @return the complaintCategory
      */
-    public int getComplaintCategory() {
+    public Integer getComplaintCategory() {
         return complaintCategory;
     }
 
     /**
      * @param complaintCategory the complaintCategory to set
      */
-    public void setComplaintCategory(int complaintCategory) {
+    public void setComplaintCategory(Integer complaintCategory) {
         this.complaintCategory = complaintCategory;
     }
 
@@ -419,10 +423,6 @@ public class ComplaintManagedBean implements Serializable {
         
         // save history
         updateHistory(cmp, activityFacade.getResendComplaint());
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_WARN, "Resend the complaint successfully!", 
-                "Because the complaint has been pending >= 2 days!"));
-            
         return "viewComplaint";
     }
 

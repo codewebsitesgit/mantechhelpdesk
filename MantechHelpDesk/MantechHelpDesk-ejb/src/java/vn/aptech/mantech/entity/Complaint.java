@@ -63,8 +63,7 @@ public class Complaint implements Serializable {
     @Column(name = "ComplaintSubject")
     private String complaintSubject;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 1000)
+    @Size(max = 1000)
     @Column(name = "ComplaintContents")
     private String complaintContents;
     @Basic(optional = false)
