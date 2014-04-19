@@ -8,5 +8,25 @@
     <ui:define name="title">MantechHelpDesk: Administrator >> Create new account</ui:define>
     <ui:define name="content">
         <h1>Create new employee's account</h1>
+        <p:panel id="panelCreateNewUserAccount" header="Create new account">
+            <p:panelGrid columns="3" id="panelSendComplaint" styleClass="table_insert_update">
+                <h:outputLabel value="ID *:" for="AccountID" />
+                <p:outputLabel id="AccountID" value="#{account.curUser.accountID}" 
+                               title="Account ID"/>
+                <p:message for="AccountID"/>
+
+                <h:outputLabel value="Username *:" for="Username" />
+                <p:inputText id="Username" value="#{account.curUser.username}" 
+                             title="Username" required="true" 
+                             requiredMessage="The Username field is required."/>
+                <p:message for="Username" />
+
+                <h:outputLabel value="Password *:" for="Password" />
+                <p:password id="Password" value="#{account.curUser.password}" 
+                            title="Password" required="true" 
+                            requiredMessage="The Password field is required."/>
+                <p:message for="Password" />
+            </p:panelGrid>
+        </p:panel>
     </ui:define>
 </ui:composition>

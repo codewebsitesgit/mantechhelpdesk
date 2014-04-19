@@ -38,8 +38,15 @@ public class AccountManagedBean implements Serializable {
     private String newPassword;
     private String confirmPassword;
 
+    private UserAccount curUser;
+
     @Resource
     UserTransaction ut;
+
+    public String createUser() {
+        userAccountFacade.create(curUser);
+        return "viewAccounts";
+    }
 
     public String getOldPassword() {
         return oldPassword;
@@ -138,6 +145,8 @@ public class AccountManagedBean implements Serializable {
     }
 
     public String newAccount() {
+        curUser = new UserAccount(userAccountFacade.getNextAccountID());
+        curUser.setStatus(true);
         return "newAccount";
     }
 
@@ -171,7 +180,7 @@ public class AccountManagedBean implements Serializable {
             String newPasswordHashed = PasswordUtils.hashPassword(newPassword);
             try {
                 ut.begin();
-                
+
                 updateAcc.setPassword(newPasswordHashed);
                 userAccountFacade.edit(updateAcc);
                 ut.commit();
@@ -192,6 +201,20 @@ public class AccountManagedBean implements Serializable {
                     "Please enter again your old password!"));
         }
         return "changeUserPassword";
+    }
+
+    /**
+     * @return the curUser
+     */
+    public UserAccount getCurUser() {
+        return curUser;
+    }
+
+    /**
+     * @param curUser the curUser to set
+     */
+    public void setCurUser(UserAccount curUser) {
+        this.curUser = curUser;
     }
 
 }
