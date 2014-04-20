@@ -283,10 +283,6 @@ public class ComplaintManagedBean implements Serializable {
         return newComplaint();
     }
 
-    public  void select(){
-        
-    }
-    
     private static UserAccount getSessionUserAccount() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);
@@ -677,6 +673,7 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String generateReports() {
+        selectedKindOfReport = 0;
         return "generateReports";
     }
 

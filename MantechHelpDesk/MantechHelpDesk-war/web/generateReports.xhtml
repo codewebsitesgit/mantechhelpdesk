@@ -7,27 +7,34 @@
                 >
     <ui:define name="title">MantechHelpDesk: Administrator >> Generate reports</ui:define>
     <ui:define name="content">
+        <h:form id="templateReport">
             <p:panel id="reportPanel" header="Generate different kinds of reports">
                 <p:panelGrid columns="3" id="reportSelectKindSection">
-                    <p:outputLabel value="Select kind of report" for="reportKinds" />
-                    <p:selectOneMenu id="reportKinds" value="#{complaint.selectedKindOfReport}">
+                    <p:outputLabel value="Select kind of report"/>
+                    <p:selectOneMenu value="#{complaint.selectedKindOfReport}">
                         <f:selectItems value="#{complaint.allKindsOfReport}" var="kind"
                                        itemLabel="#{kind.name}" itemValue="#{kind.kindId}"/>
                     </p:selectOneMenu>
-                    <p:commandButton id="btnPreview" value="Preview"
-                                     action="#{complaint.previewReport}" ajax="true"
-                                     update="dailyWeeklyMonthlySummary,dailyWeeklyMonthlyDetail"/>
+                    <p:commandButton value="Preview"
+                                     action="#{complaint.previewReport}" 
+                                     update=":templateReport:dailyWeeklyMonthlySummary,
+                                     :templateReport:dailyWeeklyMonthlyDetail_Daily,
+                                     :templateReport:dailyWeeklyMonthlyDetail_Weekly,
+                                     :templateReport:dailyWeeklyMonthlyDetail_Monthly,
+                                     :templateReport:reportPendingComplaints,
+                                     :templateReport:departmentWiseReport,
+                                     :templateReport:technicianWiseReport, 
+                                     :templateReport:complaintCategoryWiseReport"
+                                     ajax="false"/>
                 </p:panelGrid>
             </p:panel>
             <br/>
-            <p:panel id="reportResultTable" header="Preview report">
+            <p:panel id="reportResultTable" header="Preview reports" rendered="#{complaint.selectedKindOfReport != 0}">
                 <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
                              var="item" id="dailyWeeklyMonthlySummary"
                              rowKey="#{item.complaintID}" selectionMode="single" 
-                             paginator="true" rows="10"  
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                             rowsPerPageTemplate="5,10,15">
-                    <p:column headerText="Total no.">
+                             rendered="#{complaint.selectedKindOfReport == 1}">
+                    <p:column headerText="Summary">
                         Total no. of complaints
                     </p:column>
                     <p:column headerText="Daily">
@@ -40,13 +47,20 @@
                         56
                     </p:column>
                 </p:dataTable>
-                <p:commandButton value="Save"/>
+                <p:panel style="text-align: right;border: none" id="summarySave" 
+                         rendered="#{complaint.selectedKindOfReport == 1}">
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                </p:panel>
                 <p:dataTable value="#{complaint.dailyWeeklyMonthlyDetail}" 
-                             var="item" id="dailyWeeklyMonthlyDetail"
-                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             var="item" id="dailyWeeklyMonthlyDetail_Daily"
+                             rowKey="#{item.complaintID}" selectionMode="single"
                              paginator="true" rows="10"  
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                             rowsPerPageTemplate="5,10,15" >
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 1}">
+                    <f:facet name="header">  
+                        Daily reports (12) 
+                    </f:facet>
                     <p:column headerText="Complaint No">
                         #{item.complaintID}
                     </p:column>
@@ -79,7 +93,190 @@
                         #{item.complaintOwner.name}
                     </p:column>
                 </p:dataTable>
-                <p:commandButton value="Save"/>
+                <p:panel style="text-align: right; border: none" id="dailySave"
+                         rendered="#{complaint.selectedKindOfReport == 1}">
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                </p:panel>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlyDetail}" 
+                             var="item" id="dailyWeeklyMonthlyDetail_Weekly"
+                             rowKey="#{item.complaintID}" selectionMode="single"
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 1}">
+                    <f:facet name="header">  
+                        Weekly reports (24) 
+                    </f:facet>
+                    <p:column headerText="Complaint No">
+                        #{item.complaintID}
+                    </p:column>
+                    <p:column headerText="Complaint Category">
+                        #{item.complaintCategory.categoryName}
+                    </p:column>
+                    <p:column headerText="LodgingDate">
+                        <h:outputText value="#{item.lodgingDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="ClosingDate">
+                        <h:outputText value="#{item.closingDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Department of User">
+                        #{item.complaintOwner.departmentID.departmentName}
+                    </p:column>
+                    <p:column headerText="Technician">
+                        #{item.technician.name}
+                    </p:column>
+                    <p:column headerText="Actual Taken Time">
+                        <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
+                    </p:column>
+                    <p:column headerText="Employee No.">
+                        #{item.complaintOwner.accountID}
+                    </p:column>
+                    <p:column headerText="Employee Name">
+                        #{item.complaintOwner.name}
+                    </p:column>
+                </p:dataTable>
+                <p:panel style="text-align: right; border: none" id="weeklySave"
+                         rendered="#{complaint.selectedKindOfReport == 1}">
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                </p:panel>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlyDetail}" 
+                             var="item" id="dailyWeeklyMonthlyDetail_Monthly"
+                             rowKey="#{item.complaintID}" selectionMode="single"
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 1}">
+                    <f:facet name="header">  
+                        Monthly reports (56) 
+                    </f:facet>
+                    <p:column headerText="Complaint No">
+                        #{item.complaintID}
+                    </p:column>
+                    <p:column headerText="Complaint Category">
+                        #{item.complaintCategory.categoryName}
+                    </p:column>
+                    <p:column headerText="LodgingDate">
+                        <h:outputText value="#{item.lodgingDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="ClosingDate">
+                        <h:outputText value="#{item.closingDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Department of User">
+                        #{item.complaintOwner.departmentID.departmentName}
+                    </p:column>
+                    <p:column headerText="Technician">
+                        #{item.technician.name}
+                    </p:column>
+                    <p:column headerText="Actual Taken Time">
+                        <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
+                    </p:column>
+                    <p:column headerText="Employee No.">
+                        #{item.complaintOwner.accountID}
+                    </p:column>
+                    <p:column headerText="Employee Name">
+                        #{item.complaintOwner.name}
+                    </p:column>
+                </p:dataTable>
+                <p:panel style="text-align: right; border: none" id="monthlySave"
+                         rendered="#{complaint.selectedKindOfReport == 1}">
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                </p:panel>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
+                             var="item" id="reportPendingComplaints"
+                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 2}">
+                    <p:column headerText="Summary">
+                        Total no. of complaints
+                    </p:column>
+                    <p:column headerText="Daily">
+                        12
+                    </p:column>
+                    <p:column headerText="Weekly">
+                        24
+                    </p:column>
+                    <p:column headerText="Monthly">
+                        56
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
+                             var="item" id="departmentWiseReport"
+                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 3}">
+                    <p:column headerText="Summary">
+                        Total no. of complaints
+                    </p:column>
+                    <p:column headerText="Daily">
+                        12
+                    </p:column>
+                    <p:column headerText="Weekly">
+                        24
+                    </p:column>
+                    <p:column headerText="Monthly">
+                        56
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
+                             var="item" id="technicianWiseReport"
+                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 4}">
+                    <p:column headerText="Summary">
+                        Total no. of complaints
+                    </p:column>
+                    <p:column headerText="Daily">
+                        12
+                    </p:column>
+                    <p:column headerText="Weekly">
+                        24
+                    </p:column>
+                    <p:column headerText="Monthly">
+                        56
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
+                             var="item" id="complaintCategoryWiseReport"
+                             rowKey="#{item.complaintID}" selectionMode="single" 
+                             paginator="true" rows="10"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15"
+                             rendered="${complaint.selectedKindOfReport == 5}">
+                    <p:column headerText="Summary">
+                        Total no. of complaints
+                    </p:column>
+                    <p:column headerText="Daily">
+                        12
+                    </p:column>
+                    <p:column headerText="Weekly">
+                        24
+                    </p:column>
+                    <p:column headerText="Monthly">
+                        56
+                    </p:column>
+                </p:dataTable>
+                <p:panel style="text-align: right; border: none" id="otherReportSave" 
+                         rendered="${complaint.selectedKindOfReport == 2 
+                                     or complaint.selectedKindOfReport == 3 
+                                     or complaint.selectedKindOfReport == 4 
+                                     or complaint.selectedKindOfReport == 5}">
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                </p:panel>
             </p:panel>
+        </h:form>
     </ui:define>
 </ui:composition>

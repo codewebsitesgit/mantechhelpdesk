@@ -26,6 +26,7 @@
                                          icon="ui-icon-check" style="margin: 0"/>
                     </p:panelGrid>
                 </p:panel>
+                <br/>
                 <p:panel id="panelAllSearchedComplaint" header="All complaints">
                     <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
                                  rowKey="#{item.complaintID}" selectionMode="single" 
@@ -55,7 +56,7 @@
                         <p:column headerText="Action" >
                             <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
                                            action="#{complaint.resendComplaintItem}" ajax="true"
-                                           update=":viewComplaintFormID:complaintTable, :viewComplaintFormID:resendMessage">
+                                           update=":viewComplaintFormID:complaintTable">
                                 <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
                                                              value="#{item.complaintID}" 
                                                              rendered="${item.resend}"/>
