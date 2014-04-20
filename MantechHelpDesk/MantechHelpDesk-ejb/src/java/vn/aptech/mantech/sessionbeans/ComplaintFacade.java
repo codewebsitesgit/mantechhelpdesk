@@ -6,6 +6,7 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -104,5 +105,61 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
         Query query = em.createQuery("SELECT q from Complaint q ORDER BY q.lastModified DESC");
         return query.getResultList();
     }
+
+    @Override
+    public List<Complaint> getDailyComplaints() {
+        Query query = em.createQuery("SELECT cp from Complaint cp WHERE YEAR(cp.lodgingDate) =:years AND "
+                + "MONTH(cp.lodgingDate) =:months AND DAY(cp.lodgingDate) =:days ORDER BY cp.lastModified DESC");
+        query.setParameter("years", Calendar.getInstance().get(Calendar.YEAR));
+        query.setParameter("months", Calendar.getInstance().get(Calendar.MONTH) + 1);
+        query.setParameter("days", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getWeeklyComplaints() {
+        Query query = em.createQuery("SELECT cp from Complaint cp WHERE YEAR(cp.lodgingDate) =:years AND "
+                + "MONTH(cp.lodgingDate) =:months AND EXTRACT(WEEK from cp.lodgingDate) =:weeks ORDER BY cp.lastModified DESC");
+        query.setParameter("years", Calendar.getInstance().get(Calendar.YEAR));
+        query.setParameter("months", Calendar.getInstance().get(Calendar.MONTH)+ 1);
+        query.setParameter("weeks", Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getMonthlyComplaints() {
+        Query query = em.createQuery("SELECT cp from Complaint cp WHERE YEAR(cp.lodgingDate) =:years AND MONTH(cp.lodgingDate) =:months ORDER BY cp.lastModified DESC");
+        query.setParameter("years", Calendar.getInstance().get(Calendar.YEAR));
+        query.setParameter("months", Calendar.getInstance().get(Calendar.MONTH) + 1);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getPendingComplaints() {
+        Query query = em.createQuery("SELECT q from Complaint q WHERE q.status.statusID = 1 ORDER BY q.lastModified DESC");
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getAllDepartmentWiseReport(int departmentID) {
+        Query query = em.createQuery("SELECT q from Complaint q WHERE q.complaintOwner.departmentID.departmentID =:departID ORDER BY q.lastModified DESC");
+        query.setParameter("departID", departmentID);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getAllTechnicianWiseReport(int technicianID) {
+        Query query = em.createQuery("SELECT q from Complaint q WHERE q.technician.accountID =:techID ORDER BY q.lastModified DESC");
+        query.setParameter("techID", technicianID);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Complaint> getAllCategoryWiseReport(int categoryID) {
+        Query query = em.createQuery("SELECT q from Complaint q WHERE q.complaintCategory.categoryID =:catID ORDER BY q.lastModified DESC");
+        query.setParameter("catID", categoryID);
+        return query.getResultList();
+    }
+    
     
 }

@@ -47,4 +47,18 @@ public interface ComplaintFacadeLocal {
 
     List<Complaint> getLastModifiedComplaints();
 
+    List<Complaint> getDailyComplaints();
+
+    List<Complaint> getWeeklyComplaints();
+
+    List<Complaint> getMonthlyComplaints();
+
+    List<Complaint> getPendingComplaints();
+
+    List<Complaint> getAllDepartmentWiseReport(int departmentID);
+
+    List<Complaint> getAllTechnicianWiseReport(int technicianID);
+
+    List<Complaint> getAllCategoryWiseReport(int categoryID);
+
 }

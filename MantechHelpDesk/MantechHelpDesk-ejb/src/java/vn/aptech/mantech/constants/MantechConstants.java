@@ -26,6 +26,17 @@ public interface MantechConstants {
     
     public static final int COMPLAINT_STATUS_DONE = 4;
     public static final int COMPLAINT_STATUS_PENDING = 1;
+    public static final int COMPLAINT_STATUS_HANDING = 3;
+    public static final int COMPLAINT_STATUS_RESOLVING = 2;
     
     public static final int COMPLAINT_PRIORITY_NORMAL = 2;
+    public static final int COMPLAINT_PRIORITY_HIGH = 1;
+    public static final int COMPLAINT_PRIORITY_LOW = 3;
+    
+    public static final int DEPARTMENT_EDU_SERVICE = 1;
+    public static final int DEPARTMENT_MNG_SERVICE = 2;
+    public static final int DEPARTMENT_LRN_SERVICE = 3;
+    public static final int DEPARTMENT_INS_SERVICE= 4;
+    public static final int DEPARTMENT_HRS_SERVICE = 5;
+    
 }
