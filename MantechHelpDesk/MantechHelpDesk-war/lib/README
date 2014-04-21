@@ -1,0 +1,11 @@
+TAO CAC LIBRARIES VOI CAC TEN SAU:
+
+Vao Tools -> Libraries -> New Library -> Add Jar/Folder at Classpath (tro den file)
+
+PrimeFaces4.0           : primefaces-4.0.jar
+POI3.10XLSX             : poi-ooxml-3.10-FINAL-20140208.jar
+POI3.10                 : poi-3.10-FINAL-20140208.jar
+DOM4J                   : dom4j-1.6.1.jar
+STAX1.0.1               : stax-api-1.0.1.jar
+XMLBEANS2.3.0           : xmlbeans-2.3.0.jar
+POI.OOX.SCHEMAS3.10     : poi-ooxml-schemas-3.10-FINAL-20140208.jar

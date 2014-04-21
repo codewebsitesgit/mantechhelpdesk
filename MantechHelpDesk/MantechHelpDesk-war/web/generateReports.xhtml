@@ -30,12 +30,12 @@
                         <p:selectOneMenu value="#{complaint.reportTechnicianWiseId}" 
                                          rendered="${complaint.selectedKindOfReport == 4}">
                             <f:selectItems value="#{account.allTechnicians}" var="tech"
-                                   itemLabel="#{tech.name}" itemValue="#{tech.accountID}"/>
+                                           itemLabel="#{tech.name}" itemValue="#{tech.accountID}"/>
                         </p:selectOneMenu>
                         <p:selectOneMenu value="#{complaint.reportCategoryWiseId}" 
                                          rendered="${complaint.selectedKindOfReport == 5}">
                             <f:selectItems value="#{complaint.complaintCats}" var="cat"
-                                   itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
+                                           itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
                         </p:selectOneMenu>
                     </p:outputPanel>
                     <p:commandButton value="Preview"
@@ -53,6 +53,7 @@
             </p:panel>
             <br/>
             <p:panel id="reportResultTable" header="Preview reports" rendered="#{complaint.selectedKindOfReport != 0}">
+                <p:growl id="reportMessages" showSummary="true" showDetail="true"/>
                 <p:dataTable value="#{complaint.dailyWeeklyMonthlySummary}" 
                              var="item" id="dailyWeeklyMonthlySummary" selectionMode="single" 
                              rendered="${complaint.selectedKindOfReport == 1 and complaint.subDmwReport == 11}"
@@ -72,7 +73,9 @@
                 </p:dataTable>
                 <p:panel style="text-align: right;border: none" id="summarySave" 
                          rendered="${complaint.selectedKindOfReport == 1 and complaint.subDmwReport == 11}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportDwmReportSummaryToExcel(complaint.dailyWeeklyMonthlySummary)}"
+                                     ajax="false" update="reportMessages"/>
                 </p:panel>
 
                 <p:dataTable value="#{complaint.dailyComplaints}" 
@@ -119,7 +122,12 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="dailySave"
                          rendered="${complaint.selectedKindOfReport == 1 and complaint.subDmwReport == 12}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportDwmComplaintsToExcel(complaint.dailyComplaints)}"
+                                     ajax="false" update="reportMessages">
+                        <f:setPropertyActionListener value="Daily details"
+                                                     target="#{xlsReport.dwmReportDetailSubKind}"/>
+                    </p:commandButton>
                 </p:panel>
                 <p:dataTable value="#{complaint.weeklyComplaints}" 
                              var="item" id="dailyWeeklyMonthlyDetail_Weekly"
@@ -165,7 +173,12 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="weeklySave"
                          rendered="${complaint.selectedKindOfReport == 1 and complaint.subDmwReport == 12}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportDwmComplaintsToExcel(complaint.weeklyComplaints)}"
+                                     ajax="false" update="reportMessages">
+                        <f:setPropertyActionListener value="Weekly details"
+                                                     target="#{xlsReport.dwmReportDetailSubKind}"/>
+                    </p:commandButton>
                 </p:panel>
                 <p:dataTable value="#{complaint.monthlyComplaints}" 
                              var="item" id="dailyWeeklyMonthlyDetail_Monthly"
@@ -211,7 +224,12 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="monthlySave"
                          rendered="${complaint.selectedKindOfReport == 1 and complaint.subDmwReport == 12}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportDwmComplaintsToExcel(complaint.monthlyComplaints)}"
+                                     ajax="false" update="reportMessages">
+                        <f:setPropertyActionListener value="Monthly details"
+                                                     target="#{xlsReport.dwmReportDetailSubKind}"/>
+                    </p:commandButton>
                 </p:panel>
                 <p:dataTable value="#{complaint.allPendingComplaints}" 
                              var="item" id="reportPendingComplaints"
@@ -241,7 +259,9 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="allPendingComplaintsSave" 
                          rendered="${complaint.selectedKindOfReport == 2}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportAllPendingComplaintsToExcel(complaint.allPendingComplaints)}"
+                                     ajax="false" update="reportMessages"/>
                 </p:panel>
                 <p:dataTable value="#{complaint.allDepartmentWiseReport}" 
                              var="item" id="departmentWiseReport"
@@ -275,7 +295,12 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="allDepartmentWiseReportSave" 
                          rendered="${complaint.selectedKindOfReport == 3}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportAllDepartmentWiseReportToExcel(complaint.allDepartmentWiseReport)}"
+                                     ajax="false" update="reportMessages">
+                        <f:setPropertyActionListener value="#{complaint.reportDepartmentWiseId}"
+                                                     target="#{xlsReport.departmentId}"/>
+                    </p:commandButton>
                 </p:panel>
                 <p:dataTable value="#{complaint.allTechnicianWiseReport}" 
                              var="item" id="technicianWiseReport"
@@ -309,7 +334,12 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="allTechnicianWiseReportSave" 
                          rendered="${complaint.selectedKindOfReport == 4}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportAllTechnicianWiseReportToExcel(complaint.allTechnicianWiseReport)}"
+                                     ajax="false" update="reportMessages">
+                        <f:setPropertyActionListener value="#{complaint.reportTechnicianWiseId}"
+                                                     target="#{xlsReport.technicianId}"/>
+                    </p:commandButton>
                 </p:panel>
                 <p:dataTable value="#{complaint.allCategoryWiseReport}" 
                              var="item" id="complaintCategoryWiseReport"
@@ -343,7 +373,12 @@
                 </p:dataTable>
                 <p:panel style="text-align: right; border: none" id="allCategoryWiseReportSave" 
                          rendered="${complaint.selectedKindOfReport == 5}">
-                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."/>
+                    <p:commandButton value="Save to *.xls" title="Save the report to Excel file."
+                                     action="#{xlsReport.exportAllCategoryWiseReportToExcel(complaint.allCategoryWiseReport)}"
+                                     ajax="false" update="reportMessages">
+                        <f:setPropertyActionListener value="#{complaint.reportCategoryWiseId}"
+                                                     target="#{xlsReport.categoryId}"/>
+                    </p:commandButton>
                 </p:panel>
             </p:panel>
         </h:form>

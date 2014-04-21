@@ -5,6 +5,7 @@
  */
 package vn.aptech.mantech.managedbeans;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -18,7 +19,7 @@ import vn.aptech.mantech.sessionbeans.UserRoleFacadeLocal;
  */
 @ManagedBean(name = "role")
 @SessionScoped
-public class RoleManagedBean {
+public class RoleManagedBean implements Serializable{
 
     @EJB
     private UserRoleFacadeLocal userRoleFacade;

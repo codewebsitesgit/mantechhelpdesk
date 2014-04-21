@@ -5,6 +5,7 @@
  */
 package vn.aptech.mantech.managedbeans;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -18,7 +19,7 @@ import vn.aptech.mantech.sessionbeans.DepartmentFacadeLocal;
  */
 @ManagedBean(name = "department")
 @SessionScoped
-public class DepartmentManagedBean {
+public class DepartmentManagedBean implements Serializable{
 
     @EJB
     private DepartmentFacadeLocal departmentFacade;
