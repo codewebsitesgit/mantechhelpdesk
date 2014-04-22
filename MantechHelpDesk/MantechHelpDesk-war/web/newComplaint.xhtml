@@ -38,9 +38,10 @@
                                      maxlength="150" size="60"/>
                         <p:message for="complaintSubject" />
                         <h:outputLabel value="Contents:" for="complaintContents" />
-                        <p:inputTextarea id="complaintContents" value="#{complaint.curComplaint.complaintContents}" 
-                                         title="ComplaintContents" 
-                                         maxlength="1000" rows="13" cols="80"/>
+                        <p:editor id="complaintContents" value="#{complaint.curComplaint.complaintContents}" width="600"
+                                  required="true" 
+                                  requiredMessage="The Contents cannot be blank."
+                                  maxlength="1000"/>
                         <p:message for="complaintContents" />
                         <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
                                          update="panelSendComplaint,complaintTable"

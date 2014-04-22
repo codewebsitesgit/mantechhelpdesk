@@ -30,5 +30,9 @@ public interface ArticleFacadeLocal {
     List<Article> findRange(int[] range);
 
     int count();
+
+    List<Article> getTopFiveArticles(int accountID);
+
+    int getMaxArticleID();
     
 }

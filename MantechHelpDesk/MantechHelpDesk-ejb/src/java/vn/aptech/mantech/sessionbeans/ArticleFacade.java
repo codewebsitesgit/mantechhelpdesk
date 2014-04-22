@@ -6,9 +6,11 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import vn.aptech.mantech.entity.Article;
 
 /**
@@ -27,6 +29,24 @@ public class ArticleFacade extends AbstractFacade<Article> implements ArticleFac
 
     public ArticleFacade() {
         super(Article.class);
+    }
+
+    @Override
+    public List<Article> getTopFiveArticles(int accountID) {
+        Query query = em.createQuery("SELECT a from Article a WHERE a.articleOwner.accountID =:account ORDER BY a.creationDate DESC");
+        query.setParameter("account", accountID);
+        query.setMaxResults(5);
+        return query.getResultList();
+    }
+
+    @Override
+    public int getMaxArticleID() {
+        Query query = em.createQuery("SELECT MAX(a.articleID) from Article a");
+        Object obj= query.getSingleResult();
+        if (obj == null) {
+            return 1;
+        }
+        return Integer.parseInt(obj.toString()) + 1;
     }
     
 }

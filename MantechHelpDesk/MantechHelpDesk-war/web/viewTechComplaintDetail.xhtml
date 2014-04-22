@@ -19,8 +19,8 @@
                         <p:inputText id="complaintSubject" value="#{complaint.techComplaintDetail.complaintSubject}"
                                      title="ComplaintSubject" readonly="true" size="45"/>
                         <p:outputLabel value="Contents" for="complaintContents" />
-                        <p:inputTextarea id="complaintContents" value="#{complaint.techComplaintDetail.complaintContents}" 
-                                         title="ComplaintContents" readonly="true" rows="7" cols="60"/>
+                        <p:outputLabel id="complaintContents" value="#{complaint.techComplaintDetail.complaintContents}" 
+                                       title="ComplaintContents" escape="false" style="border: medium #045491"/>
                         <p:outputLabel value="Assign to" for="technician" />
                         <p:outputLabel value="#{complaint.techComplaintDetail.technician.name}" id="technician"/>
                         <p:outputLabel value="From employee" />
@@ -42,8 +42,10 @@
                                        itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="Reasons" for="reasons" />
-                        <p:inputTextarea id="reasons" value="#{complaint.techInputReasons}" 
-                                         title="Reasons" rows="5" cols="60" />
+                        <p:editor id="reasons" value="#{complaint.techInputReasons}" width="600"
+                                  required="true" 
+                                  requiredMessage="The Contents cannot be blank."
+                                  maxlength="1000"/>
                         <p:outputLabel value="LodgingDate" for="lodgingDate" />
                         <p:outputLabel id="lodgingDate" value="#{complaint.techComplaintDetail.lodgingDate}" title="LodgingDate" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
