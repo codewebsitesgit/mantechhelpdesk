@@ -78,8 +78,8 @@
                         <p:inputText value="#{complaint.curComplaint.complaintSubject}"
                                      title="ComplaintSubject" readonly="true" size="45"/>
                         <p:outputLabel value="Contents" /><p:outputLabel value=":" />
-                        <p:inputTextarea value="#{complaint.curComplaint.complaintContents}" 
-                                         title="ComplaintContents" readonly="true" rows="7" cols="60"/>
+                        <p:outputLabel value="#{complaint.curComplaint.complaintContents}" 
+                                        title="ComplaintContents" escape="false" style="border: medium #045491"/>
                         <p:outputLabel value="Technician" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.technician.name}"/>
                         <p:outputLabel value="Employee's Username" /><p:outputLabel value=":" />
@@ -91,8 +91,8 @@
                         <p:outputLabel value="Priority" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.priority.priorityName}" />
                         <p:outputLabel value="Reasons" /><p:outputLabel value=":" />
-                        <p:inputTextarea value="#{complaint.curComplaint.reasons}" 
-                                         title="Reasons" rows="5" cols="60" readonly="true"/>
+                        <p:outputLabel value="#{complaint.curComplaint.reasons}" 
+                                         title="Reasons" escape="false" style="border: medium #045491"/>
                         <p:outputLabel value="LodgingDate" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.lodgingDate}" title="LodgingDate" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />

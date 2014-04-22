@@ -7,6 +7,52 @@
                 >
     <ui:define name="title">MantechHelpDesk: Technician >> Create a new article</ui:define>
     <ui:define name="content">
-        <h1>Welcome to Create a new article page</h1>
+        <f:view>
+            <h:form id="newArticleForm">
+                <p:panel id="newArticlePanel" header="Create a new article">
+                    <p:panelGrid columns="3" id="newArticleGrid" styleClass="table_insert_update">
+                        <h:outputLabel value="ArticleID:" for="articleID" />
+                        <p:outputLabel id="articleID" value="#{article.curArticle.articleID}" title="ArticleID"/>
+                        <p:message for="articleID"/>
+                        <h:outputLabel value="Subject *:" for="articleSubject" />
+                        <p:inputText id="articleSubject" value="#{article.curArticle.articleSubject}" 
+                                     title="ArticleSubject" required="true" 
+                                     requiredMessage="The Subject cannot be blank."
+                                     maxlength="150" size="60"/>
+                        <p:message for="articleSubject" />
+                        <h:outputLabel value="Contents:" for="articleContents" />
+                        <p:editor id="articleContents" value="#{article.curArticle.articleContents}" width="600"
+                                  required="true" 
+                                  requiredMessage="The Contents cannot be blank."
+                                  maxlength="1000" />
+                        <p:message for="articleContents" />
+                        <p:outputLabel value=""/>
+                        <p:commandButton id="btnCreate" value="Post article" action="#{article.postArticle}" 
+                                         update=":newArticleForm:newArticleGrid,:newArticleForm:articleTable"
+                                         icon="ui-icon-check" style="margin: 0"/>
+                        <p:outputLabel value=""/>
+                    </p:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel id="panelTop5Articles" header="Top 5 your latest articles">
+                    <p:dataTable value="#{article.topFiveArticles}" var="item" 
+                                 id="articleTable"
+                                 rowKey="#{item.articleID}" selectionMode="single" >
+                        <p:column headerText="Article ID">
+                            #{item.articleID}
+                        </p:column>
+                        <p:column headerText="Subject">
+                            #{item.articleSubject}
+                        </p:column>
+                        <p:column headerText="Creation Date">
+                            <p:outputLabel value="#{item.creationDate}" title="CreationDate" >
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </p:outputLabel>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </f:view>
+
     </ui:define>
 </ui:composition>
