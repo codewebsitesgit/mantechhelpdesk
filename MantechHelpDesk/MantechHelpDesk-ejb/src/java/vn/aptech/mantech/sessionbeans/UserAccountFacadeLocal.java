@@ -36,4 +36,6 @@ public interface UserAccountFacadeLocal {
     List<UserAccount> getAllTechnicians();
     
     int getNextAccountID();
+
+    List<UserAccount> getAllAccount(Integer accountID, String username, Integer departmentID, String fullName);
 }

@@ -38,6 +38,11 @@ public class AccountManagedBean implements Serializable {
     private String oldPassword;
     private String newPassword;
     private String confirmPassword;
+    
+    private Integer searchAccountID;
+    private String searchUsername;
+    private Integer searchDepartmentID;
+    private String searchFullName; 
 
     private UserAccount curUser;
 
@@ -203,6 +208,11 @@ public class AccountManagedBean implements Serializable {
         }
         return "changeUserPassword";
     }
+    
+    public List<UserAccount> getSearchAllAccount()
+    {
+        return userAccountFacade.getAllAccount(searchAccountID, username, searchDepartmentID, username);
+    }
 
     /**
      * @return the curUser
@@ -216,6 +226,62 @@ public class AccountManagedBean implements Serializable {
      */
     public void setCurUser(UserAccount curUser) {
         this.curUser = curUser;
+    }
+
+    /**
+     * @return the searchAccountID
+     */
+    public Integer getSearchAccountID() {
+        return searchAccountID;
+    }
+
+    /**
+     * @param searchAccountID the searchAccountID to set
+     */
+    public void setSearchAccountID(Integer searchAccountID) {
+        this.searchAccountID = searchAccountID;
+    }
+
+    /**
+     * @return the searchUsername
+     */
+    public String getSearchUsername() {
+        return searchUsername;
+    }
+
+    /**
+     * @param searchUsername the searchUsername to set
+     */
+    public void setSearchUsername(String searchUsername) {
+        this.searchUsername = searchUsername;
+    }
+
+    /**
+     * @return the searchDepartmentID
+     */
+    public Integer getSearchDepartmentID() {
+        return searchDepartmentID;
+    }
+
+    /**
+     * @param searchDepartmentID the searchDepartmentID to set
+     */
+    public void setSearchDepartmentID(Integer searchDepartmentID) {
+        this.searchDepartmentID = searchDepartmentID;
+    }
+
+    /**
+     * @return the searchFullName
+     */
+    public String getSearchFullName() {
+        return searchFullName;
+    }
+
+    /**
+     * @param searchFullName the searchFullName to set
+     */
+    public void setSearchFullName(String searchFullName) {
+        this.searchFullName = searchFullName;
     }
 
 }

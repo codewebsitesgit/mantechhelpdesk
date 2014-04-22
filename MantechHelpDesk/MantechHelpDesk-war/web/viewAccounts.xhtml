@@ -14,70 +14,48 @@
                 <p:panel id="panelSearchAccount" header="Search Account">
                     <p:panelGrid columns="2" id="panelSearchCriteria">
                         <h:outputText value="Account ID:"/>
-                        <p:inputText value="#{complaint.searchedComplaintID}" id="searchedComplaintID"/>
+                        <p:inputText value="#{account.searchAccountID}" id="searchedAccountID"/>
                         <h:outputText value="Username:"/>
-                        <p:inputText value="#{complaint.searchedSubject}" id="searchedSubject"/>
-                        <h:outputText value="Name:"/>
-                        <p:selectOneMenu id="status" value="#{complaint.statusID}" label="Status">
-                            <f:selectItems value="#{status.allStatus}" var="st"
-                                           itemLabel="#{st.statusName}" itemValue="#{st.statusID}"/>
+                        <p:inputText value="#{account.searchUsername}" id="searchUsername"/>
+                        <h:outputText value="DeparmentID:"/>
+                        <p:selectOneMenu id="department" value="#{account.searchDepartmentID}" label="Department">
+                            <f:selectItems value="#{department.allDepartment}" var="dp"
+                                           itemLabel="#{dp.departmentName}" itemValue="#{dp.departmentName}"/>
                         </p:selectOneMenu>
+                        <h:outputText value="Name:"/>
+                        <p:inputText value="#{account.searchFullName}" id="searchFullname"/>
                         <p:commandButton value="Search" action="viewAccounts" 
-                                         update="complaintTable"
+                                         update="complaintTable" ajax="false"
                                          icon="ui-icon-check" style="margin: 0"/>
                     </p:panelGrid>
                 </p:panel>
                 <p:panel id="panelAllSearchedAccount" header="All Account">
-                    <p:growl id="resendMessage" showSummary="true" autoUpdate="true" showDetail="true"/>
-                    <p:dataTable value="#{complaint.allSearchedComplaints}" var="item" id="complaintTable"
-                                 rowKey="#{item.complaintID}" selectionMode="single" 
+                    <p:dataTable value="#{account.searchAllAccount}" var="item" id="complaintTable"
+                                 rowKey="#{item.accountID}" selectionMode="single" 
                                  paginator="true" rows="10"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                                  rowsPerPageTemplate="5,10,15">
                         <p:column headerText="Account ID">
-                            #{item.complaintID}
+                            #{item.accountID}
                         </p:column>
                         <p:column headerText="Username">
-                            #{item.complaintSubject}
+                            #{item.username}
                         </p:column>
-                        <p:column headerText="DeparmentID">
-                            <h:outputText value="#{item.lodgingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
+                        <p:column headerText="Department ID">
+                            #{item.departmentID.departmentName}
                         </p:column>
                         <p:column headerText="RoleID">
-                            <h:outputText value="#{item.lastModified}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
+                            #{item.roleID.roleName}
                         </p:column>
                         <p:column headerText="Name">
-                            <h:outputText value="#{item.closingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="Brithday">
-                            <h:outputText value="#{item.actualTakenDays}d:#{item.actualTakenHours}h:#{item.actualTakenMinutes}m:#{item.actualTakenSeconds}s" rendered="${item.status.statusID == 4}"/>
+                            #{item.name}
                         </p:column>
                         <p:column headerText="Gender">
-                            #{item.technician.name}
+                            #{item.gender}
                         </p:column>
-                        <p:column headerText="Address">
-                            #{item.status.statusName}
-                        </p:column>
-                        <p:column headerText="Phone" >
-                            <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
-                                           action="#{complaint.resendComplaintItem}" ajax="true">
-                                <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
-                                                             value="#{item.complaintID}" 
-                                                             rendered="${item.resend}"/>
-                            </p:commandLink>
-                        </p:column>
-                        <p:column headerText="Email">
-                            #{item.priority.priorityName}
-                        </p:column>
-                        <p:column headerText="Status">
-                            #{item.complaintCategory.categoryName}
-                        </p:column>
+                        
+                        
+                        
                     </p:dataTable>
                 </p:panel>
             </h:form>
