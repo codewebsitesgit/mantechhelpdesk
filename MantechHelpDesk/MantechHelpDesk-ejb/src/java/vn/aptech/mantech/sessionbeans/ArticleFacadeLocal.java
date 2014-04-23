@@ -34,5 +34,7 @@ public interface ArticleFacadeLocal {
     List<Article> getTopFiveArticles(int accountID);
 
     int getMaxArticleID();
+
+    List<Article> getAllVisibleArticles();
     
 }

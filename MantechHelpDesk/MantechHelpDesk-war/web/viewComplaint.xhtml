@@ -22,7 +22,7 @@
                                            itemLabel="#{st.statusName}" itemValue="#{st.statusID}"/>
                         </p:selectOneMenu>
                         <p:commandButton value="Search" action="viewComplaint" 
-                                         update="complaintTable"
+                                         update="complaintTable" ajax="false"
                                          icon="ui-icon-check" style="margin: 0"/>
                     </p:panelGrid>
                 </p:panel>
@@ -33,7 +33,7 @@
                                  paginator="true" rows="10"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                                  rowsPerPageTemplate="5,10,15"
-                                 selection="#{complaint.curComplaint}">
+                                 selection="#{complaint.curComplaint}" >
                         <p:ajax event="rowSelect"
                                 update=":viewComplaintFormID:panelComplaintDetail" oncomplete="PF('panelComplaintDetail').show();" />  
 
@@ -53,19 +53,20 @@
                         <p:column headerText="Status">
                             #{item.status.statusName}
                         </p:column>
-                        <p:column headerText="Action" >
-                            <p:commandLink id="btnResend" value="Resend" rendered="${item.resend}" 
-                                           action="#{complaint.resendComplaintItem}" ajax="true"
+                        <p:column headerText="Action" style="text-align: center">
+                            <p:commandButton id="btnResend" style="width: 80%"
+                                             value="Resend" rendered="${item.resend}" 
+                                           action="#{complaint.resendComplaintItem}" ajax="false"
                                            update=":viewComplaintFormID:complaintTable">
                                 <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
                                                              value="#{item.complaintID}" 
                                                              rendered="${item.resend}"/>
-                            </p:commandLink>
+                            </p:commandButton>
                         </p:column>
                     </p:dataTable>
                 </p:panel>
                 <p:dialog header="Complaint's details" widgetVar="panelComplaintDetail" 
-                          showEffect="explode"
+                          showEffect="explode" style="background-color: aliceblue"
                           modal="true" height="400" width="800" id="dialogComplaintDetailID">  
                     <h:panelGrid columns="3" id="panelComplaintDetail" cellspacing="8">
                         <p:outputLabel value="ComplaintID" />
@@ -75,24 +76,30 @@
                         <p:outputLabel value="Category" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.complaintCategory.categoryName}" />
                         <p:outputLabel value="Subject" /><p:outputLabel value=":" />
-                        <p:inputText value="#{complaint.curComplaint.complaintSubject}"
-                                     title="ComplaintSubject" readonly="true" size="45"/>
-                        <p:outputLabel value="Contents" /><p:outputLabel value=":" />
-                        <p:outputLabel value="#{complaint.curComplaint.complaintContents}" 
-                                        title="ComplaintContents" escape="false" style="border: medium #045491"/>
+                        <p:outputLabel value="#{complaint.curComplaint.complaintSubject}"
+                                     title="ComplaintSubject"/>
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                        <p:fieldset id="complaintContents" legend="Complaint contents" 
+                                    toggleable="true" toggleSpeed="500" collapsed="true">
+                            <h:panelGrid cellpadding="10" width="500">
+                                <h:outputText value="#{complaint.curComplaint.complaintContents}" escape="false"/>
+                            </h:panelGrid>
+                        </p:fieldset>
                         <p:outputLabel value="Technician" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.technician.name}"/>
-                        <p:outputLabel value="Employee's Username" /><p:outputLabel value=":" />
-                        <p:outputLabel value="#{complaint.curComplaint.complaintOwner.username}" />
-                        <p:outputLabel value="Employee's Full name"/><p:outputLabel value=":" />
-                        <p:outputLabel value="#{complaint.curComplaint.complaintOwner.name}" />
+                        <p:outputLabel value="From" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.curComplaint.complaintOwner.username}/#{complaint.curComplaint.complaintOwner.name}" />
                         <p:outputLabel value="Status" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.status.statusName}" />
                         <p:outputLabel value="Priority" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.priority.priorityName}" />
-                        <p:outputLabel value="Reasons" /><p:outputLabel value=":" />
-                        <p:outputLabel value="#{complaint.curComplaint.reasons}" 
-                                         title="Reasons" escape="false" style="border: medium #045491"/>
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                        <p:fieldset id="reasons" legend="Complaint reasons" 
+                                    toggleable="true" toggleSpeed="500" collapsed="true">
+                            <h:panelGrid cellpadding="10" width="500">
+                                <h:outputText value="#{complaint.curComplaint.reasons}" escape="false"/>
+                            </h:panelGrid>
+                        </p:fieldset>
                         <p:outputLabel value="LodgingDate" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.lodgingDate}" title="LodgingDate" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />

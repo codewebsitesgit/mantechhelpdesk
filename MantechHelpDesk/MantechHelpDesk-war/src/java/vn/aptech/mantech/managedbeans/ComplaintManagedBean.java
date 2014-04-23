@@ -509,6 +509,9 @@ public class ComplaintManagedBean implements Serializable {
                 searchedComplaintID, searchedSubject, null, statusID,
                 getSessionUserAccount().getAccountID());
         updateResendAndActualTakenTime(allComplaints);
+        if (searchedComplaintID != null && searchedComplaintID.intValue() == 0) {
+            searchedComplaintID = null;
+        }
         return allComplaints;
     }
 
@@ -562,6 +565,8 @@ public class ComplaintManagedBean implements Serializable {
         UserAccount tech = adminComplaintDetail.getTechnician();
         if (tech != null) {
             adminSelectedTechnician = tech.getAccountID();
+        } else {
+            adminSelectedTechnician = 0;
         }
 
         return "viewComplaintDetail";

@@ -9,56 +9,64 @@
     <ui:define name="content">
         <f:view>
             <h:form>
-                <p:panel id="updateComplaintOfAdminPanel" header="Complaint's Details">
+                <p:panel id="updateComplaintOfAdminPanel" header="Complaint's Details"
+                         style="background-color: aliceblue">
                     <p:messages autoUpdate="true" closable="true" showDetail="true"/>
-                    <h:panelGrid columns="2" id="panelUpdateCamplaint" cellspacing="8">
-                        <p:outputLabel value="ComplaintID" for="complaintID" />
+                    <h:panelGrid columns="3" id="panelUpdateCamplaint" cellspacing="8">
+                        <p:outputLabel value="ComplaintID" for="complaintID" /><p:outputLabel value=":" />
                         <p:outputLabel id="complaintID" value="#{complaint.adminComplaintDetail.complaintID}" 
                                        title="ComplaintID"/>
-                        <p:outputLabel value="Subject" for="complaintSubject" />
-                        <p:inputText id="complaintSubject" value="#{complaint.adminComplaintDetail.complaintSubject}"
-                                     title="ComplaintSubject" readonly="true" size="45"/>
-                        <p:outputLabel value="Contents" for="complaintContents" />
-                        <p:outputLabel id="complaintContents" value="#{complaint.adminComplaintDetail.complaintContents}" 
-                                       title="ComplaintContents" escape="false" style="border: medium #045491"/>
-                        <p:outputLabel value="Technician" for="technician" />
+                        <p:outputLabel value="Subject" for="complaintSubject" /><p:outputLabel value=":" />
+                        <p:outputLabel id="complaintSubject" value="#{complaint.adminComplaintDetail.complaintSubject}"
+                                     title="ComplaintSubject"/>
+                        <p:outputLabel value="" for="complaintContents" /><p:outputLabel value="" />
+                        <p:fieldset id="complaintContents" legend="Complaint contents" 
+                                    toggleable="true" toggleSpeed="500" collapsed="true">
+                            <h:panelGrid cellpadding="10" width="500">
+                                <h:outputText value="#{complaint.adminComplaintDetail.complaintContents}" escape="false"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p:outputLabel value="Technician" for="technician" /><p:outputLabel value=":" />
                         <p:selectOneMenu id="technician" value="#{complaint.adminSelectedTechnician}"  >
+                            <f:selectItem noSelectionOption="true" itemLabel="Select one"/>
                             <f:selectItems value="#{account.allTechnicians}" var="acc"
                                            itemLabel="#{acc.name}" itemValue="#{acc.accountID}"/>
                         </p:selectOneMenu>
-                        <p:outputLabel value="Username" />
-                        <p:outputLabel value="#{complaint.adminComplaintDetail.complaintOwner.username}" />
-                        <p:outputLabel value="Full name"/>
-                        <p:outputLabel value="#{complaint.adminComplaintDetail.complaintOwner.name}" />
-                        <p:outputLabel value="Status" for="status" />
+                        <p:outputLabel value="From" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.adminComplaintDetail.complaintOwner.username}/#{complaint.adminComplaintDetail.complaintOwner.name}" />
+                        <p:outputLabel value="Status" for="status" /><p:outputLabel value=":" />
                         <p:selectOneMenu id="status" value="#{complaint.adminSelectedStatusId}" required="true" requiredMessage="The Status field is required.">
                             <f:selectItems value="#{status.allStatus}" var="stt"
                                            itemLabel="#{stt.statusName}" itemValue="#{stt.statusID}"/>
                         </p:selectOneMenu>
-                        <p:outputLabel value="Priority" for="priority" />
+                        <p:outputLabel value="Priority" for="priority" /><p:outputLabel value=":" />
                         <p:selectOneMenu id="priority" value="#{complaint.adminSelectedPriorityId}" required="true" requiredMessage="The Priority field is required.">
                             <f:selectItems value="#{priority.allPriorities}" var="prio"
                                            itemLabel="#{prio.priorityName}" itemValue="#{prio.priorityID}"/>
                         </p:selectOneMenu>
-                        <p:outputLabel value="Category" for="complaintCategory" />
+                        <p:outputLabel value="Category" for="complaintCategory" /><p:outputLabel value=":" />
                         <p:outputLabel id="complaintCategory" 
                                        value="#{complaint.adminComplaintDetail.complaintCategory.categoryName}" />
-                        <p:outputLabel value="Reasons" for="reasons" />
-                        <p:outputLabel id="reasons" value="#{complaint.adminComplaintDetail.reasons}" 
-                                       title="Reasons" escape="false" style="border: medium #045491"/>
-                        <p:outputLabel value="LodgingDate" for="lodgingDate" />
+                        <p:outputLabel value="" for="reasons" /><p:outputLabel value="" />
+                        <p:fieldset id="reasons" legend="Complaint reasons" 
+                                    toggleable="true" toggleSpeed="500" collapsed="true">
+                            <h:panelGrid cellpadding="10" width="500">
+                                <h:outputText value="#{complaint.adminComplaintDetail.reasons}" escape="false"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p:outputLabel value="LodgingDate" for="lodgingDate" /><p:outputLabel value=":" />
                         <p:outputLabel id="lodgingDate" value="#{complaint.adminComplaintDetail.lodgingDate}" title="LodgingDate" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                         </p:outputLabel>
-                        <p:outputLabel value="ClosingDate" for="closingDate" />
+                        <p:outputLabel value="ClosingDate" for="closingDate" /><p:outputLabel value=":" />
                         <p:outputLabel id="closingDate" value="#{complaint.adminComplaintDetail.closingDate}" title="ClosingDate" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                         </p:outputLabel>
                         <p:commandButton id="btnUpdateComplaint" value="Update complaint" 
                                          action="#{complaint.updateAdminComplaintDetail}" 
-                                         icon="ui-icon-check"/>
+                                         icon="ui-icon-check" ajax="false"/><p:outputLabel value="" />
                         <p:commandButton id="btnCancelUpdate" value="Cancel" 
-                                         action="administrator" 
+                                         action="administrator" ajax="false"
                                          icon="ui-icon-arrowreturnthick-1-w"/>
                     </h:panelGrid>
                 </p:panel>

@@ -48,5 +48,12 @@ public class ArticleFacade extends AbstractFacade<Article> implements ArticleFac
         }
         return Integer.parseInt(obj.toString()) + 1;
     }
+
+    @Override
+    public List<Article> getAllVisibleArticles() {
+        Query query = em.createQuery("SELECT a from Article a WHERE a.status =:visible ORDER BY a.creationDate DESC");
+        query.setParameter("visible", true);
+        return query.getResultList();
+    }
     
 }

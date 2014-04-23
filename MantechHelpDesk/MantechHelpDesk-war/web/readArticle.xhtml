@@ -4,9 +4,32 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                >
+                    
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
     <ui:define name="title">MantechHelpDesk: Read articles</ui:define>
     <ui:define name="content">
-        <h1>Welcome to Read articles page</h1>
+        <f:view>
+            <h:form id="readArticleFormId">
+                <c:forEach items="#{article.allVisibleArticles}" var="art">
+                    <p:panel id="pnlReadArticle#{art.articleID}" 
+                             header="#{art.articleSubject} / #{article.currentRateDesc}" toggleable="true" 
+                             closable="true" toggleSpeed="500" 
+                             closeSpeed="500" widgetVar="articlePanel#{art.articleID}">
+                        <h:outputText value="#{art.articleContents}" escape="false"/>
+                        <p:rating value="#{article.currentRate}" cancel="false">
+                            <f:param name="articleId" value="#{art.articleID}" />
+                            <p:ajax event="rate" listener="#{article.handleRate}" update="pnlReadArticle#{art.articleID}"/>
+                        </p:rating><p:spacer/><p:spacer/>
+                        <p:commandLink value="View results" action="#{article.viewResults}" 
+                                       onclick="PF('ratingResultVar').show();" 
+                                       style="font-size: 11px;" />
+                    </p:panel>
+                    <br/>
+                </c:forEach>
+                <p:dialog id="resultDialog" header="Rating results" widgetVar="ratingResultVar" >
+                    <p:pieChart value="#{article.pieRatingResultModel}" legendPosition="w" style="width:400px;height:300px"/>
+                </p:dialog>
+            </h:form>
+        </f:view>
     </ui:define>
 </ui:composition>

@@ -15,28 +15,26 @@
                                  paginator="true" rows="10"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                                  rowsPerPageTemplate="5,10,15">
-                        <p:column headerText="ID">
-                            #{item.historyID}
+                        <p:column headerText="ComplaintID">
+                            #{item.complaintID.complaintID}
                         </p:column>
-                        <p:column headerText="Employee's Logging Name">
-                            #{item.userAccountID.username}
-                        </p:column>
-                        <p:column headerText="Employee's Name">
-                            #{item.userAccountID.name}
+                        <p:column headerText="From">
+                            #{item.userAccountID.username}/#{item.userAccountID.name}
                         </p:column>
                         <p:column headerText="Details">
                             #{item.details}
                         </p:column>
-                        <p:column headerText="ComplaintID">
-                            <p:commandLink value="#{item.complaintID.complaintID}" action="#{complaint.viewComplaintDetail}">
-                                <f:setPropertyActionListener target="#{complaint.adminComplaintDetail}" 
-                                                             value="#{item.complaintID}"/>
-                            </p:commandLink>
-                        </p:column>
-                        <p:column headerText="Action Date">
+                        <p:column headerText="Raised Date">
                             <h:outputText value="#{item.lastModifiedDate}">
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </h:outputText>
+                        </p:column>
+                        <p:column headerText="Action" style="text-align: center">
+                            <p:commandButton value="View" style="width: 80%" action="#{complaint.viewComplaintDetail}"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{complaint.adminComplaintDetail}" 
+                                                             value="#{item.complaintID}"/>
+                            </p:commandButton>
                         </p:column>
                     </p:dataTable>
                 </p:panel>

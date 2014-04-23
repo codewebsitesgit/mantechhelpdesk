@@ -25,64 +25,65 @@
                     <p:menubar style="padding-left: 10%" rendered="${not empty userSession}">  
                         <p:submenu label="Complaints" icon="ui-icon ui-icon-home">  
                             <p:submenu label="New" rendered="${userSession.roleID.roleID == 3}">  
-                                <p:menuitem value="Complaint" action="#{complaint.newComplaint}" icon="ui-icon-circle-plus"/>  
+                                <p:menuitem value="Complaint" action="#{complaint.newComplaint}" icon="ui-icon-circle-plus" ajax="false"/>  
                             </p:submenu> 
                             <p:menuitem value="Handle complaints" action="#{complaint.viewLastModifiedComplaints}" 
-                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon ui-icon-refresh"/>
+                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon ui-icon-refresh" ajax="false"/>
                             <p:separator rendered="${userSession.roleID.roleID == 1}"/>
                             <p:menuitem value="History trackings" action="#{complaint.viewComplaintHistory}" 
-                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon-arrow-4-diag"/>
+                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon-arrow-4-diag" ajax="false"/>
                             <p:separator rendered="${userSession.roleID.roleID == 1}"/>
                             <p:menuitem value="Generate reports" action="#{complaint.generateReports}" 
-                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon-disk"/>
+                                        rendered="${userSession.roleID.roleID == 1}" icon="ui-icon-disk" ajax="false"/>
                             <p:menuitem value="All Assignments" action="#{complaint.viewComplaintAssignment}" 
-                                        rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh"/>
+                                        rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh" ajax="false"/>
                         </p:submenu>  
 
                         <p:submenu label="Articles" icon="ui-icon-signal-diag">  
                             <p:menuitem value="Read articles" action="#{article.readArticle}" 
-                                        icon="ui-icon-comment"/>
+                                        icon="ui-icon-comment" ajax="false"/>
                             <p:separator rendered="${userSession.roleID.roleID == 2}"/>
                             <p:menuitem value="New article" action="#{article.newArticle}" 
-                                        icon="ui-icon-circle-plus" rendered="${userSession.roleID.roleID == 2}"/>
+                                        icon="ui-icon-circle-plus" rendered="${userSession.roleID.roleID == 2}" ajax="false"/>
                             <p:separator rendered="${userSession.roleID.roleID == 2}"/>
                             <p:menuitem value="Maintain article" action="#{article.maintainArticle}" 
-                                        icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 2}"/>
+                                        icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 2}" ajax="false"/>
                         </p:submenu>
 
                         <p:submenu label="Accounts" icon="ui-icon-person" rendered="${userSession.roleID.roleID == 1}">  
-                            <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-circle-plus" />
+                            <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-circle-plus" ajax="false"/>
                             <p:separator />
-                            <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" />
+                            <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" ajax="false"/>
                         </p:submenu>
 
                         <p:submenu label="View" icon="ui-icon-contact" rendered="${userSession.roleID.roleID == 3}">  
-                            <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" />  
+                            <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" ajax="false"/>  
                         </p:submenu>  
 
                         <p:submenu label="Profiles" icon="ui-icon-gear">  
-                            <p:menuitem value="Change password" action="#{account.changeUserPassword}" icon="ui-icon-pencil" />  
+                            <p:menuitem value="Change password" action="#{account.changeUserPassword}" icon="ui-icon-pencil" ajax="false"/>  
                         </p:submenu>
 
                         <p:submenu label="Help" icon="ui-icon-help">  
-                            <p:menuitem value="User Guide" action="#{help.viewUserGuide}" icon="ui-icon-newwin"/> 
+                            <p:menuitem value="User Guide" action="#{help.viewUserGuide}" icon="ui-icon-newwin" ajax="false"/> 
                             <p:separator />
-                            <p:menuitem value="FAQs" action="#{help.viewFAQs}" icon="ui-icon-transferthick-e-w"/>
+                            <p:menuitem value="FAQs" action="#{help.viewFAQs}" icon="ui-icon-transferthick-e-w" ajax="false"/>
                         </p:submenu> 
 
                         <f:facet name="options">  
                             <p:commandButton value="FAQs" icon="ui-icon-search" 
-                                             action="#{faqs.searchFaqs}" ajax="true"
-                                             rendered="${view.viewId != '/faqs.xhtml'}"/> 
+                                             action="#{faqs.searchFaqs}"
+                                             rendered="${view.viewId != '/faqs.xhtml'}"
+                                             ajax="false"/> 
                             <p:commandButton value="FAQs" icon="ui-icon-search" 
                                              update=":formFaqs:faqsTable"
-                                             action="#{faqs.searchFaqs}" ajax="true"
+                                             action="#{faqs.searchFaqs}" ajax="false"
                                              rendered="${view.viewId == '/faqs.xhtml'}"/> 
                             <p:inputText style="margin-right:10px" id="faqFocus" 
                                          value="#{faqs.searchQuestionKeyword}"
                                          title="Enter keyword to search the question"/> 
                             <p:tooltip for="faqFocus" showEffect="slide" hideEffect="slide"/>
-                            <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{account.logout}"/>  
+                            <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{account.logout}" ajax="false"/>  
                         </f:facet>  
                     </p:menubar>
                 </h:form>

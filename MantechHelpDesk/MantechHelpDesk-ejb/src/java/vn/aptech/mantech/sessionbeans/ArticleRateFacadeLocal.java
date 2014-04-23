@@ -30,5 +30,12 @@ public interface ArticleRateFacadeLocal {
     List<ArticleRate> findRange(int[] range);
 
     int count();
-    
+
+    ArticleRate getArticleRateFromUser(int userId, int articleID);
+
+    List<ArticleRate> findPoorRatings(int articleID);
+    List<ArticleRate> findSatisfiedRatings(int articleID);
+    List<ArticleRate> findGoodRatings(int articleID);
+    List<ArticleRate> findVeryGoodRatings(int articleID);
+    List<ArticleRate> findExcellentRatings(int articleID);
 }

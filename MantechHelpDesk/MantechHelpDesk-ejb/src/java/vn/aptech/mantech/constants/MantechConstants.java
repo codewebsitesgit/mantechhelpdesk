@@ -39,4 +39,10 @@ public interface MantechConstants {
     public static final int DEPARTMENT_INS_SERVICE= 4;
     public static final int DEPARTMENT_HRS_SERVICE = 5;
     
+    public static final int ARTICLE_RATE_POOR = 1;
+    public static final int ARTICLE_RATE_SATISFIED = 2;
+    public static final int ARTICLE_RATE_GOOD = 3;
+    public static final int ARTICLE_RATE_VERY_GOOD= 4;
+    public static final int ARTICLE_RATE_EXCELLENT = 5;
+    
 }

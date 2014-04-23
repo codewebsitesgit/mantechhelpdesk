@@ -45,7 +45,8 @@
                         <p:message for="complaintContents" />
                         <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
                                          update="panelSendComplaint,complaintTable"
-                                         icon="ui-icon-check" style="margin: 0"/>
+                                         icon="ui-icon-check" style="margin: 0"
+                                         ajax="false"/>
                         <h:outputText />
                         <h:outputText />
                     </p:panelGrid>

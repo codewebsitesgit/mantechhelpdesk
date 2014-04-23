@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -169,5 +170,23 @@ public class Article implements Serializable {
     public String toString() {
         return "vn.aptech.mantech.entity.Article[ articleID=" + articleID + " ]";
     }
+    
+    @Transient
+    private ArticleRate currentRate;
+
+    /**
+     * @return the currentRate
+     */
+    public ArticleRate getCurrentRate() {
+        return currentRate;
+    }
+
+    /**
+     * @param currentRate the currentRate to set
+     */
+    public void setCurrentRate(ArticleRate currentRate) {
+        this.currentRate = currentRate;
+    }
+
     
 }

@@ -22,20 +22,6 @@
                         <p:column headerText="Subject">
                             #{item.complaintSubject}
                         </p:column>
-                        <p:column headerText="From user">
-                            #{item.complaintOwner.name}
-                        </p:column>
-                        <p:column headerText="Department">
-                            #{item.complaintOwner.departmentID.departmentName}
-                        </p:column>
-                        <p:column headerText="Category">
-                            #{item.complaintCategory.categoryName}
-                        </p:column>
-                        <p:column headerText="LastModifiedDate">
-                            <h:outputText value="#{item.lastModified}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
                         <p:column headerText="Priority">
                             #{item.priority.priorityName}
                         </p:column>
@@ -45,11 +31,12 @@
                         <p:column headerText="Status">
                             #{item.status.statusName}
                         </p:column>
-                        <p:column headerText="Action">
-                            <p:commandLink value="Handle" action="#{complaint.viewComplaintDetail}">
+                        <p:column headerText="Action" style="text-align: center">
+                            <p:commandButton value="View" style="width: 80%" ajax="false"
+                                             action="#{complaint.viewComplaintDetail}">
                                 <f:setPropertyActionListener target="#{complaint.adminComplaintDetail}" 
                                                              value="#{item}"/>
-                            </p:commandLink>
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>

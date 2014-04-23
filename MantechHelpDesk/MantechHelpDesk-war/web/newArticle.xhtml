@@ -11,16 +11,16 @@
             <h:form id="newArticleForm">
                 <p:panel id="newArticlePanel" header="Create a new article">
                     <p:panelGrid columns="3" id="newArticleGrid" styleClass="table_insert_update">
-                        <h:outputLabel value="ArticleID:" for="articleID" />
+                        <h:outputLabel value="ArticleID" for="articleID" />
                         <p:outputLabel id="articleID" value="#{article.curArticle.articleID}" title="ArticleID"/>
                         <p:message for="articleID"/>
-                        <h:outputLabel value="Subject *:" for="articleSubject" />
+                        <h:outputLabel value="Subject *" for="articleSubject" />
                         <p:inputText id="articleSubject" value="#{article.curArticle.articleSubject}" 
                                      title="ArticleSubject" required="true" 
                                      requiredMessage="The Subject cannot be blank."
                                      maxlength="150" size="60"/>
                         <p:message for="articleSubject" />
-                        <h:outputLabel value="Contents:" for="articleContents" />
+                        <h:outputLabel value="Contents *" for="articleContents" />
                         <p:editor id="articleContents" value="#{article.curArticle.articleContents}" width="600"
                                   required="true" 
                                   requiredMessage="The Contents cannot be blank."
@@ -44,10 +44,23 @@
                         <p:column headerText="Subject">
                             #{item.articleSubject}
                         </p:column>
-                        <p:column headerText="Creation Date">
+                        <p:column headerText="Creation Date" >
                             <p:outputLabel value="#{item.creationDate}" title="CreationDate" >
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Status">
+                            <p:commandButton value="visible" rendered="${item.status}" 
+                                             action="#{article.changeStatus}" 
+                                             validateClient="false">
+                                <f:setPropertyActionListener value="#{item.articleID}" 
+                                                             target="#{article.changedArticleStatusId}"/>
+                            </p:commandButton>
+                            <p:commandButton value="invisible" rendered="${not item.status}" 
+                                             action="#{article.changeStatus}" validateClient="false">
+                                <f:setPropertyActionListener value="#{item.articleID}" 
+                                                             target="#{article.changedArticleStatusId}"/>
+                            </p:commandButton>
                         </p:column>
                     </p:dataTable>
                 </p:panel>

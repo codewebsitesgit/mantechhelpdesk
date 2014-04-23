@@ -9,52 +9,53 @@
     <ui:define name="content">
         <f:view>
             <h:form>
-                <p:panel id="updateComplaintOfTechPanel" header="Complaint's Details">
+                <p:panel id="updateComplaintOfTechPanel" header="Complaint's Details" style="background-color: aliceblue">
                     <p:messages autoUpdate="true" closable="true" showDetail="true"/>
-                    <h:panelGrid columns="2" id="panelUpdateCamplaint" cellspacing="8">
-                        <p:outputLabel value="ComplaintID" for="complaintID" />
+                    <h:panelGrid columns="3" id="panelUpdateCamplaint" cellspacing="8">
+                        <p:outputLabel value="ComplaintID" for="complaintID" /><p:outputLabel value=":" />
                         <p:outputLabel id="complaintID" value="#{complaint.techComplaintDetail.complaintID}" 
                                        title="ComplaintID"/>
-                        <p:outputLabel value="Subject" for="complaintSubject" />
-                        <p:inputText id="complaintSubject" value="#{complaint.techComplaintDetail.complaintSubject}"
-                                     title="ComplaintSubject" readonly="true" size="45"/>
-                        <p:outputLabel value="Contents" for="complaintContents" />
-                        <p:outputLabel id="complaintContents" value="#{complaint.techComplaintDetail.complaintContents}" 
-                                       title="ComplaintContents" escape="false" style="border: medium #045491"/>
-                        <p:outputLabel value="Assign to" for="technician" />
+                        <p:outputLabel value="Subject" for="complaintSubject" /><p:outputLabel value=":" />
+                        <p:outputLabel id="complaintSubject" value="#{complaint.techComplaintDetail.complaintSubject}"
+                                     title="ComplaintSubject"/>
+                        <p:outputLabel value="" for="complaintContents" /><p:outputLabel value="" />
+                        <p:fieldset id="complaintContents" legend="Complaint contents" 
+                                    toggleable="true" toggleSpeed="500" collapsed="true">
+                            <h:panelGrid cellpadding="10" width="500">
+                                <h:outputText value="#{complaint.techComplaintDetail.complaintContents}" escape="false"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p:outputLabel value="Assign to" for="technician" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.techComplaintDetail.technician.name}" id="technician"/>
-                        <p:outputLabel value="From employee" />
-                        <p:outputLabel value="#{complaint.techComplaintDetail.complaintOwner.username}" />
-                        <p:outputLabel value="Full employee's name"/>
-                        <p:outputLabel value="#{complaint.techComplaintDetail.complaintOwner.name}" />
-                        <p:outputLabel value="Status" for="status" />
+                        <p:outputLabel value="From" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{complaint.techComplaintDetail.complaintOwner.username}/#{complaint.techComplaintDetail.complaintOwner.name}" />
+                        <p:outputLabel value="Status" for="status" /><p:outputLabel value=":" />
                         <p:selectOneMenu id="status" value="#{complaint.techSelectedStatusId}" 
                                          required="true" requiredMessage="The Status field is required.">
                             <f:selectItems value="#{status.allStatus}" var="stt"
                                            itemLabel="#{stt.statusName}" itemValue="#{stt.statusID}"/>
                         </p:selectOneMenu>
-                        <p:outputLabel value="Priority" for="priority" />
+                        <p:outputLabel value="Priority" for="priority" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.techComplaintDetail.priority.priorityName}" id="priority"/>
-                        <p:outputLabel value="Category" for="complaintCategory" />
+                        <p:outputLabel value="Category" for="complaintCategory" /><p:outputLabel value=":" />
                         <p:selectOneMenu id="complaintCategory" value="#{complaint.techSelectedCategory}" 
                                          required="true" requiredMessage="The Category field is required.">
                             <f:selectItems value="#{complaint.complaintCats}" var="cat"
                                        itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
                         </p:selectOneMenu>
-                        <p:outputLabel value="Reasons" for="reasons" />
+                        <p:outputLabel value="Reasons" for="reasons" /><p:outputLabel value=":" />
                         <p:editor id="reasons" value="#{complaint.techInputReasons}" width="600"
-                                  required="true" 
-                                  requiredMessage="The Contents cannot be blank."
                                   maxlength="1000"/>
-                        <p:outputLabel value="LodgingDate" for="lodgingDate" />
+                        <p:outputLabel value="LodgingDate" for="lodgingDate" /><p:outputLabel value=":" />
                         <p:outputLabel id="lodgingDate" value="#{complaint.techComplaintDetail.lodgingDate}" title="LodgingDate" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                         </p:outputLabel>
                         <p:commandButton id="btnUpdateComplaint" value="Update complaint" 
                                          action="#{complaint.updateTechComplaintDetail}" 
-                                         icon="ui-icon-check"/>
+                                         icon="ui-icon-check" ajax="false"/>
+                        <p:outputLabel value="" />
                         <p:commandButton id="btnCancelUpdate" value="Cancel" 
-                                         action="technician" 
+                                         action="technician" ajax="false"
                                          icon="ui-icon-arrowreturnthick-1-w"/>
                     </h:panelGrid>
                 </p:panel>
