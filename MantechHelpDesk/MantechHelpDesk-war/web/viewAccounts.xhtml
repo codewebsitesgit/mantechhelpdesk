@@ -10,7 +10,7 @@
     <ui:define name="content">
         <h1>View all employee's account and search account.</h1>
         <f:view>
-            <h:form>
+            <h:form id="form">
                 <p:panel id="panelSearchAccount" header="Search Account">
                     <p:panelGrid columns="2" id="panelSearchCriteria">
                         <h:outputText value="Account ID:"/>
@@ -20,21 +20,25 @@
                         <h:outputText value="DeparmentID:"/>
                         <p:selectOneMenu id="department" value="#{account.searchDepartmentID}" label="Department">
                             <f:selectItems value="#{department.allDepartment}" var="dp"
-                                           itemLabel="#{dp.departmentName}" itemValue="#{dp.departmentName}"/>
+                                           itemLabel="#{dp.departmentName}" itemValue="#{dp.departmentID}"/>
                         </p:selectOneMenu>
                         <h:outputText value="Name:"/>
                         <p:inputText value="#{account.searchFullName}" id="searchFullname"/>
                         <p:commandButton value="Search" action="viewAccounts" 
-                                         update="complaintTable" ajax="false"
+                                         update="panelAllSearchedAccount" ajax="false"
                                          icon="ui-icon-check" style="margin: 0"/>
                     </p:panelGrid>
                 </p:panel>
+                <br/>
                 <p:panel id="panelAllSearchedAccount" header="All Account">
                     <p:dataTable value="#{account.searchAllAccount}" var="item" id="complaintTable"
                                  rowKey="#{item.accountID}" selectionMode="single" 
                                  paginator="true" rows="10"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                                 rowsPerPageTemplate="5,10,15">
+                                 rowsPerPageTemplate="5,10,15"
+                                 selection="#{account.selectAccount}">
+                        <p:ajax event="rowSelect"
+                                update=":form:panelAccountDetail" oncomplete="PF('panelAccountDetail').show();" /> 
                         <p:column headerText="Account ID">
                             #{item.accountID}
                         </p:column>
@@ -52,12 +56,50 @@
                         </p:column>
                         <p:column headerText="Gender">
                             #{item.gender}
-                        </p:column>
-                        
+                        </p:column>                       
                         
                         
                     </p:dataTable>
                 </p:panel>
+                <p:dialog header="Accounts details" widgetVar="panelAccountDetail" 
+                          showEffect="explode" style="background-color: aliceblue"
+                          modal="true" height="400" width="800" id="dialogAccountDetailID">  
+                    <h:panelGrid columns="3" id="panelAccountDetail" cellspacing="8">
+                        <p:outputLabel value="AccountID" />
+                        <p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.accountID}" 
+                                       title="AccountID"/>
+                        <p:outputLabel value="Username" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.username}" />
+                        <p:outputLabel value="DepartmentID" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.departmentID.departmentName}"
+                                     title="AccountDepartment"/>
+                        
+                        <p:outputLabel value="RoleID" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.roleID.roleName}"/>
+                        <p:outputLabel value="Name" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.name}" />
+                        <p:outputLabel value="Brithday" />
+                   <p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.birthday}" >
+                                     <f:convertDateTime parent="dd/MM/yyyy" />
+                        </p:outputLabel>
+                        <p:outputLabel value="Gender" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.gender}" />
+                        
+                        <p:outputLabel value="Address" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.address}" />                           
+                        <p:outputLabel value="Phone" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.phone}" />                            
+                        <p:outputLabel value="Email" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.email}" />
+                            
+                        <p:outputLabel value="Status" /><p:outputLabel value=":" />
+                        <p:outputLabel value="#{account.selectAccount.status}" />
+                                      
+                    </h:panelGrid>    
+
+                </p:dialog>
             </h:form>
         </f:view>
     </ui:define>

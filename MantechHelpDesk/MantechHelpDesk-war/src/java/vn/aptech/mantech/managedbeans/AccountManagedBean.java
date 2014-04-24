@@ -43,6 +43,7 @@ public class AccountManagedBean implements Serializable {
     private String searchUsername;
     private Integer searchDepartmentID;
     private String searchFullName; 
+    private UserAccount selectAccount;
 
     private UserAccount curUser;
 
@@ -211,7 +212,7 @@ public class AccountManagedBean implements Serializable {
     
     public List<UserAccount> getSearchAllAccount()
     {
-        return userAccountFacade.getAllAccount(searchAccountID, username, searchDepartmentID, username);
+        return userAccountFacade.getAllAccount(searchAccountID, searchUsername, searchDepartmentID, searchFullName);
     }
 
     /**
@@ -282,6 +283,20 @@ public class AccountManagedBean implements Serializable {
      */
     public void setSearchFullName(String searchFullName) {
         this.searchFullName = searchFullName;
+    }
+
+    /**
+     * @return the selectAccount
+     */
+    public UserAccount getSelectAccount() {
+        return selectAccount;
+    }
+
+    /**
+     * @param selectAccount the selectAccount to set
+     */
+    public void setSelectAccount(UserAccount selectAccount) {
+        this.selectAccount = selectAccount;
     }
 
 }

@@ -62,7 +62,7 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
 
     @Override
     public List<UserAccount> getAllAccount(Integer accountID, String username, Integer departmentID, String fullName) {
-        String sql = "SELECT a from UserAccount a WHERE 1=1";
+        String sql = "SELECT a from UserAccount a WHERE a.roleID.roleID <> 1";
         if (accountID != null && accountID != 0) {
             sql += " AND a.accountID=:accountID";
         }
