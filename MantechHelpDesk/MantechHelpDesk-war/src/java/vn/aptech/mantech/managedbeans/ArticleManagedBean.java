@@ -7,8 +7,6 @@ package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -18,7 +16,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.RateEvent;
 import org.primefaces.model.chart.PieChartModel;
 import vn.aptech.mantech.entity.Article;
@@ -51,8 +48,6 @@ public class ArticleManagedBean implements Serializable {
 
     private int changedArticleStatusId;
 
-    private final Map<Integer, Integer> ratings;
-
     private Integer currentRate = 2;
 
     private Integer currentArticleId;
@@ -64,7 +59,7 @@ public class ArticleManagedBean implements Serializable {
     public void setCurrentArticleId(Integer currentArticleId) {
         this.currentArticleId = currentArticleId;
     }
-    
+
     @Resource
     private UserTransaction ut;
 
@@ -72,7 +67,6 @@ public class ArticleManagedBean implements Serializable {
      * Creates a new instance of ArticleManagedBean
      */
     public ArticleManagedBean() {
-        ratings = new HashMap<Integer, Integer>();
     }
 
     public String newArticle() {
@@ -114,31 +108,7 @@ public class ArticleManagedBean implements Serializable {
     }
 
     public List<Article> getAllVisibleArticles() {
-        try {
-            ut.begin();
-            List<Article> articles = articleFacade.getAllVisibleArticles();
-            int accId = getSessionUserAccount().getAccountID();
-            for (Article a : articles) {
-                for (ArticleRate r : a.getArticleRateCollection()) {
-                    if (r.getRateOwner() == accId) {
-                        a.setCurrentRate(r);
-                        break;
-                    }
-                }
-
-            }
-            ut.commit();
-            return articles;
-        } catch (Exception e) {
-            try {
-                ut.rollback();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            e.printStackTrace();
-        }
-
-        return Collections.emptyList();
+        return articleFacade.getAllVisibleArticles();
     }
 
     private static UserAccount getSessionUserAccount() {
@@ -204,23 +174,20 @@ public class ArticleManagedBean implements Serializable {
             ArticleRate rate = articleRateFacade.getArticleRateFromUser(
                     getSessionUserAccount().getAccountID(), articleId);
             final boolean isCreateNew = rate == null;
-            if (rate == null) {
-                rate = new ArticleRate();
-                ArticleRatePK articleRatePK = new ArticleRatePK(articleId, rateStars);
-                rate.setArticleRatePK(articleRatePK);
-                Article article = articleFacade.find(articleId);
-                rate.setArticle(article);
-                rate.setRateOwner(getSessionUserAccount().getAccountID());
-            }
-            Rate rating = rateFacade.find(rateStars);
-            rate.setRate(rating);
-            rate.setCreationDate(Calendar.getInstance().getTime());
-            if (isCreateNew) {
-                articleRateFacade.create(rate);
-            } else {
-                articleRateFacade.edit(rate);
-            }
 
+            if (!isCreateNew) {
+                articleRateFacade.remove(rate);
+            }
+            ArticleRate newRate = new ArticleRate();
+            ArticleRatePK articleRatePK = new ArticleRatePK(articleId, rateStars);
+            newRate.setArticleRatePK(articleRatePK);
+            newRate.setRateOwner(getSessionUserAccount().getAccountID());
+            newRate.setCreationDate(Calendar.getInstance().getTime());
+            Rate rating = rateFacade.find(rateStars);
+            newRate.setRate(rating);
+            Article article = articleFacade.find(articleId);
+            newRate.setArticle(article);
+            articleRateFacade.create(newRate);
             ut.commit();
         } catch (Exception e) {
             try {
@@ -231,48 +198,9 @@ public class ArticleManagedBean implements Serializable {
             e.printStackTrace();
         }
 
-        ratings.put(articleId, rateStars);
     }
 
     public void viewResults() {
-    }
-
-    public PieChartModel getPieRatingResultModel() {
-        PieChartModel pieModel = new PieChartModel();
-
-//        if(currentArticleId == null) {
-//            return pieModel;
-//        }
-//        // get all the ratings
-//        List<ArticleRate> poorRatings = articleRateFacade.findPoorRatings(currentArticleId.intValue());
-//        List<ArticleRate> satisfiedRatings = articleRateFacade.findSatisfiedRatings(currentArticleId.intValue());
-//        List<ArticleRate> goodRatings = articleRateFacade.findGoodRatings(currentArticleId.intValue());
-//        List<ArticleRate> veryGoodRatings = articleRateFacade.findVeryGoodRatings(currentArticleId.intValue());
-//        List<ArticleRate> excellentRatings = articleRateFacade.findExcellentRatings(currentArticleId.intValue());
-//
-//        double ps = poorRatings.size();
-//        double ss = satisfiedRatings.size();
-//        double gs = goodRatings.size();
-//        double vgs = veryGoodRatings.size();
-//        double es = excellentRatings.size();
-//
-//        double totalSize = ps + ss + gs + vgs + es;
-//        if (totalSize == 0) {
-//            return pieModel;
-//        }
-//        pieModel.set("Poor", ps / totalSize * 1000);
-//        pieModel.set("Satisfied", ss / totalSize * 1000);
-//        pieModel.set("Good", gs / totalSize * 10000);
-//        pieModel.set("Very good", vgs / totalSize * 1000);
-//        pieModel.set("Excellent", es / totalSize * 1000);
-        
-        pieModel.set("Poor", 540);
-        pieModel.set("Satisfied", 325);
-        pieModel.set("Good", 702);
-        pieModel.set("Very good", 421);
-        pieModel.set("Excellent", 274);
-        
-        return pieModel;
     }
 
     /**
@@ -299,4 +227,43 @@ public class ArticleManagedBean implements Serializable {
 
         return "";
     }
+
+    /**
+     * @return the curPieChart
+     */
+    public PieChartModel getCurPieChart() {
+        PieChartModel curPieChart = new PieChartModel();
+        if (currentArticleId == null) {
+            return curPieChart;
+        }
+        // get all the ratings
+        List<ArticleRate> poorRatings = articleRateFacade.findPoorRatings(currentArticleId);
+        List<ArticleRate> satisfiedRatings = articleRateFacade.findSatisfiedRatings(currentArticleId);
+        List<ArticleRate> goodRatings = articleRateFacade.findGoodRatings(currentArticleId);
+        List<ArticleRate> veryGoodRatings = articleRateFacade.findVeryGoodRatings(currentArticleId);
+        List<ArticleRate> excellentRatings = articleRateFacade.findExcellentRatings(currentArticleId);
+
+        double ps = poorRatings.size();
+        double ss = satisfiedRatings.size();
+        double gs = goodRatings.size();
+        double vgs = veryGoodRatings.size();
+        double es = excellentRatings.size();
+
+        double totalSize = ps + ss + gs + vgs + es;
+        if (totalSize == 0) {
+            return curPieChart;
+        }
+        double pourPercent = ps / totalSize * 100;
+        curPieChart.set("Poor" + "(" + (int) ps + (ps > 1 ? " votes" : " vote") + ")", pourPercent);
+        double satisPercent = ss / totalSize * 100;
+        curPieChart.set("Satisfied" + "(" + (int) ss + (ss > 1 ? " votes" : " vote") + ")", satisPercent);
+        double goodPercent = gs / totalSize * 100;
+        curPieChart.set("Good" + "(" + (int) gs + (gs > 1 ? " votes" : " vote") + ")", goodPercent);
+        double veryGoodPercent = vgs / totalSize * 100;
+        curPieChart.set("Very good" + "(" + (int) vgs + (vgs > 1 ? " votes" : " vote") + ")", veryGoodPercent);
+        double excellentPercent = es / totalSize * 100;
+        curPieChart.set("Excellent" + "(" + (int) es + (es > 1 ? " votes" : " vote") + ")", excellentPercent);
+        return curPieChart;
+    }
+
 }

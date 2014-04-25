@@ -35,7 +35,8 @@
                                  rowsPerPageTemplate="5,10,15"
                                  selection="#{complaint.curComplaint}" >
                         <p:ajax event="rowSelect"
-                                update=":viewComplaintFormID:panelComplaintDetail" oncomplete="PF('panelComplaintDetail').show();" />  
+                                update=":viewComplaintFormID:panelComplaintDetailGrid" 
+                                oncomplete="PF('panelComplaintDetail').show();" />  
 
                         <p:column headerText="ID">
                             #{item.complaintID}
@@ -68,7 +69,7 @@
                 <p:dialog header="Complaint's details" widgetVar="panelComplaintDetail" 
                           showEffect="explode" style="background-color: aliceblue"
                           modal="true" height="400" width="800" id="dialogComplaintDetailID">  
-                    <h:panelGrid columns="3" id="panelComplaintDetail" cellspacing="8">
+                    <h:panelGrid columns="3" id="panelComplaintDetailGrid" cellspacing="8">
                         <p:outputLabel value="ComplaintID" />
                         <p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.complaintID}" 

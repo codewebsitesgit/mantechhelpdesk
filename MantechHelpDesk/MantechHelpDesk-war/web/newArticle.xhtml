@@ -28,12 +28,15 @@
                         <p:message for="articleContents" />
                         <p:outputLabel value=""/>
                         <p:commandButton id="btnCreate" value="Post article" action="#{article.postArticle}" 
-                                         update=":newArticleForm:newArticleGrid,:newArticleForm:articleTable"
-                                         icon="ui-icon-check" style="margin: 0"/>
+                                         update=":newArticleForm:newArticleGrid,:resultArticleTable:articleTable"
+                                         icon="ui-icon-check" style="margin: 0"
+                                         ajax="false"/>
                         <p:outputLabel value=""/>
                     </p:panelGrid>
                 </p:panel>
                 <br/>
+            </h:form>
+            <h:form id="resultArticleTable">
                 <p:panel id="panelTop5Articles" header="Top 5 your latest articles">
                     <p:dataTable value="#{article.topFiveArticles}" var="item" 
                                  id="articleTable"
@@ -49,15 +52,16 @@
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </p:outputLabel>
                         </p:column>
-                        <p:column headerText="Status">
-                            <p:commandButton value="visible" rendered="${item.status}" 
+                        <p:column headerText="Status" style="text-align: center">
+                            <p:commandButton style="width: 80%" value="visible" rendered="${item.status}" 
                                              action="#{article.changeStatus}" 
-                                             validateClient="false">
+                                             ajax="false" update=":resultArticleTable:articleTable">
                                 <f:setPropertyActionListener value="#{item.articleID}" 
                                                              target="#{article.changedArticleStatusId}"/>
                             </p:commandButton>
-                            <p:commandButton value="invisible" rendered="${not item.status}" 
-                                             action="#{article.changeStatus}" validateClient="false">
+                            <p:commandButton style="width: 80%" value="invisible" rendered="${not item.status}" 
+                                             action="#{article.changeStatus}" ajax="false"
+                                             update=":resultArticleTable:articleTable">
                                 <f:setPropertyActionListener value="#{item.articleID}" 
                                                              target="#{article.changedArticleStatusId}"/>
                             </p:commandButton>
@@ -66,6 +70,5 @@
                 </p:panel>
             </h:form>
         </f:view>
-
     </ui:define>
 </ui:composition>

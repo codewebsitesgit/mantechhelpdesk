@@ -57,6 +57,7 @@ public class ArticleRateFacade extends AbstractFacade<ArticleRate> implements Ar
     public List<ArticleRate> findSatisfiedRatings(int articleID) {
         Query query = em.createQuery("SELECT ar from ArticleRate ar WHERE ar.article.articleID=:artID AND ar.rate.rateID=:ratID");
         query.setParameter("ratID", MantechConstants.ARTICLE_RATE_SATISFIED);
+        query.setParameter("artID", articleID);
         return query.getResultList();
     }
 
@@ -64,6 +65,7 @@ public class ArticleRateFacade extends AbstractFacade<ArticleRate> implements Ar
     public List<ArticleRate> findGoodRatings(int articleID) {
         Query query = em.createQuery("SELECT ar from ArticleRate ar WHERE ar.article.articleID=:artID AND ar.rate.rateID=:ratID");
         query.setParameter("ratID", MantechConstants.ARTICLE_RATE_GOOD);
+        query.setParameter("artID", articleID);
         return query.getResultList();
     }
 
@@ -71,6 +73,7 @@ public class ArticleRateFacade extends AbstractFacade<ArticleRate> implements Ar
     public List<ArticleRate> findVeryGoodRatings(int articleID) {
         Query query = em.createQuery("SELECT ar from ArticleRate ar WHERE ar.article.articleID=:artID AND ar.rate.rateID=:ratID");
         query.setParameter("ratID", MantechConstants.ARTICLE_RATE_VERY_GOOD);
+        query.setParameter("artID", articleID);
         return query.getResultList();
     }
 
@@ -78,6 +81,7 @@ public class ArticleRateFacade extends AbstractFacade<ArticleRate> implements Ar
     public List<ArticleRate> findExcellentRatings(int articleID) {
         Query query = em.createQuery("SELECT ar from ArticleRate ar WHERE ar.article.articleID=:artID AND ar.rate.rateID=:ratID");
         query.setParameter("ratID", MantechConstants.ARTICLE_RATE_EXCELLENT);
+        query.setParameter("artID", articleID);
         return query.getResultList();
     }
 }

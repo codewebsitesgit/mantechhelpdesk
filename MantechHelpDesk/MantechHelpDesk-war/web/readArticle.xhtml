@@ -4,32 +4,41 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                    
+
                 xmlns:c="http://java.sun.com/jsp/jstl/core">
     <ui:define name="title">MantechHelpDesk: Read articles</ui:define>
     <ui:define name="content">
         <f:view>
             <h:form id="readArticleFormId">
+                <p:growl id="aaaaaa" showDetail="true" /> 
                 <c:forEach items="#{article.allVisibleArticles}" var="art">
                     <p:panel id="pnlReadArticle#{art.articleID}" 
-                             header="#{art.articleSubject} / #{article.currentRateDesc}" toggleable="true" 
+                             header="#{art.articleID}. #{art.articleSubject} / #{article.currentRateDesc}" toggleable="true" 
                              closable="true" toggleSpeed="500" 
-                             closeSpeed="500" widgetVar="articlePanel#{art.articleID}">
-                        <h:outputText value="#{art.articleContents}" escape="false"/>
+                             closeSpeed="500" widgetVar="articlePanel#{art.articleID}" >
+                        <h:panelGrid columns="2" cellpadding="10" width="100%">  
+                            <h:outputText value="#{art.articleContents}" escape="false"/>
+                            <p:pieChart value="#{article.curPieChart}" title="Rating results"
+                                        legendPosition="w" style="width:300px;height:200px" 
+                                        rendered="${article.currentArticleId == art.articleID}"
+                                        id="resultPie#{art.articleID}"/>
+                        </h:panelGrid>
                         <p:rating value="#{article.currentRate}" cancel="false">
                             <f:param name="articleId" value="#{art.articleID}" />
                             <p:ajax event="rate" listener="#{article.handleRate}" update="pnlReadArticle#{art.articleID}"/>
                         </p:rating><p:spacer/><p:spacer/>
-                        <p:commandLink value="View results" action="#{article.viewResults}" 
-                                       onclick="PF('ratingResultVar').show();" 
-                                       style="font-size: 11px;" />
+                        <p:commandLink id="linkViewResult#{art.articleID}" value="View results"
+                                       action="#{article.viewResults}"
+                                       style="font-size: 11px;" ajax="false"
+                                       update=":readArticleFormId:resultPie#{art.articleID}">
+                            <f:setPropertyActionListener value="#{art.articleID}"
+                                                         target="#{article.currentArticleId}"/>
+                        </p:commandLink>
                     </p:panel>
                     <br/>
                 </c:forEach>
-                <p:dialog id="resultDialog" header="Rating results" widgetVar="ratingResultVar" >
-                    <p:pieChart value="#{article.pieRatingResultModel}" legendPosition="w" style="width:400px;height:300px"/>
-                </p:dialog>
             </h:form>
+
         </f:view>
     </ui:define>
 </ui:composition>
