@@ -95,6 +95,39 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
         return query.getResultList();
     }
     
-    
+    @Override
+    public List<UserAccount> getAllAccountWithAdmin(Integer accountID, String username, Integer departmentID, String fullName) {
+        String sql = "SELECT a from UserAccount a WHERE 1=1";
+        if (accountID != null && accountID != 0) {
+            sql += " AND a.accountID=:accountID";
+        }
+        if (username != null && !username.isEmpty()) {
+            sql += " AND a.username =:username";
+        }
+        
+        if (departmentID != null) {
+            sql += " AND a.departmentID.departmentID=:departmentID";
+        }
+        if (fullName != null && !fullName.isEmpty()) {
+            sql += " AND a.name LIKE :fullName";
+        }
+        Query query = em.createQuery(sql);
+        //query.setParameter("account", accountID);
+        if (accountID != null && accountID != 0) {
+            query.setParameter("accountID", accountID);
+        }
+        if (username != null && !username.isEmpty()) {
+            query.setParameter("username", username);
+        }
+        
+        if (departmentID != null) {
+            query.setParameter("departmentID", departmentID);
+        }
+        
+        if (fullName != null && !fullName.isEmpty()) {
+            query.setParameter("fullName", "%"+fullName+"%");
+        }
+        return query.getResultList();
+    }
     
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package vn.aptech.mantech.sessionbeans;
 
 import java.util.List;
@@ -30,12 +29,14 @@ public interface UserAccountFacadeLocal {
     List<UserAccount> findRange(int[] range);
 
     int count();
-    
+
     UserAccount getUserAccount(String username);
 
     List<UserAccount> getAllTechnicians();
-    
+
     int getNextAccountID();
 
     List<UserAccount> getAllAccount(Integer accountID, String username, Integer departmentID, String fullName);
+
+    List<UserAccount> getAllAccountWithAdmin(Integer accountID, String username, Integer departmentID, String fullName);
 }

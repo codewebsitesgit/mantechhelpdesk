@@ -17,7 +17,9 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 import vn.aptech.mantech.constants.MantechConstants;
 import vn.aptech.mantech.entity.UserAccount;
+import vn.aptech.mantech.sessionbeans.DepartmentFacadeLocal;
 import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
+import vn.aptech.mantech.sessionbeans.UserRoleFacadeLocal;
 import vn.aptech.mantech.utils.PasswordUtils;
 
 /**
@@ -29,6 +31,10 @@ import vn.aptech.mantech.utils.PasswordUtils;
 public class AccountManagedBean implements Serializable {
 
     @EJB
+    private UserRoleFacadeLocal userRoleFacade;
+    @EJB
+    private DepartmentFacadeLocal departmentFacade;
+    @EJB
     private UserAccountFacadeLocal userAccountFacade;
 
     private String username;
@@ -37,20 +43,35 @@ public class AccountManagedBean implements Serializable {
     private String oldPassword;
     private String newPassword;
     private String confirmPassword;
-    
+
     private Integer searchAccountID;
     private String searchUsername;
     private Integer searchDepartmentID;
-    private String searchFullName; 
+    private String searchFullName;
     private UserAccount selectAccount;
 
     private UserAccount curUser;
+    private int newDepartmentID;
+    private int newRoleID;
 
     @Resource
     UserTransaction ut;
 
     public String createUser() {
-        //userAccountFacade.create(curUser);
+        if (!userAccountFacade.getAllAccountWithAdmin(0, curUser.getUsername(), null, null).isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Username",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username is existed in database.", null));
+            return "";
+        }
+        if (!userAccountFacade.getAllAccountWithAdmin(0, null, null, curUser.getName()).isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username is existed in database.", null));
+            return "";
+        }
+        curUser.setDepartmentID(departmentFacade.find(newDepartmentID));
+        curUser.setRoleID(userRoleFacade.find(newRoleID));
+        curUser.setPassword(PasswordUtils.hashPassword(curUser.getPassword()));
+        userAccountFacade.create(curUser);
         return "viewAccounts";
     }
 
@@ -208,9 +229,8 @@ public class AccountManagedBean implements Serializable {
         }
         return "changeUserPassword";
     }
-    
-    public List<UserAccount> getSearchAllAccount()
-    {
+
+    public List<UserAccount> getSearchAllAccount() {
         return userAccountFacade.getAllAccount(searchAccountID, searchUsername, searchDepartmentID, searchFullName);
     }
 
@@ -298,4 +318,31 @@ public class AccountManagedBean implements Serializable {
         this.selectAccount = selectAccount;
     }
 
+    /**
+     * @return the newRoleID
+     */
+    public int getNewRoleID() {
+        return newRoleID;
+    }
+
+    /**
+     * @param newRoleID the newRoleID to set
+     */
+    public void setNewRoleID(int newRoleID) {
+        this.newRoleID = newRoleID;
+    }
+
+    /**
+     * @return the newDepartmentID
+     */
+    public int getNewDepartmentID() {
+        return newDepartmentID;
+    }
+
+    /**
+     * @param newDepartmentID the newDepartmentID to set
+     */
+    public void setNewDepartmentID(int newDepartmentID) {
+        this.newDepartmentID = newDepartmentID;
+    }
 }
