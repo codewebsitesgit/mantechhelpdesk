@@ -653,7 +653,7 @@ public class ComplaintManagedBean implements Serializable {
             e.printStackTrace();
         }
 
-        return "administrator";
+        return "viewLastModifiedComplaints";
     }
 
     private boolean checkChangeTech() {
@@ -756,7 +756,7 @@ public class ComplaintManagedBean implements Serializable {
             }
             e.printStackTrace();
         }
-        return "technician";
+        return "viewComplaintAssignment";
     }
 
     private boolean checkTechChangeStatus() {

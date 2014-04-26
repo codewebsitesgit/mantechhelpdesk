@@ -24,9 +24,11 @@
                     </table>
                     <p:menubar style="padding-left: 10%">  
                         <p:submenu label="Complaints" icon="ui-icon ui-icon-home" rendered="${not empty userSession}">  
-                            <p:submenu label="New" rendered="${userSession.roleID.roleID == 3}">  
-                                <p:menuitem value="Complaint" action="#{complaint.newComplaint}" icon="ui-icon-circle-plus" ajax="false"/>  
-                            </p:submenu> 
+                            <p:menuitem value="Complaint" action="#{complaint.newComplaint}" icon="ui-icon-circle-plus" 
+                                        ajax="false" rendered="${userSession.roleID.roleID == 3}"/> 
+                            <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" 
+                                        ajax="false" rendered="${userSession.roleID.roleID == 3}"/>
+
                             <p:menuitem value="Handle complaints" action="#{complaint.viewLastModifiedComplaints}" 
                                         rendered="${userSession.roleID.roleID == 1}" icon="ui-icon ui-icon-refresh" ajax="false"/>
                             <p:separator rendered="${userSession.roleID.roleID == 1}"/>
@@ -35,19 +37,20 @@
                             <p:separator rendered="${userSession.roleID.roleID == 1}"/>
                             <p:menuitem value="Generate reports" action="#{complaint.generateReports}" 
                                         rendered="${userSession.roleID.roleID == 1}" icon="ui-icon-disk" ajax="false"/>
-                            <p:menuitem value="All Assignments" action="#{complaint.viewComplaintAssignment}" 
+                            <p:menuitem value="All complaints" action="#{complaint.viewComplaintAssignment}" 
                                         rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh" ajax="false"/>
                         </p:submenu>  
 
-                        <p:submenu label="Articles" icon="ui-icon-signal-diag" rendered="${not empty userSession}">  
-                            <p:menuitem value="Read articles" action="#{article.readArticle}" 
-                                        icon="ui-icon-comment" ajax="false"/>
-                            <p:separator rendered="${userSession.roleID.roleID == 2}"/>
+                        <p:menuitem value="Articles" action="#{article.readArticle}" icon="ui-icon-signal-diag" ajax="false"
+                                    rendered="${userSession.roleID.roleID != 2}"/>
+
+                        <p:submenu label="Articles" icon="ui-icon-signal-diag" 
+                                   rendered="${not empty userSession and userSession.roleID.roleID == 2}">  
                             <p:menuitem value="New article" action="#{article.newArticle}" 
-                                        icon="ui-icon-circle-plus" rendered="${userSession.roleID.roleID == 2}" ajax="false"/>
-                            <p:separator rendered="${userSession.roleID.roleID == 2}"/>
+                                        icon="ui-icon-circle-plus" ajax="false"/>
+                            <p:separator/>
                             <p:menuitem value="Maintain article" action="#{article.maintainArticle}" 
-                                        icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 2}" ajax="false"/>
+                                        icon="ui-icon-pencil" ajax="false"/>
                         </p:submenu>
 
                         <p:submenu label="Accounts" icon="ui-icon-person" rendered="${not empty userSession and userSession.roleID.roleID == 1}">  
@@ -56,11 +59,8 @@
                             <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" ajax="false"/>
                         </p:submenu>
 
-                        <p:submenu label="View" icon="ui-icon-contact" rendered="${not empty userSession and userSession.roleID.roleID == 3}">  
-                            <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" ajax="false"/>  
-                        </p:submenu>  
-
-                        <p:submenu label="Profiles" icon="ui-icon-gear" rendered="${not empty userSession}">  
+                        <p:submenu label="Profile" icon="ui-icon-gear" rendered="${not empty userSession}">  
+                            <p:menuitem value="Change profile" action="#{account.displayChangeUserProfile}" icon="ui-icon-pencil" ajax="false"/> 
                             <p:menuitem value="Change password" action="#{account.changeUserPassword}" icon="ui-icon-pencil" ajax="false"/>  
                         </p:submenu>
 

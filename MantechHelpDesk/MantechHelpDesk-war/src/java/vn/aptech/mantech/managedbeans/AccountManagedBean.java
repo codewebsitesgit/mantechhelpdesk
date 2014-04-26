@@ -141,13 +141,13 @@ public class AccountManagedBean implements Serializable {
         if (account != null && account.getPassword().equals(hashPassword)) {
             session.setAttribute("userSession", account);
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_ADMIN) {
-                return "administrator";
+                return "viewLastModifiedComplaints";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_USER) {
-                return "registeredUser";
+                return "readArticle";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_TECHNICIAN) {
-                return "technician";
+                return "viewComplaintAssignment";
             }
         }
         session.setAttribute("userSession", null);
@@ -344,5 +344,9 @@ public class AccountManagedBean implements Serializable {
      */
     public void setNewDepartmentID(int newDepartmentID) {
         this.newDepartmentID = newDepartmentID;
+    }
+    
+    public String displayChangeUserProfile() {
+        return "changeUserProfile";
     }
 }
