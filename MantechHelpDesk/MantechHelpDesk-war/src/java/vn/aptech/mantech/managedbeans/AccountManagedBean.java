@@ -72,7 +72,7 @@ public class AccountManagedBean implements Serializable {
         curUser.setRoleID(userRoleFacade.find(newRoleID));
         curUser.setPassword(PasswordUtils.hashPassword(curUser.getPassword()));
         userAccountFacade.create(curUser);
-        return "viewAccounts";
+        return "viewAccounts?faces-redirect=true";
     }
 
     public String getOldPassword() {
@@ -141,19 +141,19 @@ public class AccountManagedBean implements Serializable {
         if (account != null && account.getPassword().equals(hashPassword)) {
             session.setAttribute("userSession", account);
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_ADMIN) {
-                return "viewLastModifiedComplaints";
+                return "administrator?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_USER) {
-                return "readArticle";
+                return "registeredUser?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_TECHNICIAN) {
-                return "viewComplaintAssignment";
+                return "technician?faces-redirect=true";
             }
         }
         session.setAttribute("userSession", null);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_ERROR, "Invalid Username or Password!", "Please check again input Username and Password!"));
-        return "index";
+        return "index?faces-redirect=true";
     }
 
     public String logout() {
@@ -164,11 +164,11 @@ public class AccountManagedBean implements Serializable {
             session.removeAttribute("userSession");
             session.invalidate();
         }
-        return "index";
+        return "index?faces-redirect=true";
     }
 
     public String changeUserPassword() {
-        return "changeUserPassword";
+        return "changeUserPassword?faces-redirect=true";
     }
 
     public String newAccount() {
@@ -193,14 +193,14 @@ public class AccountManagedBean implements Serializable {
                 .getExternalContext().getSession(false);
         UserAccount account = (UserAccount) session.getAttribute("userSession");
         if (account == null) {
-            return "index";
+            return "index?faces-redirect=true";
         }
 
         if (!newPassword.equals(confirmPassword)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                     FacesMessage.SEVERITY_ERROR, "Confirm password does not match with New password!",
                     "Please enter again your Confirm password!"));
-            return "changeUserPassword";
+            return "changeUserPassword?faces-redirect=true";
         }
         UserAccount updateAcc = userAccountFacade.find(account.getAccountID());
         if (updateAcc.getPassword().equals(hashPassword)) {
@@ -227,7 +227,7 @@ public class AccountManagedBean implements Serializable {
                     FacesMessage.SEVERITY_ERROR, "Old password is not correct!",
                     "Please enter again your old password!"));
         }
-        return "changeUserPassword";
+        return "changeUserPassword?faces-redirect=true";
     }
 
     public List<UserAccount> getSearchAllAccount() {

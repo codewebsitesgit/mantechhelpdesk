@@ -244,7 +244,7 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String previewReport() {
-        return "generateReports";
+        return "generateReports?faces-redirect=true";
     }
 
     public int getResendComplaintId() {
@@ -327,7 +327,7 @@ public class ComplaintManagedBean implements Serializable {
 
     public String newComplaint() {
         setUpNewComplaint();
-        return "newComplaint";
+        return "newComplaint?faces-redirect=true";
     }
 
     private void setUpNewComplaint() {
@@ -341,7 +341,7 @@ public class ComplaintManagedBean implements Serializable {
         searchedComplaintID = null;
         searchedSubject = null;
         statusID = null;
-        return "viewComplaint";
+        return "viewComplaint?faces-redirect=true";
     }
 
     /**
@@ -548,15 +548,15 @@ public class ComplaintManagedBean implements Serializable {
 
         // save history
         updateHistory(cmp, activityFacade.getResendComplaint());
-        return "viewComplaint";
+        return "viewComplaint?faces-redirect=true";
     }
 
     public String viewComplaintHistory() {
-        return "viewComplaintHistory";
+        return "viewComplaintHistory?faces-redirect=true";
     }
 
     public String viewComplaintAssignment() {
-        return "viewComplaintAssignment";
+        return "viewComplaintAssignment?faces-redirect=true";
     }
 
     public String viewComplaintDetail() {
@@ -569,14 +569,14 @@ public class ComplaintManagedBean implements Serializable {
             adminSelectedTechnician = 0;
         }
 
-        return "viewComplaintDetail";
+        return "viewComplaintDetail?faces-redirect=true";
     }
 
     public String viewTechComplaintDetail() {
         techInputReasons = techComplaintDetail.getReasons();
         techSelectedCategory = techComplaintDetail.getComplaintCategory().getCategoryID();
         techSelectedStatusId = techComplaintDetail.getStatus().getStatusID();
-        return "viewTechComplaintDetail";
+        return "viewTechComplaintDetail?faces-redirect=true";
     }
 
     public String updateAdminComplaintDetail() {
@@ -587,7 +587,7 @@ public class ComplaintManagedBean implements Serializable {
         if (!hasChangedTech && !hasChangedStatus && !hasChangedPriority) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                     FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
-            return "viewComplaintDetail";
+            return "viewComplaintDetail?faces-redirect=true";
         }
 
         try {
@@ -653,7 +653,7 @@ public class ComplaintManagedBean implements Serializable {
             e.printStackTrace();
         }
 
-        return "viewLastModifiedComplaints";
+        return "administrator?faces-redirect=true";
     }
 
     private boolean checkChangeTech() {
@@ -697,7 +697,7 @@ public class ComplaintManagedBean implements Serializable {
         if (!hasChangedStatus && !hasChangedCategory && !hasChangedReasons) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                     FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
-            return "viewTechComplaintDetail";
+            return "viewTechComplaintDetail?faces-redirect=true";
         }
 
         try {
@@ -756,7 +756,7 @@ public class ComplaintManagedBean implements Serializable {
             }
             e.printStackTrace();
         }
-        return "viewComplaintAssignment";
+        return "technician?faces-redirect=true";
     }
 
     private boolean checkTechChangeStatus() {
@@ -796,7 +796,7 @@ public class ComplaintManagedBean implements Serializable {
     }
 
     public String viewLastModifiedComplaints() {
-        return "viewLastModifiedComplaints";
+        return "viewLastModifiedComplaints?faces-redirect=true";
     }
 
     public List<Complaint> getAllLatestModifiedComplaints() {
@@ -809,7 +809,7 @@ public class ComplaintManagedBean implements Serializable {
         setReportDepartmentWiseId(0);
         setReportTechnicianWiseId(0);
         setReportCategoryWiseId(0);
-        return "generateReports";
+        return "generateReports?faces-redirect=true";
     }
 
     /**

@@ -72,15 +72,15 @@ public class ArticleManagedBean implements Serializable {
     public String newArticle() {
         curArticle = new Article();
         curArticle.setArticleID(articleFacade.getMaxArticleID());
-        return "newArticle";
+        return "newArticle?faces-redirect=true";
     }
 
     public String maintainArticle() {
-        return "maintainArticle";
+        return "maintainArticle?faces-redirect=true";
     }
 
     public String readArticle() {
-        return "readArticle";
+        return "readArticle?faces-redirect=true";
     }
 
     public String postArticle() {
@@ -146,7 +146,7 @@ public class ArticleManagedBean implements Serializable {
             }
             e.printStackTrace();
         }
-        return "newArticle";
+        return "newArticle?faces-redirect=true";
     }
 
     /**

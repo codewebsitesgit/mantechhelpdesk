@@ -46,6 +46,6 @@ public class FaqsManagedBean implements Serializable {
     }
     
     public String searchFaqs() {
-        return "faqs";
+        return "faqs?faces-redirect=true";
     }
 }
