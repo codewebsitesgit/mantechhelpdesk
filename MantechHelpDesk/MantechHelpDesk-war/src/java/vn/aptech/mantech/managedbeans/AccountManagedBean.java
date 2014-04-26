@@ -65,13 +65,31 @@ public class AccountManagedBean implements Serializable {
         }
         if (!userAccountFacade.getAllAccountWithAdmin(0, null, null, curUser.getName()).isEmpty()) {
             FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username is existed in database.", null));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
             return "";
         }
         curUser.setDepartmentID(departmentFacade.find(newDepartmentID));
         curUser.setRoleID(userRoleFacade.find(newRoleID));
         curUser.setPassword(PasswordUtils.hashPassword(curUser.getPassword()));
         userAccountFacade.create(curUser);
+        return "viewAccounts?faces-redirect=true";
+    }
+
+    public String editNav() {
+        newDepartmentID = curUser.getDepartmentID().getDepartmentID();
+        newRoleID = curUser.getRoleID().getRoleID();
+        return "editAccount?faces-redirect=true";
+    }
+
+    public String editUser() {
+        if (!userAccountFacade.getAllAccount(curUser.getAccountID(), curUser.getName()).isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
+            return "";
+        }
+        curUser.setDepartmentID(departmentFacade.find(newDepartmentID));
+        curUser.setRoleID(userRoleFacade.find(newRoleID));
+        userAccountFacade.edit(curUser);
         return "viewAccounts?faces-redirect=true";
     }
 
@@ -345,7 +363,7 @@ public class AccountManagedBean implements Serializable {
     public void setNewDepartmentID(int newDepartmentID) {
         this.newDepartmentID = newDepartmentID;
     }
-    
+
     public String displayChangeUserProfile() {
         return "changeUserProfile";
     }

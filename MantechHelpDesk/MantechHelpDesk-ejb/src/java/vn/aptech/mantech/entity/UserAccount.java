@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package vn.aptech.mantech.entity;
 
 import java.io.Serializable;
@@ -48,6 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "UserAccount.findByEmail", query = "SELECT u FROM UserAccount u WHERE u.email = :email"),
     @NamedQuery(name = "UserAccount.findByStatus", query = "SELECT u FROM UserAccount u WHERE u.status = :status")})
 public class UserAccount implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -83,13 +83,13 @@ public class UserAccount implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "Address")
     private String address;
-    @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone number format, should be as (xxx) xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Pattern(regexp = "^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message = "Invalid phone number format, should be as (xxx) xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "Phone")
     private String phone;
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email format")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email format")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -176,6 +176,18 @@ public class UserAccount implements Serializable {
 
     public short getGender() {
         return gender;
+    }
+
+    public String getGenderName() {
+        switch (gender) {
+            case 0:
+                return "Unknown";
+            case 1:
+                return "Male";
+            case 2:
+                return "Female";
+        }
+        return "";
     }
 
     public void setGender(short gender) {
@@ -290,5 +302,5 @@ public class UserAccount implements Serializable {
     public String toString() {
         return "vn.aptech.mantech.entity.UserAccount[ accountID=" + accountID + " ]";
     }
-    
+
 }

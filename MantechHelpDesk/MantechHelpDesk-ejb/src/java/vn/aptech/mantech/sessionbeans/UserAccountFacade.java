@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package vn.aptech.mantech.sessionbeans;
 
 import java.util.List;
@@ -20,6 +19,7 @@ import vn.aptech.mantech.entity.UserAccount;
  */
 @Stateless
 public class UserAccountFacade extends AbstractFacade<UserAccount> implements UserAccountFacadeLocal {
+
     @PersistenceContext(unitName = "MantechHelpDesk-ejbPU")
     private EntityManager em;
 
@@ -31,23 +31,23 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
     public UserAccountFacade() {
         super(UserAccount.class);
     }
-    
+
     @Override
     public int getNextAccountID() {
         Query query = em.createQuery("SELECT MAX(u.accountID) from UserAccount u");
-        Object obj= query.getSingleResult();
+        Object obj = query.getSingleResult();
         if (obj == null) {
             return 1;
         }
         return Integer.parseInt(obj.toString()) + 1;
     }
-    
+
     @Override
     public UserAccount getUserAccount(String username) {
         Query query = em.createQuery("SELECT u from UserAccount u WHERE u.username=:userName");
         query.setParameter("userName", username);
         try {
-            return (UserAccount)query.getSingleResult();
+            return (UserAccount) query.getSingleResult();
         } catch (Exception ex) {
             return null;
         }
@@ -69,8 +69,8 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
         if (username != null && !username.isEmpty()) {
             sql += " AND a.username =:username";
         }
-        
-        if (departmentID != null) {
+
+        if (departmentID != null && departmentID != 0) {
             sql += " AND a.departmentID.departmentID=:departmentID";
         }
         if (fullName != null && !fullName.isEmpty()) {
@@ -84,17 +84,17 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
         if (username != null && !username.isEmpty()) {
             query.setParameter("username", username);
         }
-        
-        if (departmentID != null) {
+
+        if (departmentID != null && departmentID != 0) {
             query.setParameter("departmentID", departmentID);
         }
-        
+
         if (fullName != null && !fullName.isEmpty()) {
-            query.setParameter("fullName", "%"+fullName+"%");
+            query.setParameter("fullName", "%" + fullName + "%");
         }
         return query.getResultList();
     }
-    
+
     @Override
     public List<UserAccount> getAllAccountWithAdmin(Integer accountID, String username, Integer departmentID, String fullName) {
         String sql = "SELECT a from UserAccount a WHERE 1=1";
@@ -104,12 +104,12 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
         if (username != null && !username.isEmpty()) {
             sql += " AND a.username =:username";
         }
-        
+
         if (departmentID != null) {
             sql += " AND a.departmentID.departmentID=:departmentID";
         }
         if (fullName != null && !fullName.isEmpty()) {
-            sql += " AND a.name LIKE :fullName";
+            sql += " AND a.name = :fullName";
         }
         Query query = em.createQuery(sql);
         //query.setParameter("account", accountID);
@@ -119,15 +119,24 @@ public class UserAccountFacade extends AbstractFacade<UserAccount> implements Us
         if (username != null && !username.isEmpty()) {
             query.setParameter("username", username);
         }
-        
+
         if (departmentID != null) {
             query.setParameter("departmentID", departmentID);
         }
-        
+
         if (fullName != null && !fullName.isEmpty()) {
-            query.setParameter("fullName", "%"+fullName+"%");
+            query.setParameter("fullName", fullName);
         }
         return query.getResultList();
     }
-    
+
+    @Override
+    public List<UserAccount> getAllAccount(int accountID, String fullName) {
+        String sql = "SELECT a from UserAccount a WHERE a.name=:fullName and a.accountID <> :accountId";
+        Query query = em.createQuery(sql);
+        query.setParameter("accountId", accountID);
+        query.setParameter("fullName", fullName);
+        return query.getResultList();
+    }
+
 }

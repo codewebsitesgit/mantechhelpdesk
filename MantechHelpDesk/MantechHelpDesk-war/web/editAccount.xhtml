@@ -9,9 +9,9 @@
     <ui:define name="content">
         <f:view>
             <h:form id="insertAccountForm">
-                <p:panel id="panelCreateNewUserAccount" header="Create new account">
-                    <p:panelGrid columns="3" id="panelCreateNewUserAccountID" styleClass="table_insert_update">
-                        <h:outputLabel value="ID:" for="AccountID" />
+                <p:panel id="panelEditUserAccount" header="Create new account">
+                    <p:panelGrid columns="3" id="panelEditUserAccountID" styleClass="table_insert_update">
+                        <h:outputLabel value="ID *:" for="AccountID" />
                         <p:outputLabel id="AccountID" value="#{account.curUser.accountID}" 
                                        title="Account ID"/>
                         <p:message for="AccountID"/>
@@ -19,14 +19,9 @@
                         <h:outputLabel value="Username *:" for="Username" />
                         <p:inputText id="Username" value="#{account.curUser.username}" 
                                      title="Username" required="true" 
-                                     requiredMessage="The Username field is required."/>
+                                     requiredMessage="The Username field is required."
+                                     readonly="true"/>
                         <p:message for="Username" />
-
-                        <h:outputLabel value="Password *:" for="Password" />
-                        <p:password id="Password" value="#{account.curUser.password}" 
-                                    title="Password" required="true" 
-                                    requiredMessage="The Password field is required."/>
-                        <p:message for="Password" />
 
                         <h:outputLabel value="Department *:" for="Department" />
                         <p:selectOneMenu id="Department" value="#{account.newDepartmentID}">
@@ -84,16 +79,21 @@
                                      requiredMessage="The Email field is required."/>
                         <p:message for="Email" />
 
-                        <p:commandButton value="Create" action="#{account.createUser()}" 
-                                         update="panelCreateNewUserAccountID"
+                        <h:outputLabel value="Status:" for="Status:" /> 
+                        <p:selectBooleanButton id="Status" offLabel="Disable" 
+                                               onLabel="Enable" value="#{account.curUser.status}" />
+                        <h:outputText />
+
+                        <p:commandButton value="Edit" action="#{account.editUser()}" 
+                                         update="panelEditUserAccountID"
                                          icon="ui-icon-check" style="margin: 0">
-                            <p:confirm header="Confirmation Dialog" message="Are you sure to create new account?" icon="ui-icon-alert" />   
+                            <p:confirm header="Confirmation Dialog" message="Are you sure to edit account?" icon="ui-icon-alert" />   
                         </p:commandButton>
                         <h:outputText />
                         <h:outputText />
                     </p:panelGrid>
                 </p:panel>
-                <p:confirmDialog id="confirmCreateNewAccountDialogId" global="true" showEffect="fade" hideEffect="explode">
+                <p:confirmDialog id="confirmEditAccountDialogId" global="true" showEffect="fade" hideEffect="explode">
                     <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>
                     <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:confirmDialog>
