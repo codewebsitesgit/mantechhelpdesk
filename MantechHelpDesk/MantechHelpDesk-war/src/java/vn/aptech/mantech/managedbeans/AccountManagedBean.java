@@ -76,6 +76,8 @@ public class AccountManagedBean implements Serializable {
     }
 
     public String editNav() {
+        newDepartmentID = curUser.getDepartmentID().getDepartmentID();
+        newRoleID = curUser.getRoleID().getRoleID();
         return "editAccount?faces-redirect=true";
     }
 
@@ -361,7 +363,7 @@ public class AccountManagedBean implements Serializable {
     public void setNewDepartmentID(int newDepartmentID) {
         this.newDepartmentID = newDepartmentID;
     }
-    
+
     public String displayChangeUserProfile() {
         return "changeUserProfile";
     }
