@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -266,4 +267,50 @@ public class ArticleManagedBean implements Serializable {
         return curPieChart;
     }
 
+    public List<Article> getAllSelfActicles() {
+        return articleFacade.findAll();
+    }
+    
+    public String updateArticle() {
+        return "articleDetail?faces-redirect=true";
+    }
+    
+    public String doUpdateArticle() {
+        try {
+            ut.begin();
+
+            Article article = articleFacade.find(curArticle.getArticleID());
+            if (!hasSubjectChanged(article) && !hasContentsChanged(article)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
+                return "articleDetail";
+            }
+            
+            if (hasSubjectChanged(article)) {
+                article.setArticleSubject(curArticle.getArticleSubject());
+            }
+            if (hasContentsChanged(article)) {
+                article.setArticleContents(curArticle.getArticleContents());
+            }
+            
+            articleFacade.edit(article);
+            ut.commit();
+        } catch (Exception e) {
+            try {
+                ut.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        return "maintainArticle?faces-redirect=true";
+    }
+
+    private boolean hasSubjectChanged(Article article) {
+        return !article.getArticleSubject().equals(curArticle.getArticleSubject().trim());
+    }
+
+    private boolean hasContentsChanged(Article article) {
+        return !article.getArticleContents().equals(curArticle.getArticleContents().trim());
+    }
 }
