@@ -10,8 +10,9 @@
     </h:head>
     <h:body>
         <f:view>
-            <h:form>
-                <p:panel header="Login panel" styleClass="panelGridCenter">
+
+            <p:panel header="Login panel" styleClass="panelGridCenter">
+                <h:form>
                     <p:messages autoUpdate="true" closable="true" />
                     <p:panelGrid columns="2" id="panelLogin" >
                         <h:outputText value="Username"/>
@@ -26,8 +27,11 @@
                                          icon="ui-icon-check" style="margin: 0"
                                          ajax="false"/>
                     </p:panelGrid>
-                </p:panel>
-            </h:form>
+                </h:form>
+                <h:form>
+                    <p:commandLink value="How to use the system?" action="userGuide" style="font-size: 11px;"/>
+                </h:form>
+            </p:panel>
         </f:view>
     </h:body>
 </html>

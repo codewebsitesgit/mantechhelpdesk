@@ -23,7 +23,7 @@
                                         rendered="${article.currentArticleId == art.articleID}"
                                         id="resultPie#{art.articleID}"/>
                         </h:panelGrid>
-                        <p:rating value="#{article.currentRate}" cancel="false">
+                        <p:rating value="#{article.currentRate}" cancel="false" readonly="${userSession.roleID.roleID == 2}">
                             <f:param name="articleId" value="#{art.articleID}" />
                             <p:ajax event="rate" listener="#{article.handleRate}" update="pnlReadArticle#{art.articleID}"/>
                         </p:rating><p:spacer/><p:spacer/>

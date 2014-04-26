@@ -7,6 +7,10 @@
                 >
     <ui:define name="title">MantechHelpDesk: User Guide</ui:define>
     <ui:define name="content">
-        <p:media value="/userguide/User Guide Document.pdf" width="100%" height="500px"/>
+        <f:view>
+            <h:form id="userGuideFormId">
+                <p:media value="/userguide/User Guide Document.pdf" width="100%" height="500px"/>
+            </h:form>
+        </f:view>
     </ui:define>
 </ui:composition>

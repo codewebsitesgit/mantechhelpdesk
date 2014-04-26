@@ -22,8 +22,8 @@
                             <td><img src="images/banner.jpg" width="100%" height="100%"/></td>
                         </tr>
                     </table>
-                    <p:menubar style="padding-left: 10%" rendered="${not empty userSession}">  
-                        <p:submenu label="Complaints" icon="ui-icon ui-icon-home">  
+                    <p:menubar style="padding-left: 10%">  
+                        <p:submenu label="Complaints" icon="ui-icon ui-icon-home" rendered="${not empty userSession}">  
                             <p:submenu label="New" rendered="${userSession.roleID.roleID == 3}">  
                                 <p:menuitem value="Complaint" action="#{complaint.newComplaint}" icon="ui-icon-circle-plus" ajax="false"/>  
                             </p:submenu> 
@@ -39,7 +39,7 @@
                                         rendered="${userSession.roleID.roleID == 2}" icon="ui-icon ui-icon-refresh" ajax="false"/>
                         </p:submenu>  
 
-                        <p:submenu label="Articles" icon="ui-icon-signal-diag">  
+                        <p:submenu label="Articles" icon="ui-icon-signal-diag" rendered="${not empty userSession}">  
                             <p:menuitem value="Read articles" action="#{article.readArticle}" 
                                         icon="ui-icon-comment" ajax="false"/>
                             <p:separator rendered="${userSession.roleID.roleID == 2}"/>
@@ -50,17 +50,17 @@
                                         icon="ui-icon-pencil" rendered="${userSession.roleID.roleID == 2}" ajax="false"/>
                         </p:submenu>
 
-                        <p:submenu label="Accounts" icon="ui-icon-person" rendered="${userSession.roleID.roleID == 1}">  
+                        <p:submenu label="Accounts" icon="ui-icon-person" rendered="${not empty userSession and userSession.roleID.roleID == 1}">  
                             <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-circle-plus" ajax="false"/>
                             <p:separator />
                             <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" ajax="false"/>
                         </p:submenu>
 
-                        <p:submenu label="View" icon="ui-icon-contact" rendered="${userSession.roleID.roleID == 3}">  
+                        <p:submenu label="View" icon="ui-icon-contact" rendered="${not empty userSession and userSession.roleID.roleID == 3}">  
                             <p:menuitem value="All complaints" action="#{complaint.viewComplaint}" icon="ui-icon-note" ajax="false"/>  
                         </p:submenu>  
 
-                        <p:submenu label="Profiles" icon="ui-icon-gear">  
+                        <p:submenu label="Profiles" icon="ui-icon-gear" rendered="${not empty userSession}">  
                             <p:menuitem value="Change password" action="#{account.changeUserPassword}" icon="ui-icon-pencil" ajax="false"/>  
                         </p:submenu>
 
@@ -83,7 +83,10 @@
                                          value="#{faqs.searchQuestionKeyword}"
                                          title="Enter keyword to search the question"/> 
                             <p:tooltip for="faqFocus" showEffect="slide" hideEffect="slide"/>
-                            <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{account.logout}" ajax="false"/>  
+                            <p:commandButton value="Logout" icon="ui-icon-extlink" 
+                                             action="#{account.logout}" ajax="false" rendered="${not empty userSession}"/> 
+                            <p:commandButton value="Login" icon="ui-icon-extlink" 
+                                             action="index" ajax="false" rendered="${empty userSession}"/>
                         </f:facet>  
                     </p:menubar>
                 </h:form>
