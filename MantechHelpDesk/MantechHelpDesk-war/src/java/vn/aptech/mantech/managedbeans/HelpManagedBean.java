@@ -25,10 +25,10 @@ public class HelpManagedBean implements Serializable {
     }
  
     public String viewUserGuide() {
-        return "userGuide";
+        return "userGuide?faces-redirect=true";
     }
     
     public String viewFAQs() {
-        return "faqs";
+        return "faqs?faces-redirect=true";
     }
 }
