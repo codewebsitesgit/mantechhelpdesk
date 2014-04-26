@@ -174,11 +174,11 @@ public class AccountManagedBean implements Serializable {
     public String newAccount() {
         curUser = new UserAccount(userAccountFacade.getNextAccountID());
         curUser.setStatus(true);
-        return "newAccount";
+        return "newAccount?faces-redirect=true";
     }
 
     public String viewAccounts() {
-        return "viewAccounts";
+        return "viewAccounts?faces-redirect=true";
     }
 
     public List<UserAccount> getAllTechnicians() {
