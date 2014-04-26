@@ -141,13 +141,13 @@ public class AccountManagedBean implements Serializable {
         if (account != null && account.getPassword().equals(hashPassword)) {
             session.setAttribute("userSession", account);
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_ADMIN) {
-                return "administrator?faces-redirect=true";
+                return "viewLastModifiedComplaints?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_USER) {
-                return "registeredUser?faces-redirect=true";
+                return "readArticle?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_TECHNICIAN) {
-                return "technician?faces-redirect=true";
+                return "viewComplaintAssignment?faces-redirect=true";
             }
         }
         session.setAttribute("userSession", null);
