@@ -9,31 +9,23 @@
     <ui:define name="content">
         <f:view>
             <h:form id='viewAssignmentFormId'>
-                <p:panel id="technicalAssignmentPanel" header="View all task assignments from Administrator">
+                <p:panel id="technicalAssignmentPanel" header="All complaints assigned by Administrator">
                     <p:dataTable value="#{complaint.technicianAssignments}" var="item" id="assignmentTable"
                                  rowKey="#{item.complaintID}" selectionMode="single" 
                                  paginator="true" rows="5"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                                  rowsPerPageTemplate="5,10,15">
-                        <p:column headerText="ComplaintID">
+                        <p:column headerText="ID">
                             #{item.complaintID}
                         </p:column>
                         <p:column headerText="Subject">
                             #{item.complaintSubject}
-                        </p:column>
-                        <p:column headerText="Category">
-                            #{item.complaintCategory.categoryName}
                         </p:column>
                         <p:column headerText="Priority">
                             #{item.priority.priorityName}
                         </p:column>
                         <p:column headerText="Status">
                             #{item.status.statusName}
-                        </p:column>
-                        <p:column headerText="LodgingDate">
-                            <h:outputText value="#{item.lodgingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
                         </p:column>
                         <p:column headerText="ClosingDate">
                             <h:outputText value="#{item.closingDate}">

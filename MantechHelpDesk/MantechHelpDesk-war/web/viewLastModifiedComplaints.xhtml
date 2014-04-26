@@ -19,8 +19,8 @@
                         <p:column headerText="ID">
                             #{item.complaintID}
                         </p:column>
-                        <p:column headerText="Subject">
-                            #{item.complaintSubject}
+                        <p:column headerText="From">
+                            #{item.complaintOwner.username}/#{item.complaintOwner.name}
                         </p:column>
                         <p:column headerText="Priority">
                             #{item.priority.priorityName}

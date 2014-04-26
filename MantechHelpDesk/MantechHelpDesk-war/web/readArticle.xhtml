@@ -10,7 +10,6 @@
     <ui:define name="content">
         <f:view>
             <h:form id="readArticleFormId">
-                <p:growl id="aaaaaa" showDetail="true" /> 
                 <c:forEach items="#{article.allVisibleArticles}" var="art">
                     <p:panel id="pnlReadArticle#{art.articleID}" 
                              header="#{art.articleID}. #{art.articleSubject} / #{article.currentRateDesc}" toggleable="true" 
