@@ -144,7 +144,7 @@ public class AccountManagedBean implements Serializable {
                 return "viewLastModifiedComplaints?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_USER) {
-                return "readArticle?faces-redirect=true";
+                return "viewComplaint?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_TECHNICIAN) {
                 return "viewComplaintAssignment?faces-redirect=true";
