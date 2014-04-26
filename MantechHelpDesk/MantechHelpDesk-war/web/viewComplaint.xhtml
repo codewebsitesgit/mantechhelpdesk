@@ -57,15 +57,21 @@
                         <p:column headerText="Action" style="text-align: center">
                             <p:commandButton id="btnResend" style="width: 80%"
                                              value="Resend" rendered="${item.resend}" 
-                                           action="#{complaint.resendComplaintItem}" ajax="false"
+                                           action="#{complaint.resendComplaintItem}"
                                            update=":viewComplaintFormID:complaintTable">
                                 <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
                                                              value="#{item.complaintID}" 
                                                              rendered="${item.resend}"/>
+                                <p:confirm header="Confirmation Dialog" message="Are you sure to resend notification?" icon="ui-icon-alert" />
+                                
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
                 </p:panel>
+                <p:confirmDialog id="confirmResendNotificationDialogId" global="true" showEffect="fade" hideEffect="explode">  
+                    <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+                    <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+                </p:confirmDialog>
                 <p:dialog header="Complaint's details" widgetVar="panelComplaintDetail" 
                           showEffect="explode" style="background-color: aliceblue"
                           modal="true" height="400" width="800" id="dialogComplaintDetailID">  

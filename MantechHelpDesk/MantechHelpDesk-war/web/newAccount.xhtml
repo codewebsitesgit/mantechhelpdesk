@@ -83,10 +83,16 @@
 
                 <p:commandButton value="Create" actionListener="#{account.createUser()}" 
                                  update="panelCreateNewUserAccountID"
-                                 icon="ui-icon-check" style="margin: 0"/>
+                                 icon="ui-icon-check" style="margin: 0">
+                    <p:confirm header="Confirmation Dialog" message="Are you sure to create new account?" icon="ui-icon-alert" />
+                </p:commandButton>
                 <h:outputText />
                 <h:outputText />
             </p:panelGrid>
         </p:panel>
+        <p:confirmDialog id="confirmCreateNewAccountDialogId" global="true" showEffect="fade" hideEffect="explode">  
+            <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+            <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+        </p:confirmDialog>
     </ui:define>
 </ui:composition>

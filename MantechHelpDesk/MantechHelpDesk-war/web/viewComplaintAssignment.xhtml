@@ -41,7 +41,8 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Action" style="text-align: center">
-                            <p:commandButton ajax="false" value="Update" style="width: 80%" action="#{complaint.viewTechComplaintDetail}" >
+                            <p:commandButton ajax="false" value="Update" style="width: 80%" 
+                                             action="#{complaint.viewTechComplaintDetail}" >
                                 <f:setPropertyActionListener target="#{complaint.techComplaintDetail}" 
                                                              value="#{item}"/>
                             </p:commandButton>

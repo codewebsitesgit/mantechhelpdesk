@@ -17,7 +17,7 @@
                                        title="ComplaintID"/>
                         <p:outputLabel value="Subject" for="complaintSubject" /><p:outputLabel value=":" />
                         <p:outputLabel id="complaintSubject" value="#{complaint.techComplaintDetail.complaintSubject}"
-                                     title="ComplaintSubject"/>
+                                       title="ComplaintSubject"/>
                         <p:outputLabel value="" for="complaintContents" /><p:outputLabel value="" />
                         <p:fieldset id="complaintContents" legend="Complaint contents" 
                                     toggleable="true" toggleSpeed="500" collapsed="true">
@@ -41,7 +41,7 @@
                         <p:selectOneMenu id="complaintCategory" value="#{complaint.techSelectedCategory}" 
                                          required="true" requiredMessage="The Category field is required.">
                             <f:selectItems value="#{complaint.complaintCats}" var="cat"
-                                       itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
+                                           itemLabel="#{cat.categoryName}" itemValue="#{cat.categoryID}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="Reasons" for="reasons" /><p:outputLabel value=":" />
                         <p:editor id="reasons" value="#{complaint.techInputReasons}" width="600"
@@ -52,13 +52,19 @@
                         </p:outputLabel>
                         <p:commandButton id="btnUpdateComplaint" value="Update complaint" 
                                          action="#{complaint.updateTechComplaintDetail}" 
-                                         icon="ui-icon-check" ajax="false"/>
+                                         icon="ui-icon-check">
+                            <p:confirm header="Confirmation Dialog" message="Are you sure to update this complaint?" icon="ui-icon-alert" />
+                        </p:commandButton>
                         <p:outputLabel value="" />
                         <p:commandButton id="btnCancelUpdate" value="Cancel" 
                                          action="technician" ajax="false"
                                          icon="ui-icon-arrowreturnthick-1-w"/>
                     </h:panelGrid>
                 </p:panel>
+                <p:confirmDialog id="confirmTechUpdateComplaintDialogId" global="true" showEffect="fade" hideEffect="explode">  
+                    <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+                    <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+                </p:confirmDialog>
             </h:form>
         </f:view>
 

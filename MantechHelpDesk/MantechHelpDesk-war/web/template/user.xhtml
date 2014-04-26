@@ -83,13 +83,15 @@
                                          value="#{faqs.searchQuestionKeyword}"
                                          title="Enter keyword to search the question"/> 
                             <p:tooltip for="faqFocus" showEffect="slide" hideEffect="slide"/>
-                            <p:commandButton value="Logout" icon="ui-icon-extlink" 
-                                             action="#{account.logout}" ajax="false" rendered="${not empty userSession}"/> 
+                            <p:commandButton value="Logout" icon="ui-icon-extlink" ajax="false"
+                                             action="#{account.logout}" rendered="${not empty userSession}">
+                            </p:commandButton>
                             <p:commandButton value="Login" icon="ui-icon-extlink" 
                                              action="index" ajax="false" rendered="${empty userSession}"/>
                         </f:facet>  
                     </p:menubar>
                 </h:form>
+
             </f:view>
         </div>
 

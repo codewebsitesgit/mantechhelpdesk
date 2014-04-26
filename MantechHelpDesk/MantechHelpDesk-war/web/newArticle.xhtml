@@ -29,12 +29,17 @@
                         <p:outputLabel value=""/>
                         <p:commandButton id="btnCreate" value="Post article" action="#{article.postArticle}" 
                                          update=":newArticleForm:newArticleGrid,:resultArticleTable:articleTable"
-                                         icon="ui-icon-check" style="margin: 0"
-                                         ajax="false"/>
+                                         icon="ui-icon-check" style="margin: 0">
+                            <p:confirm header="Confirmation Dialog" message="Are you sure to create new article?" icon="ui-icon-alert" />
+                        </p:commandButton>
                         <p:outputLabel value=""/>
                     </p:panelGrid>
                 </p:panel>
                 <br/>
+                <p:confirmDialog id="confirmCreateNewArticleDialogId" global="true" showEffect="fade" hideEffect="explode">  
+                    <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+                    <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+                </p:confirmDialog>
             </h:form>
             <h:form id="resultArticleTable">
                 <p:panel id="panelTop5Articles" header="Top 5 your latest articles">
@@ -55,19 +60,25 @@
                         <p:column headerText="Status" style="text-align: center">
                             <p:commandButton style="width: 80%" value="visible" rendered="${item.status}" 
                                              action="#{article.changeStatus}" 
-                                             ajax="false" update=":resultArticleTable:articleTable">
-                                <f:setPropertyActionListener value="#{item.articleID}" 
-                                                             target="#{article.changedArticleStatusId}"/>
-                            </p:commandButton>
-                            <p:commandButton style="width: 80%" value="invisible" rendered="${not item.status}" 
-                                             action="#{article.changeStatus}" ajax="false"
                                              update=":resultArticleTable:articleTable">
                                 <f:setPropertyActionListener value="#{item.articleID}" 
                                                              target="#{article.changedArticleStatusId}"/>
+                                <p:confirm header="Confirmation Dialog" message="Are you sure to hide this article?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton style="width: 80%" value="invisible" rendered="${not item.status}" 
+                                             action="#{article.changeStatus}" 
+                                             update=":resultArticleTable:articleTable">
+                                <f:setPropertyActionListener value="#{item.articleID}" 
+                                                             target="#{article.changedArticleStatusId}"/>
+                                <p:confirm header="Confirmation Dialog" message="Are you sure to show this article?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
                 </p:panel>
+                <p:confirmDialog id="confirmHideShowArticleDialogId" global="true" showEffect="fade" hideEffect="explode">  
+                    <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+                    <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+                </p:confirmDialog>
             </h:form>
         </f:view>
     </ui:define>

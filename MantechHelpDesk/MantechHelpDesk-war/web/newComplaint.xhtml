@@ -45,12 +45,17 @@
                         <p:message for="complaintContents" />
                         <p:commandButton id="btnSend" value="Send" actionListener="#{complaint.sendComplaint}" 
                                          update="panelSendComplaint,complaintTable"
-                                         icon="ui-icon-check" style="margin: 0"
-                                         ajax="false"/>
+                                         icon="ui-icon-check" style="margin: 0">
+                            <p:confirm header="Confirmation Dialog" message="Are you sure to create new complaint?" icon="ui-icon-alert" />
+                        </p:commandButton>
                         <h:outputText />
                         <h:outputText />
                     </p:panelGrid>
                 </p:panel>
+                <p:confirmDialog id="confirmSendComplaintDialogId" global="true" showEffect="fade" hideEffect="explode">  
+                    <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+                    <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+                </p:confirmDialog> 
                 <br/>
                 <p:panel id="panelTop5Complaints" header="Top 5 your latest complaints">
                     <p:dataTable value="#{complaint.topFiveComplaints}" var="item" 
