@@ -21,19 +21,11 @@
                         <p:column headerText="Subject">
                             #{item.complaintSubject}
                         </p:column>
-                        <p:column headerText="Category">
-                            #{item.complaintCategory.categoryName}
-                        </p:column>
                         <p:column headerText="Priority">
                             #{item.priority.priorityName}
                         </p:column>
                         <p:column headerText="Status">
                             #{item.status.statusName}
-                        </p:column>
-                        <p:column headerText="LodgingDate">
-                            <h:outputText value="#{item.lodgingDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                            </h:outputText>
                         </p:column>
                         <p:column headerText="ClosingDate">
                             <h:outputText value="#{item.closingDate}">
