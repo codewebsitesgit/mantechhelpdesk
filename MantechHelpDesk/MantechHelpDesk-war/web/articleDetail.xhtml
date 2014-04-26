@@ -1,0 +1,54 @@
+<ui:composition template="/template/user.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title">MantechHelpDesk: Technician >> Update an article</ui:define>
+    <ui:define name="content">
+        <f:view>
+            <h:form id="updateArticleFormId">
+                <p:panel id="updateArticlePanel" header="Article's Details"
+                         style="background-color: aliceblue">
+                    <p:messages autoUpdate="true" closable="true" showDetail="true"/>
+                    <h:panelGrid columns="4" id="updateArticleGrid" cellspacing="8">
+                        <p:outputLabel value="ArticleID" for="articleID" /><p:outputLabel value=":" />
+                        <p:outputLabel id="articleID" value="#{article.curArticle.articleID}" 
+                                       title="ArticleID"/>
+                        <p:message for="articleID" />
+                        <p:outputLabel value="Subject" for="articleSubject" /><p:outputLabel value=":" />
+                        <p:inputText id="articleSubject" value="#{article.curArticle.articleSubject}"
+                                       title="ArticleSubject"
+                                       required="true"
+                                       requiredMessage="Subject cannot be blank."
+                                       maxlength="150" size="60"/>
+                        <p:message for="articleSubject" />
+                        
+                        <p:outputLabel value="Contents" for="articleContents" /><p:outputLabel value=":" />
+                        <p:editor id="articleContents" value="#{article.curArticle.articleContents}" width="600"
+                                  maxlength="1000"
+                                  required="true"
+                                  requiredMessage="Contents cannot be blank."/>
+                        <p:message for="articleContents" />
+                        
+                        <p:commandButton id="btnUpdateArticle" value="Update" 
+                                         action="#{article.doUpdateArticle}" 
+                                         icon="ui-icon-check" >
+                            <p:confirm header="Confirmation Dialog" message="Are you sure to update this article?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <p:outputLabel value="" />
+                        <p:commandButton id="btnCancelUpdate" value="Cancel" 
+                                         action="maintainArticle?faces-redirect=true" ajax="false"
+                                         icon="ui-icon-arrowreturnthick-1-w"/>
+                        <p:outputLabel value="" />
+                    </h:panelGrid>
+                </p:panel>
+                <p:confirmDialog id="confirmArticleUpdateDialogId" global="true" showEffect="fade" hideEffect="explode">  
+                    <p:commandButton value="Agree" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="false"/>  
+                    <p:commandButton value="Cancel" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />       
+                </p:confirmDialog>
+            </h:form>
+        </f:view>
+    </ui:define>
+</ui:composition>

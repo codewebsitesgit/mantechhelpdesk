@@ -58,14 +58,14 @@
                             </p:outputLabel>
                         </p:column>
                         <p:column headerText="Status" style="text-align: center">
-                            <p:commandButton style="width: 80%" value="visible" rendered="${item.status}" 
+                            <p:commandButton style="width: 80%" value="Visible" rendered="${item.status}" 
                                              action="#{article.changeStatus}" 
                                              update=":resultArticleTable:articleTable">
                                 <f:setPropertyActionListener value="#{item.articleID}" 
                                                              target="#{article.changedArticleStatusId}"/>
                                 <p:confirm header="Confirmation Dialog" message="Are you sure to hide this article?" icon="ui-icon-alert" />
                             </p:commandButton>
-                            <p:commandButton style="width: 80%" value="invisible" rendered="${not item.status}" 
+                            <p:commandButton style="width: 80%" value="Invisible" rendered="${not item.status}" 
                                              action="#{article.changeStatus}" 
                                              update=":resultArticleTable:articleTable">
                                 <f:setPropertyActionListener value="#{item.articleID}" 

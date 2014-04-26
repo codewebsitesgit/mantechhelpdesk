@@ -7,6 +7,42 @@
                 >
     <ui:define name="title">MantechHelpDesk: Technician >> Maintain an article</ui:define>
     <ui:define name="content">
-        <h1>Welcome to Maintain an article page</h1>
+        <f:view>
+            <h:form id="resultArticleTable">
+                <p:panel id="panelAllArticles" header="All articles">
+                    <p:dataTable value="#{article.allSelfActicles}" var="item" 
+                                 id="articleTable"
+                                 rowKey="#{item.articleID}" selectionMode="single" 
+                                 paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="Article ID">
+                            #{item.articleID}
+                        </p:column>
+                        <p:column headerText="Subject">
+                            #{item.articleSubject}
+                        </p:column>
+                        <p:column headerText="Creation Date" >
+                            <p:outputLabel value="#{item.creationDate}" title="CreationDate" >
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Status" >
+                            <p:outputLabel value="Invisible" title="Status" rendered="${not item.status}"/>
+                            <p:outputLabel value="Visible" title="Status" rendered="${item.status}"/>
+                        </p:column>
+                        <p:column headerText="Action" style="text-align: center">
+                            <p:commandButton style="width: 80%" value="Update" 
+                                             action="#{article.updateArticle}" 
+                                             ajax="false"
+                                             update=":resultArticleTable:articleTable">
+                                <f:setPropertyActionListener value="#{item}" 
+                                                             target="#{article.curArticle}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </f:view>
     </ui:define>
 </ui:composition>
