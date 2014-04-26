@@ -53,7 +53,7 @@
                         <p:submenu label="Accounts" icon="ui-icon-person" rendered="${not empty userSession and userSession.roleID.roleID == 1}">  
                             <p:menuitem value="New account" action="#{account.newAccount}" icon="ui-icon-circle-plus" ajax="false"/>
                             <p:separator />
-                            <p:menuitem value="Search account" action="#{account.viewAccounts}" icon="ui-icon-search" ajax="false"/>
+                            <p:menuitem value="Maintain account" action="#{account.viewAccounts}" icon="ui-icon-search" ajax="false"/>
                         </p:submenu>
 
                         <p:submenu label="View" icon="ui-icon-contact" rendered="${not empty userSession and userSession.roleID.roleID == 3}">  

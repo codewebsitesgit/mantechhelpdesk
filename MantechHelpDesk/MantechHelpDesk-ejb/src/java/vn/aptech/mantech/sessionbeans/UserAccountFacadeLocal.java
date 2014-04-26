@@ -39,4 +39,6 @@ public interface UserAccountFacadeLocal {
     List<UserAccount> getAllAccount(Integer accountID, String username, Integer departmentID, String fullName);
 
     List<UserAccount> getAllAccountWithAdmin(Integer accountID, String username, Integer departmentID, String fullName);
+
+    List<UserAccount> getAllAccount(int accountID, String fullName);
 }
