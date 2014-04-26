@@ -384,6 +384,9 @@ public class AccountManagedBean implements Serializable {
     }
 
     public String displayChangeUserProfile() {
-        return "changeUserProfile";
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(true);
+        curUser=(UserAccount)session.getAttribute("userSession");
+        return "changeUserProfile?faces-redirect=true";
     }
 }
