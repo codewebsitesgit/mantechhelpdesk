@@ -6,6 +6,7 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -68,6 +69,13 @@ public class AccountManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
             return "";
         }
+        Date birthday = curUser.getBirthday();
+        Date now = new Date();
+        if (!isBetween(now.getYear() - 65, now.getYear() - 18, birthday.getYear())) {
+            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Birthday",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Age must between 18 and 65.", null));
+            return "";
+        }
         curUser.setDepartmentID(departmentFacade.find(newDepartmentID));
         curUser.setRoleID(userRoleFacade.find(newRoleID));
         curUser.setPassword(PasswordUtils.hashPassword(curUser.getPassword()));
@@ -87,10 +95,21 @@ public class AccountManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
             return "";
         }
-        curUser.setDepartmentID(departmentFacade.find(newDepartmentID));
+
+        Date birthday = curUser.getBirthday();
+        Date now = new Date();
+        if (!isBetween(now.getYear() - 65, now.getYear() - 18, birthday.getYear())) {
+            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Birthday",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Age must between 18 and 65.", null));
+            return "";
+        }
         curUser.setRoleID(userRoleFacade.find(newRoleID));
         userAccountFacade.edit(curUser);
         return "viewAccounts?faces-redirect=true";
+    }
+
+    public static boolean isBetween(int a, int b, int num) {
+        return b > a ? num > a && num < b : num > b && num < a;
     }
 
     public String getOldPassword() {
