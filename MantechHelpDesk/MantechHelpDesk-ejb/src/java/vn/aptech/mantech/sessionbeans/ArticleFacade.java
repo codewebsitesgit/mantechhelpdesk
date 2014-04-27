@@ -55,5 +55,11 @@ public class ArticleFacade extends AbstractFacade<Article> implements ArticleFac
         query.setParameter("visible", true);
         return query.getResultList();
     }
+
+    @Override
+    public List<Article> allSelfArticles() {
+        Query query = em.createQuery("SELECT a from Article a ORDER BY a.creationDate DESC");
+        return query.getResultList();
+    }
     
 }

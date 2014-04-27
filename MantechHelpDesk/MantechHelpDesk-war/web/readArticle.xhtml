@@ -10,32 +10,30 @@
     <ui:define name="content">
         <f:view>
             <h:form id="readArticleFormId">
-                <c:forEach items="#{article.allVisibleArticles}" var="art">
-                    <p:panel id="pnlReadArticle#{art.articleID}" 
-                             header="#{art.articleID}. #{art.articleSubject} / #{article.currentRateDesc}" toggleable="true" 
-                             closable="true" toggleSpeed="500" 
-                             closeSpeed="500" widgetVar="articlePanel#{art.articleID}" >
-                        <h:panelGrid columns="2" cellpadding="10" width="100%">  
-                            <h:outputText value="#{art.articleContents}" escape="false"/>
+                <p:accordionPanel multiple="true" id="accPanelId">  
+                    <c:forEach items="#{article.allVisibleArticles}" var="art">
+                        <p:tab id="tabReadArticle#{art.articleID}" title="#{art.articleID}. #{art.articleSubject}">
+                            <h:panelGrid columns="2" cellpadding="10">  
+                                <p:graphicImage value="/#{art.imageLocation}" width="120" height="150"/>  
+                                <h:outputText value="#{art.articleContents}" escape="false"/>
+                            </h:panelGrid>
+                            <p:rating value="#{article.currentRate}" cancel="false" readonly="${userSession.roleID.roleID == 2}">
+                                <f:param name="articleId" value="#{art.articleID}" />
+                                <p:ajax event="rate" listener="#{article.handleRate}"/>
+                            </p:rating><p:spacer/><p:spacer/>
+                            <p:commandLink id="linkViewResult#{art.articleID}" value="View results"
+                                           action="#{article.viewResults}"
+                                           style="font-size: 11px;" ajax="false">
+                                <f:setPropertyActionListener value="#{art.articleID}"
+                                                             target="#{article.currentArticleId}"/>
+                            </p:commandLink>
                             <p:pieChart value="#{article.curPieChart}" title="Rating results"
                                         legendPosition="w" style="width:300px;height:200px" 
                                         rendered="${article.currentArticleId == art.articleID}"
                                         id="resultPie#{art.articleID}"/>
-                        </h:panelGrid>
-                        <p:rating value="#{article.currentRate}" cancel="false" readonly="${userSession.roleID.roleID == 2}">
-                            <f:param name="articleId" value="#{art.articleID}" />
-                            <p:ajax event="rate" listener="#{article.handleRate}" update="pnlReadArticle#{art.articleID}"/>
-                        </p:rating><p:spacer/><p:spacer/>
-                        <p:commandLink id="linkViewResult#{art.articleID}" value="View results"
-                                       action="#{article.viewResults}"
-                                       style="font-size: 11px;" ajax="false"
-                                       update=":readArticleFormId:resultPie#{art.articleID}">
-                            <f:setPropertyActionListener value="#{art.articleID}"
-                                                         target="#{article.currentArticleId}"/>
-                        </p:commandLink>
-                    </p:panel>
-                    <br/>
-                </c:forEach>
+                        </p:tab>
+                    </c:forEach>
+                </p:accordionPanel>
             </h:form>
 
         </f:view>

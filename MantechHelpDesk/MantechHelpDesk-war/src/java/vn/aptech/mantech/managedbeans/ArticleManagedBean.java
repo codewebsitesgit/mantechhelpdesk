@@ -5,7 +5,11 @@
  */
 package vn.aptech.mantech.managedbeans;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +21,10 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
+import org.apache.commons.io.FileUtils;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RateEvent;
+import org.primefaces.model.UploadedFile;
 import org.primefaces.model.chart.PieChartModel;
 import vn.aptech.mantech.entity.Article;
 import vn.aptech.mantech.entity.ArticleRate;
@@ -27,6 +34,7 @@ import vn.aptech.mantech.entity.UserAccount;
 import vn.aptech.mantech.sessionbeans.ArticleFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ArticleRateFacadeLocal;
 import vn.aptech.mantech.sessionbeans.RateFacadeLocal;
+import vn.aptech.mantech.utils.FilePathUtils;
 
 /**
  *
@@ -53,6 +61,10 @@ public class ArticleManagedBean implements Serializable {
 
     private Integer currentArticleId;
 
+    private List<UploadedFile> uploadedImages;
+
+    private UploadedFile currentDelImageName;
+
     public Integer getCurrentArticleId() {
         return currentArticleId;
     }
@@ -73,6 +85,9 @@ public class ArticleManagedBean implements Serializable {
     public String newArticle() {
         curArticle = new Article();
         curArticle.setArticleID(articleFacade.getMaxArticleID());
+        if (uploadedImages != null) {
+            uploadedImages.clear();
+        }
         return "newArticle?faces-redirect=true";
     }
 
@@ -91,8 +106,15 @@ public class ArticleManagedBean implements Serializable {
             curArticle.setArticleOwner(user);
             curArticle.setCreationDate(Calendar.getInstance().getTime());
             curArticle.setStatus(true);
+            if (uploadedImages != null && !uploadedImages.isEmpty()) {
+                curArticle.setImageLocation(FilePathUtils.UPLOAD_ARTICLE_FOLDER + uploadedImages.get(0).getFileName());
+            }
             articleFacade.create(curArticle);
             ut.commit();
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "The new article was created.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", msg);
+            uploadedImages.clear();
         } catch (Exception e) {
             try {
                 ut.rollback();
@@ -268,31 +290,78 @@ public class ArticleManagedBean implements Serializable {
     }
 
     public List<Article> getAllSelfActicles() {
-        return articleFacade.findAll();
+        return articleFacade.allSelfArticles();
     }
-    
+
     public String updateArticle() {
+        if (uploadedImages != null) {
+            uploadedImages.clear();
+
+        } else {
+            uploadedImages = new ArrayList<UploadedFile>();
+        }
+        
+        final String imgLocation = curArticle.getImageLocation();
+        if (imgLocation != null && !"".equals(imgLocation)) {
+            final String[] fileNameFrags = imgLocation.split("/");
+            uploadedImages.add(new UploadedFile() {
+
+                @Override
+                public String getFileName() {
+                    return fileNameFrags[fileNameFrags.length - 1];
+                }
+
+                @Override
+                public InputStream getInputstream() throws IOException {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public long getSize() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public byte[] getContents() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public String getContentType() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
+        }
         return "articleDetail?faces-redirect=true";
     }
-    
+
     public String doUpdateArticle() {
         try {
             ut.begin();
 
             Article article = articleFacade.find(curArticle.getArticleID());
-            if (!hasSubjectChanged(article) && !hasContentsChanged(article)) {
+
+            boolean hasImageChanged = hasImagedChange(article);
+
+            if (!hasImageChanged && !hasSubjectChanged(article) && !hasContentsChanged(article)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
+                        FacesMessage.SEVERITY_ERROR, "No changes in any field to update!", "Please modify at least one field to update!"));
                 return "articleDetail";
             }
-            
+
             if (hasSubjectChanged(article)) {
                 article.setArticleSubject(curArticle.getArticleSubject());
             }
             if (hasContentsChanged(article)) {
                 article.setArticleContents(curArticle.getArticleContents());
             }
-            
+
+            if (uploadedImages != null && !uploadedImages.isEmpty()) {
+                article.setImageLocation(FilePathUtils.UPLOAD_ARTICLE_FOLDER + uploadedImages.get(0).getFileName());
+            } else {
+                article.setImageLocation(null);
+            }
+
             articleFacade.edit(article);
             ut.commit();
         } catch (Exception e) {
@@ -306,6 +375,18 @@ public class ArticleManagedBean implements Serializable {
         return "maintainArticle?faces-redirect=true";
     }
 
+    private boolean hasImagedChange(Article article) {
+        String imgLocation = article.getImageLocation();
+        if (imgLocation == null) {
+            return uploadedImages != null && !uploadedImages.isEmpty();
+        }
+
+        if (!"".equals(imgLocation)) {
+            return uploadedImages == null || uploadedImages.isEmpty() || !imgLocation.endsWith(uploadedImages.get(0).getFileName());
+        }
+        return false;
+    }
+
     private boolean hasSubjectChanged(Article article) {
         return !article.getArticleSubject().equals(curArticle.getArticleSubject().trim());
     }
@@ -313,4 +394,86 @@ public class ArticleManagedBean implements Serializable {
     private boolean hasContentsChanged(Article article) {
         return !article.getArticleContents().equals(curArticle.getArticleContents().trim());
     }
+
+    /**
+     * @return the uploadedImages
+     */
+    public List<UploadedFile> getUploadedImages() {
+        return uploadedImages;
+    }
+
+    /**
+     * @return the currentDelImageName
+     */
+    public UploadedFile getCurrentDelImageName() {
+        return currentDelImageName;
+    }
+
+    public void deleteImage() {
+        if (getUploadedImages() != null && !uploadedImages.isEmpty()) {
+            if (getUploadedImages().contains(getCurrentDelImageName())) {
+                getUploadedImages().remove(getCurrentDelImageName());
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        getCurrentDelImageName().getFileName() + " was deleted successfully.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", msg);
+                // delete file from folder
+                FileUtils.deleteQuietly(new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER + getCurrentDelImageName().getFileName())));
+
+            } else {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "No image named " + getCurrentDelImageName().getFileName() + " found.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", msg);
+            }
+        }
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        if (uploadedImages != null && !uploadedImages.isEmpty()) {
+            FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Maximum one file is allowed to upload for every article.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+                return;
+        }
+        final UploadedFile uploadedFile = event.getFile();
+        final String fileName = uploadedFile.getFileName();
+        
+        // add images to list
+        if (getUploadedImages() == null) {
+            setUploadedImages(new ArrayList<UploadedFile>());
+        }
+        if (!FilePathUtils.contains(uploadedImages, fileName)) {
+            // check if exist in database
+            if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER), fileName).exists()) {
+                FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "File " + fileName + " already exists! Choose another file or rename it.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+            } else {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        fileName + " was uploaded successfully.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", msg);
+
+                getUploadedImages().add(uploadedFile);
+                FilePathUtils.saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER + fileName));
+            }
+
+        } else {
+            FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "File " + fileName + " already exists! Choose another file or rename it.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+        }
+    }
+
+    /**
+     * @param uploadedImages the uploadedImages to set
+     */
+    public void setUploadedImages(List<UploadedFile> uploadedImages) {
+        this.uploadedImages = uploadedImages;
+    }
+
+    /**
+     * @param currentDelImageName the currentDelImageName to set
+     */
+    public void setCurrentDelImageName(UploadedFile currentDelImageName) {
+        this.currentDelImageName = currentDelImageName;
+    }
+
 }

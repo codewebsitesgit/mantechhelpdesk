@@ -36,5 +36,7 @@ public interface ArticleFacadeLocal {
     int getMaxArticleID();
 
     List<Article> getAllVisibleArticles();
+
+    List<Article> allSelfArticles();
     
 }

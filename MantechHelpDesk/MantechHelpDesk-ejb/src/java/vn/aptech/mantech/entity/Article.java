@@ -43,6 +43,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Article.findByCreationDate", query = "SELECT a FROM Article a WHERE a.creationDate = :creationDate"),
     @NamedQuery(name = "Article.findByStatus", query = "SELECT a FROM Article a WHERE a.status = :status")})
 public class Article implements Serializable {
+    @Size(max = 350)
+    @Column(name = "ImageLocation")
+    private String imageLocation;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -186,6 +189,14 @@ public class Article implements Serializable {
      */
     public void setCurrentRate(ArticleRate currentRate) {
         this.currentRate = currentRate;
+    }
+
+    public String getImageLocation() {
+        return imageLocation;
+    }
+
+    public void setImageLocation(String imageLocation) {
+        this.imageLocation = imageLocation;
     }
 
     

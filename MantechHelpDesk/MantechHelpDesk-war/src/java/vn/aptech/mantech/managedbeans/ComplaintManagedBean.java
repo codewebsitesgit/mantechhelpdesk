@@ -6,8 +6,6 @@
 package vn.aptech.mantech.managedbeans;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -451,6 +449,7 @@ public class ComplaintManagedBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "The new complaint was created.", "");
             FacesContext.getCurrentInstance().addMessage("messages", msg);
+            uploadedImages.clear();
         } catch (Exception e) {
             try {
                 ut.rollback();
@@ -982,7 +981,7 @@ public class ComplaintManagedBean implements Serializable {
         if (uploadedImages == null) {
             uploadedImages = new ArrayList<UploadedFile>();
         }
-        if (!contains(fileName)) {
+        if (!FilePathUtils.contains(uploadedImages, fileName)) {
             // check if exist in database
             if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER), fileName).exists()) {
                 FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -994,7 +993,7 @@ public class ComplaintManagedBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage("messages", msg);
 
                 uploadedImages.add(uploadedFile);
-                saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + fileName));
+                FilePathUtils.saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + fileName));
             }
 
         } else {
@@ -1002,40 +1001,6 @@ public class ComplaintManagedBean implements Serializable {
                     "File " + fileName + " already exists! Choose another file or rename it.", "");
             FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
         }
-    }
-
-    private void saveUploadedImageToDirectory(UploadedFile uploadedFile, final String destFilePath) {
-        //create an InputStream from the uploaded file
-        InputStream inputStr = null;
-        try {
-            inputStr = uploadedFile.getInputstream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        File destFile = new File(destFilePath);
-
-        //use org.apache.commons.io.FileUtils to copy the File
-        try {
-            FileUtils.copyInputStreamToFile(inputStr, destFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                inputStr.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private boolean contains(String imageName) {
-        for (UploadedFile f : uploadedImages) {
-            if (f.getFileName().equals(imageName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
