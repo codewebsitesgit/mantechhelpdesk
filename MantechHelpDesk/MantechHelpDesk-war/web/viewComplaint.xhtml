@@ -57,13 +57,13 @@
                         <p:column headerText="Action" style="text-align: center">
                             <p:commandButton id="btnResend" style="width: 80%"
                                              value="Resend" rendered="${item.resend}" 
-                                           action="#{complaint.resendComplaintItem}"
-                                           update=":viewComplaintFormID:complaintTable">
+                                             action="#{complaint.resendComplaintItem}"
+                                             update=":viewComplaintFormID:complaintTable">
                                 <f:setPropertyActionListener target="#{complaint.resendComplaintId}"
                                                              value="#{item.complaintID}" 
                                                              rendered="${item.resend}"/>
                                 <p:confirm header="Confirmation Dialog" message="Are you sure to resend notification?" icon="ui-icon-alert" />
-                                
+
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
@@ -74,7 +74,7 @@
                 </p:confirmDialog>
                 <p:dialog header="Complaint's details" widgetVar="panelComplaintDetail" 
                           showEffect="explode" style="background-color: aliceblue"
-                          modal="true" height="400" width="800" id="dialogComplaintDetailID">  
+                          modal="true" height="500" width="800" id="dialogComplaintDetailID">  
                     <h:panelGrid columns="3" id="panelComplaintDetailGrid" cellspacing="8">
                         <p:outputLabel value="ComplaintID" />
                         <p:outputLabel value=":" />
@@ -84,7 +84,7 @@
                         <p:outputLabel value="#{complaint.curComplaint.complaintCategory.categoryName}" />
                         <p:outputLabel value="Subject" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.curComplaint.complaintSubject}"
-                                     title="ComplaintSubject"/>
+                                       title="ComplaintSubject"/>
                         <p:outputLabel value="" /><p:outputLabel value="" />
                         <p:fieldset id="complaintContents" legend="Complaint contents" 
                                     toggleable="true" toggleSpeed="500" collapsed="true">
@@ -120,8 +120,21 @@
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                         </p:outputLabel>
                         <p:outputLabel value="Actual Taken Time" /><p:outputLabel value=":" />
-                        <p:outputLabel value="#{complaint.curComplaint.actualTakenDays}d:#{complaint.curComplaint.actualTakenHours}h:#{complaint.curComplaint.actualTakenMinutes}m:#{complaint.curComplaint.actualTakenSeconds}s" 
+                        <p:outputLabel value="#{complaint.curComplaint.actualTakenDays}d:#{complaint.curComplaint.actualTakenHours}h:#{complaint.curComplaint.actualTakenMinutes}m:#{complaint.curComplaint.actualTakenSeconds}s"
                                        rendered="${complaint.curComplaint.status.statusID == 4}"/>
+                        <p:outputLabel value="N/A"
+                                       rendered="${complaint.curComplaint.status.statusID != 4}"/>
+                        <p:outputLabel value="Problem images" /><p:outputLabel value=":" />
+                        <p:imageSwitch effect="shuffle" rendered="${not empty complaint.allComplaintImages}">  
+                            <ui:repeat value="#{complaint.allComplaintImages}" var="image" >  
+                                <p:graphicImage value="/#{image.imageLocation}" width="520" height="200"/>  
+                            </ui:repeat>  
+                        </p:imageSwitch>
+                        <p:outputLabel value="" rendered="${empty complaint.allComplaintImages}"/>
+                        
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                        <p:commandButton value="Close" onclick="PF('panelComplaintDetail').hide();"/>
+                        
                     </h:panelGrid>    
 
                 </p:dialog>

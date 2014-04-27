@@ -30,5 +30,7 @@ public interface ComplaintStatusFacadeLocal {
     List<ComplaintStatus> findRange(int[] range);
 
     int count();
+
+    List<ComplaintStatus> getAllStatusExceptPendings();
     
 }

@@ -5,9 +5,13 @@
  */
 package vn.aptech.mantech.managedbeans;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -18,11 +22,15 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
+import org.apache.commons.io.FileUtils;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 import vn.aptech.mantech.constants.MantechConstants;
 import vn.aptech.mantech.entity.Activity;
 import vn.aptech.mantech.entity.Complaint;
 import vn.aptech.mantech.entity.ComplaintCategory;
 import vn.aptech.mantech.entity.ComplaintHistory;
+import vn.aptech.mantech.entity.ComplaintImages;
 import vn.aptech.mantech.entity.ComplaintPriority;
 import vn.aptech.mantech.entity.ComplaintStatus;
 import vn.aptech.mantech.entity.Department;
@@ -36,6 +44,7 @@ import vn.aptech.mantech.sessionbeans.ComplaintHistoryFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintPriorityFacadeLocal;
 import vn.aptech.mantech.sessionbeans.ComplaintStatusFacadeLocal;
 import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
+import vn.aptech.mantech.utils.FilePathUtils;
 
 /**
  *
@@ -95,8 +104,12 @@ public class ComplaintManagedBean implements Serializable {
     private int reportDepartmentWiseId;
     private int reportTechnicianWiseId;
     private int reportCategoryWiseId;
-    
+
     private int subDmwReport;
+
+    private List<UploadedFile> uploadedImages;
+
+    private UploadedFile currentDelImageName;
 
     public List<ReportKind> getAllKindsOfReport() {
         List<ReportKind> kindsOfReport = new ArrayList<ReportKind>();
@@ -116,7 +129,7 @@ public class ComplaintManagedBean implements Serializable {
                 ReportKind.COMPLAINT_CATEGORY_WISE_REPORT_DESC));
         return kindsOfReport;
     }
-    
+
     public List<ReportKind> getSubDwmReportKinds() {
         List<ReportKind> subDwmKinds = new ArrayList<ReportKind>();
         subDwmKinds.add(new ReportKind(ReportKind.DAILY_WEEKLY_MONTHY_SUMMARY_REPORT,
@@ -334,6 +347,10 @@ public class ComplaintManagedBean implements Serializable {
         final Complaint cmpl = new Complaint();
         cmpl.setComplaintID(complaintFacade.getMaxComplaintID());
         setComplaintPriority(MantechConstants.COMPLAINT_PRIORITY_NORMAL);
+        setComplaintCategory(null);
+        if (uploadedImages != null) {
+            uploadedImages.clear();
+        }
         setCurComplaint(cmpl);
     }
 
@@ -342,6 +359,28 @@ public class ComplaintManagedBean implements Serializable {
         searchedSubject = null;
         statusID = null;
         return "viewComplaint?faces-redirect=true";
+    }
+
+    public List<ComplaintImages> getAllComplaintImages() {
+        if (curComplaint != null) {
+            List<ComplaintImages> images = new ArrayList<ComplaintImages>();
+            try {
+                ut.begin();
+                for (ComplaintImages i : complaintFacade.getAllComplaintImages(curComplaint.getComplaintID())) {
+                    images.add(i);
+                }
+                ut.commit();
+            } catch (Exception e) {
+                try {
+                    ut.rollback();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                e.printStackTrace();
+            }
+            return images;
+        }
+        return Collections.emptyList();
     }
 
     /**
@@ -362,7 +401,7 @@ public class ComplaintManagedBean implements Serializable {
         return complaintCategoryFacade.findAll();
     }
 
-    public String sendComplaint() {
+    public void sendComplaint() {
         try {
             ut.begin();
             ComplaintCategory category = complaintCategoryFacade.find(complaintCategory.intValue());
@@ -374,6 +413,24 @@ public class ComplaintManagedBean implements Serializable {
             curComplaint.setStatus(complaintStatusFacade.find(MantechConstants.COMPLAINT_STATUS_PENDING));
             curComplaint.setComplaintOwner(getSessionUserAccount());
             curComplaint.setLastModified(modifiedDate);
+
+            // updates image to complaint images, one complaint can have alot of images
+            if (uploadedImages != null && !uploadedImages.isEmpty()) {
+                List<ComplaintImages> images = new ArrayList<ComplaintImages>();
+                Date d = Calendar.getInstance().getTime();
+                int maxID = complaintFacade.getComplaintImageMaxID();
+                for (int i = 0; i < uploadedImages.size(); i++) {
+                    UploadedFile f = uploadedImages.get(i);
+                    ComplaintImages cmpImages = new ComplaintImages();
+                    cmpImages.setComplaintImageID(maxID + i);
+                    cmpImages.setComplaintID(curComplaint);
+                    cmpImages.setCreationDate(d);
+                    cmpImages.setImageLocation(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + f.getFileName());
+                    images.add(cmpImages);
+                }
+                curComplaint.setComplaintImagesCollection(images);
+            }
+
             complaintFacade.create(curComplaint);
             // save to history table
             UserAccount user = getSessionUserAccount();
@@ -391,6 +448,9 @@ public class ComplaintManagedBean implements Serializable {
             complaintHistoryFacade.create(hist);
 
             ut.commit();
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "The new complaint was created.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", msg);
         } catch (Exception e) {
             try {
                 ut.rollback();
@@ -399,7 +459,7 @@ public class ComplaintManagedBean implements Serializable {
             }
             e.printStackTrace();
         }
-        return newComplaint();
+        setUpNewComplaint();
     }
 
     private static UserAccount getSessionUserAccount() {
@@ -665,7 +725,7 @@ public class ComplaintManagedBean implements Serializable {
                 return curTech.getAccountID().intValue() != adminSelectedTechnician.intValue();
             }
         }
-        return adminSelectedTechnician != null;
+        return adminSelectedTechnician != null && adminSelectedTechnician.intValue() != 0;
 
     }
 
@@ -913,6 +973,127 @@ public class ComplaintManagedBean implements Serializable {
     public void setSubDmwReport(int subDmwReport) {
         this.subDmwReport = subDmwReport;
     }
-    
-    
+
+    public void handleFileUpload(FileUploadEvent event) {
+
+        final UploadedFile uploadedFile = event.getFile();
+        final String fileName = uploadedFile.getFileName();
+        // add images to list
+        if (uploadedImages == null) {
+            uploadedImages = new ArrayList<UploadedFile>();
+        }
+        if (!contains(fileName)) {
+            // check if exist in database
+            if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER), fileName).exists()) {
+                FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "File " + fileName + " already exists! Choose another file or rename it.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+            } else {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        fileName + " was uploaded successfully.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", msg);
+
+                uploadedImages.add(uploadedFile);
+                saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + fileName));
+            }
+
+        } else {
+            FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "File " + fileName + " already exists! Choose another file or rename it.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+        }
+    }
+
+    private void saveUploadedImageToDirectory(UploadedFile uploadedFile, final String destFilePath) {
+        //create an InputStream from the uploaded file
+        InputStream inputStr = null;
+        try {
+            inputStr = uploadedFile.getInputstream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File destFile = new File(destFilePath);
+
+        //use org.apache.commons.io.FileUtils to copy the File
+        try {
+            FileUtils.copyInputStreamToFile(inputStr, destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean contains(String imageName) {
+        for (UploadedFile f : uploadedImages) {
+            if (f.getFileName().equals(imageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return the uploadedImages
+     */
+    public List<UploadedFile> getUploadedImages() {
+        return uploadedImages;
+    }
+
+    /**
+     * @param uploadedImages the uploadedImages to set
+     */
+    public void setUploadedImages(List<UploadedFile> uploadedImages) {
+        this.uploadedImages = uploadedImages;
+    }
+
+    /**
+     * @return the currentDelImageName
+     */
+    public UploadedFile getCurrentDelImageName() {
+        return currentDelImageName;
+    }
+
+    /**
+     * @param currentDelImageName the currentDelImageName to set
+     */
+    public void setCurrentDelImageName(UploadedFile currentDelImageName) {
+        this.currentDelImageName = currentDelImageName;
+    }
+
+    public void deleteImage() {
+        if (uploadedImages != null && !uploadedImages.isEmpty()) {
+            if (uploadedImages.contains(currentDelImageName)) {
+                uploadedImages.remove(currentDelImageName);
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        currentDelImageName.getFileName() + " was deleted successfully.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", msg);
+                // delete file from folder
+                FileUtils.deleteQuietly(new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + currentDelImageName.getFileName())));
+
+            } else {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "No image named " + currentDelImageName.getFileName() + " found.", "");
+                FacesContext.getCurrentInstance().addMessage("messages", msg);
+            }
+        }
+    }
+
+    public void ajaxChangeTechnician() {
+        if (adminSelectedTechnician == null || adminSelectedTechnician.intValue() == 0) {
+            adminSelectedStatusId = MantechConstants.COMPLAINT_STATUS_PENDING;
+            return;
+        }
+        if (checkChangeTech()) {
+            adminSelectedStatusId = MantechConstants.COMPLAINT_STATUS_RESOLVING;
+        } else {
+            adminSelectedStatusId = adminComplaintDetail.getStatus().getStatusID();
+        }
+    }
+
 }

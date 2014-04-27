@@ -43,6 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Complaint.findByLodgingDate", query = "SELECT c FROM Complaint c WHERE c.lodgingDate = :lodgingDate"),
     @NamedQuery(name = "Complaint.findByClosingDate", query = "SELECT c FROM Complaint c WHERE c.closingDate = :closingDate")})
 public class Complaint implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "complaintID")
+    private Collection<ComplaintImages> complaintImagesCollection;
     @Basic(optional = false)
     @NotNull
     @Column(name = "LastModified")
@@ -291,5 +293,13 @@ public class Complaint implements Serializable {
         this.actualTakenSeconds = actualTakenSeconds;
     }
 
+    @XmlTransient
+    public Collection<ComplaintImages> getComplaintImagesCollection() {
+        return complaintImagesCollection;
+    }
+
+    public void setComplaintImagesCollection(Collection<ComplaintImages> complaintImagesCollection) {
+        this.complaintImagesCollection = complaintImagesCollection;
+    }
     
 }

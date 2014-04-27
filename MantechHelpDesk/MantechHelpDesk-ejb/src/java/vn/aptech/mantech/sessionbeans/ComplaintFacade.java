@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import vn.aptech.mantech.entity.Complaint;
+import vn.aptech.mantech.entity.ComplaintImages;
 
 /**
  *
@@ -158,6 +159,23 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
     public List<Complaint> getAllCategoryWiseReport(int categoryID) {
         Query query = em.createQuery("SELECT q from Complaint q WHERE q.complaintCategory.categoryID =:catID ORDER BY q.lastModified DESC");
         query.setParameter("catID", categoryID);
+        return query.getResultList();
+    }
+
+    @Override
+    public int getComplaintImageMaxID() {
+        Query query = em.createQuery("SELECT MAX(q.complaintImageID) from ComplaintImages q");
+        Object obj= query.getSingleResult();
+        if (obj == null) {
+            return 1;
+        }
+        return Integer.parseInt(obj.toString()) + 1;
+    }
+
+    @Override
+    public List<ComplaintImages> getAllComplaintImages(int complaintID) {
+        Query query = em.createQuery("SELECT ci from ComplaintImages ci WHERE ci.complaintID.complaintID =:cmpID");
+        query.setParameter("cmpID", complaintID);
         return query.getResultList();
     }
     

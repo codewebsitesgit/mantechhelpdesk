@@ -6,9 +6,11 @@
 
 package vn.aptech.mantech.sessionbeans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import vn.aptech.mantech.entity.ComplaintStatus;
 
 /**
@@ -27,6 +29,12 @@ public class ComplaintStatusFacade extends AbstractFacade<ComplaintStatus> imple
 
     public ComplaintStatusFacade() {
         super(ComplaintStatus.class);
+    }
+
+    @Override
+    public List<ComplaintStatus> getAllStatusExceptPendings() {
+        Query query = em.createQuery("SELECT cs from ComplaintStatus cs where cs.statusID <> 1");
+        return query.getResultList();
     }
     
 }

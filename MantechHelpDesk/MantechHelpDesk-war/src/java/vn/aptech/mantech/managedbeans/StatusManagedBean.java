@@ -34,4 +34,8 @@ public class StatusManagedBean implements Serializable{
         return complaintStatusFacade.findAll();
     }
     
+    public List<ComplaintStatus> getAllStatusExceptPendings() {
+        return complaintStatusFacade.getAllStatusExceptPendings();
+    }
+    
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import vn.aptech.mantech.entity.Complaint;
+import vn.aptech.mantech.entity.ComplaintImages;
 
 /**
  *
@@ -60,5 +61,9 @@ public interface ComplaintFacadeLocal {
     List<Complaint> getAllTechnicianWiseReport(int technicianID);
 
     List<Complaint> getAllCategoryWiseReport(int categoryID);
+
+    int getComplaintImageMaxID();
+
+    List<ComplaintImages> getAllComplaintImages(int complaintID);
 
 }

@@ -27,10 +27,11 @@
                             </h:panelGrid>
                         </p:fieldset>
                         <p:outputLabel value="Technician" for="technician" /><p:outputLabel value=":" />
-                        <p:selectOneMenu id="technician" value="#{complaint.adminSelectedTechnician}"  >
+                        <p:selectOneMenu id="technician" value="#{complaint.adminSelectedTechnician}" >
                             <f:selectItem noSelectionOption="true" itemLabel="Select one"/>
                             <f:selectItems value="#{account.allTechnicians}" var="acc"
                                            itemLabel="#{acc.name}" itemValue="#{acc.accountID}"/>
+                            <p:ajax event="change" update="status" listener="#{complaint.ajaxChangeTechnician}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="From" /><p:outputLabel value=":" />
                         <p:outputLabel value="#{complaint.adminComplaintDetail.complaintOwner.username}/#{complaint.adminComplaintDetail.complaintOwner.name}" />
@@ -64,7 +65,7 @@
                         </p:outputLabel>
                         <p:commandButton id="btnUpdateComplaint" value="Update complaint" 
                                          action="#{complaint.updateAdminComplaintDetail}" 
-                                         icon="ui-icon-check" >
+                                         icon="ui-icon-check">
                             <p:confirm header="Confirmation Dialog" message="Are you sure to update this complaint?" icon="ui-icon-alert" />
                         </p:commandButton>
                         <p:outputLabel value="" />
