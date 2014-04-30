@@ -48,10 +48,9 @@
                         <p:fileUpload fileUploadListener="#{complaint.handleFileUpload}" 
                                       mode="advanced" dragDropSupport="false"  
                                       multiple="true" id="complaintScreenshot"
-                                      sizeLimit="1048576" fileLimit="5" 
+                                      sizeLimit="1048576" 
                                       allowTypes="/(\.|\/)(gif|jpg|jpeg|png)$/"
                                       invalidSizeMessage="Maximum file size allowed is 1MB."
-                                      fileLimitMessage="Maximum 5 files is allowed to upload in one times."
                                       invalidFileMessage="Only *.gif, *.jpeg, *.jpg, *.png files are allowed."
                                       update="messages, :formDeleteUploadedImage:gridUploadedImages"/>
                         <h:outputText />

@@ -38,9 +38,9 @@
                         <p:fileUpload fileUploadListener="#{article.handleFileUpload}" 
                                       mode="advanced" dragDropSupport="false"  
                                       multiple="true" id="articleScreenshot"
-                                      sizeLimit="1048576" fileLimit="1" 
+                                      sizeLimit="307200" fileLimit="1" 
                                       allowTypes="/(\.|\/)(gif|jpg|jpeg|png)$/"
-                                      invalidSizeMessage="Maximum file size allowed is 1MB."
+                                      invalidSizeMessage="Maximum file size allowed is 300KB."
                                       fileLimitMessage="Maximum one file is allowed to upload for every article."
                                       invalidFileMessage="Only *.gif, *.jpeg, *.jpg, *.png files are allowed."
                                       update=":formDeleteUploadedImage:gridUploadedImages"/>
@@ -69,7 +69,6 @@
                     <p:panelGrid columns="2" id="gridUploadedImages" style="border:none;width: 100%" >
                         <c:forEach items="#{article.uploadedImages}" var="uploadedImage" varStatus="loop">
                             <p:outputLabel value="#{uploadedImage.fileName}" style="width: 60%"/>
-
                             <p:commandLink id="lnkDelete#{loop.index}" value="Delete" style="font-size: 11px;" 
                                            action="#{article.deleteImage}" 
                                            update=":formDeleteUploadedImage:gridUploadedImages, :updateArticleFormId:messages,

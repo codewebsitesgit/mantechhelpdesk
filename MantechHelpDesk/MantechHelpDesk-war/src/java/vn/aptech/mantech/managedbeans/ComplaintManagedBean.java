@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -979,28 +980,28 @@ public class ComplaintManagedBean implements Serializable {
         final String fileName = uploadedFile.getFileName();
         // add images to list
         if (uploadedImages == null) {
-            uploadedImages = new ArrayList<UploadedFile>();
+            uploadedImages = new LinkedList<UploadedFile>();
         }
-        if (!FilePathUtils.contains(uploadedImages, fileName)) {
-            // check if exist in database
-            if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER), fileName).exists()) {
-                FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "File " + fileName + " already exists! Choose another file or rename it.", "");
-                FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
-            } else {
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        fileName + " was uploaded successfully.", "");
-                FacesContext.getCurrentInstance().addMessage("messages", msg);
+        synchronizeUploadedImages(uploadedFile, fileName);
+    }
 
-                uploadedImages.add(uploadedFile);
-                FilePathUtils.saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + fileName));
-            }
-
-        } else {
+    private void synchronizeUploadedImages(final UploadedFile uploadedFile,
+            final String fileName) {
+        // check if exist in database
+        if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER), fileName).exists()) {
             FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "File " + fileName + " already exists! Choose another file or rename it.", "");
+                    "File " + fileName + " already exists in database! Choose another file or rename it.", "");
             FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    fileName + " was uploaded successfully.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", msg);
+
+            //System.out.println("Save to directory: " + FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER));
+            uploadedImages.add(uploadedFile);
+            FilePathUtils.saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_COMPLAINT_FOLDER + fileName));
         }
+
     }
 
     /**
