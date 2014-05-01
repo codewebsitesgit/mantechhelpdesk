@@ -114,7 +114,10 @@ public class ArticleManagedBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "The new article was created.", "");
             FacesContext.getCurrentInstance().addMessage("messages", msg);
-            uploadedImages.clear();
+            if (uploadedImages != null) {
+                uploadedImages.clear();
+            }
+
         } catch (Exception e) {
             try {
                 ut.rollback();
@@ -290,7 +293,7 @@ public class ArticleManagedBean implements Serializable {
     }
 
     public List<Article> getAllSelfActicles() {
-        return articleFacade.allSelfArticles();
+        return articleFacade.allSelfArticles(getSessionUserAccount().getAccountID());
     }
 
     public String updateArticle() {
@@ -300,7 +303,7 @@ public class ArticleManagedBean implements Serializable {
         } else {
             uploadedImages = new ArrayList<UploadedFile>();
         }
-        
+
         final String imgLocation = curArticle.getImageLocation();
         if (imgLocation != null && !"".equals(imgLocation)) {
             final String[] fileNameFrags = imgLocation.split("/");
@@ -429,37 +432,31 @@ public class ArticleManagedBean implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         if (uploadedImages != null && !uploadedImages.isEmpty()) {
-            FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Maximum one file is allowed to upload for every article.", "");
-                FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
-                return;
+            FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Maximum one file is allowed to upload for every article.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+            return;
         }
         final UploadedFile uploadedFile = event.getFile();
         final String fileName = uploadedFile.getFileName();
-        
+
         // add images to list
         if (getUploadedImages() == null) {
             setUploadedImages(new ArrayList<UploadedFile>());
         }
-        if (!FilePathUtils.contains(uploadedImages, fileName)) {
-            // check if exist in database
-            if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER), fileName).exists()) {
-                FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "File " + fileName + " already exists! Choose another file or rename it.", "");
-                FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
-            } else {
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        fileName + " was uploaded successfully.", "");
-                FacesContext.getCurrentInstance().addMessage("messages", msg);
-
-                getUploadedImages().add(uploadedFile);
-                FilePathUtils.saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER + fileName));
-            }
-
-        } else {
+        // check if exist in database
+        if (new File(FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER), fileName).exists()) {
             FacesMessage errorMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "File " + fileName + " already exists! Choose another file or rename it.", "");
             FacesContext.getCurrentInstance().addMessage("messages", errorMsg);
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    fileName + " was uploaded successfully.", "");
+            FacesContext.getCurrentInstance().addMessage("messages", msg);
+
+            getUploadedImages().add(uploadedFile);
+            FilePathUtils.saveUploadedImageToDirectory(uploadedFile, FilePathUtils.getRealPath(FilePathUtils.UPLOAD_ARTICLE_FOLDER + fileName));
         }
+
     }
 
     /**

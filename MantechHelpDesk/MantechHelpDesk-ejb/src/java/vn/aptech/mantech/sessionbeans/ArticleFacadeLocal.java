@@ -37,6 +37,6 @@ public interface ArticleFacadeLocal {
 
     List<Article> getAllVisibleArticles();
 
-    List<Article> allSelfArticles();
+    List<Article> allSelfArticles(int accountID);
     
 }

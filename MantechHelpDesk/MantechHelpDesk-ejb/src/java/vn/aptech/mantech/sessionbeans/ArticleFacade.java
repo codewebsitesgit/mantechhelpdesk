@@ -57,8 +57,9 @@ public class ArticleFacade extends AbstractFacade<Article> implements ArticleFac
     }
 
     @Override
-    public List<Article> allSelfArticles() {
-        Query query = em.createQuery("SELECT a from Article a ORDER BY a.creationDate DESC");
+    public List<Article> allSelfArticles(int accountID) {
+        Query query = em.createQuery("SELECT a from Article a WHERE a.articleOwner.accountID =:accID ORDER BY a.creationDate DESC");
+        query.setParameter("accID", accountID);
         return query.getResultList();
     }
     

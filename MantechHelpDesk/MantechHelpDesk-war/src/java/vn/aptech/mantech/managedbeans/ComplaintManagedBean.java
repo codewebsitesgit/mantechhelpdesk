@@ -450,7 +450,9 @@ public class ComplaintManagedBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "The new complaint was created.", "");
             FacesContext.getCurrentInstance().addMessage("messages", msg);
-            uploadedImages.clear();
+            if (uploadedImages != null) {
+                uploadedImages.clear();
+            }
         } catch (Exception e) {
             try {
                 ut.rollback();
