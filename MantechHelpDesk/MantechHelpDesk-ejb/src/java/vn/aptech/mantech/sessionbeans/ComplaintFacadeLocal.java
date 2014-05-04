@@ -41,7 +41,7 @@ public interface ComplaintFacadeLocal {
 
     List<Complaint> getAllSearchedComplaints(
             Integer complainID, String subject, 
-            Date creationDate, Integer statusID, 
+            Date creationDate, int statusID, 
             int accountID);
 
     List<Complaint> getAllTechnicianAssignments(int accountID);

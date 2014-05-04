@@ -18,11 +18,13 @@
                         <p:inputText value="#{complaint.searchedSubject}" id="searchedSubject"/>
                         <h:outputText value="Status:"/>
                         <p:selectOneMenu id="status" value="#{complaint.statusID}" label="Status">
+                            <f:selectItem noSelectionOption="true" itemLabel="Select one"/>
                             <f:selectItems value="#{status.allStatus}" var="st"
                                            itemLabel="#{st.statusName}" itemValue="#{st.statusID}"/>
                         </p:selectOneMenu>
-                        <p:commandButton value="Search" action="viewComplaint" 
-                                         update="complaintTable" ajax="false"
+                        <p:commandButton value="Search" 
+                                         action="viewComplaint?faces-redirect=true" 
+                                         update=":viewComplaintFormID:complaintTable" 
                                          icon="ui-icon-check" style="margin: 0"/>
                     </p:panelGrid>
                 </p:panel>

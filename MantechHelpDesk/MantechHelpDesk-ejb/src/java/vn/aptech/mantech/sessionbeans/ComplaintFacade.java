@@ -61,7 +61,7 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
 
     @Override
     public List<Complaint> getAllSearchedComplaints(Integer complainID,
-            String subject, Date creationDate, Integer statusID, int accountID) {
+            String subject, Date creationDate, int statusID, int accountID) {
         String sql = "SELECT q from Complaint q WHERE 1=1";
         if (complainID != null && complainID != 0) {
             sql += " AND q.complaintID=:compID";
@@ -72,7 +72,7 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
         if (creationDate != null) {
             sql += " AND q.lodgingDate=:creationDate";
         }
-        if (statusID != null) {
+        if (statusID != 0) {
             sql += " AND q.status.statusID=:sttID";
         }
         sql += " AND q.complaintOwner.accountID =:account";
@@ -88,7 +88,7 @@ public class ComplaintFacade extends AbstractFacade<Complaint> implements Compla
         if (creationDate != null) {
             query.setParameter("creationDate", creationDate);
         }
-        if (statusID != null) {
+        if (statusID != 0) {
             query.setParameter("sttID", statusID);
         }
         return query.getResultList();

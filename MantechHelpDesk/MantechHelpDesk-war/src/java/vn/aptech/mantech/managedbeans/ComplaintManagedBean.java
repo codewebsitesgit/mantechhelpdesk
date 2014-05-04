@@ -82,7 +82,7 @@ public class ComplaintManagedBean implements Serializable {
     private Integer searchedComplaintID = null;
     private String searchedSubject;
     private Date creationDate;
-    private Integer statusID = null;
+    private int statusID;
 
     private Complaint adminComplaintDetail;
 
@@ -356,7 +356,7 @@ public class ComplaintManagedBean implements Serializable {
     public String viewComplaint() {
         searchedComplaintID = null;
         searchedSubject = null;
-        statusID = null;
+        statusID = 0;
         return "viewComplaint?faces-redirect=true";
     }
 
@@ -552,14 +552,14 @@ public class ComplaintManagedBean implements Serializable {
     /**
      * @return the statusID
      */
-    public Integer getStatusID() {
+    public int getStatusID() {
         return statusID;
     }
 
     /**
      * @param statusID the statusID to set
      */
-    public void setStatusID(Integer statusID) {
+    public void setStatusID(int statusID) {
         this.statusID = statusID;
     }
 
