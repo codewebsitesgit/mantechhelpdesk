@@ -19,7 +19,7 @@
                         <h:outputLabel value="Username *:" for="Username" />
                         <p:inputText id="Username" value="#{account.curUser.username}" 
                                      title="Username" required="true" 
-                                     requiredMessage="The Username field is required."
+                                     requiredMessage="The Username cannot be blank."
                                      readonly="true"/>
                         <p:message for="Username" />
 
@@ -40,13 +40,13 @@
                         <h:outputLabel value="Name *:" for="Name" />
                         <p:inputText id="Name" value="#{account.curUser.name}" 
                                      title="Name" required="true" 
-                                     requiredMessage="The Name field is required."/>
+                                     requiredMessage="The Name cannot be blank."/>
                         <p:message for="Name" />
 
                         <h:outputLabel value="Birthday *:" for="Birthday" />
                         <p:calendar id="Birthday" value="#{account.curUser.birthday}" 
                                     title="Birthday" required="true" 
-                                    requiredMessage="The Birthday field is required."
+                                    requiredMessage="The Birthday cannot be blank."
                                     pattern="yyyy-MM-dd">
                             <f:convertDateTime pattern="yyyy-MM-dd"/>
                         </p:calendar>
@@ -63,20 +63,20 @@
                         <h:outputLabel value="Address *:" for="Address" />
                         <p:inputText id="Address" value="#{account.curUser.address}" 
                                      title="Address" required="true" 
-                                     requiredMessage="The Address field is required."/>
+                                     requiredMessage="The Address cannot be blank."/>
                         <p:message for="Address" />
 
                         <h:outputLabel value="Phone *:" for="Phone" />
                         <p:inputMask id="Phone" value="#{account.curUser.phone}" 
                                      title="Phone" required="true" 
-                                     requiredMessage="The Phone field is required."
+                                     requiredMessage="The Phone cannot be blank."
                                      mask="(999) 999-9999"/>
                         <p:message for="Phone" />
 
                         <h:outputLabel value="Email *:" for="Address" />
                         <p:inputText id="Email" value="#{account.curUser.email}" 
                                      title="Email" required="true" 
-                                     requiredMessage="The Email field is required."/>
+                                     requiredMessage="The Email cannot be blank."/>
                         <p:message for="Email" />
 
                         <h:outputLabel value="Status:" for="Status:" /> 
