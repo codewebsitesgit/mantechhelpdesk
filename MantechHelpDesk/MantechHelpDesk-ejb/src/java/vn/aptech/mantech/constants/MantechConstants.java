@@ -23,6 +23,9 @@ public interface MantechConstants {
     public static final int ROLE_ADMIN = 1;
     public static final int ROLE_USER = 3;
     public static final int ROLE_TECHNICIAN = 2;
+    public static final String ROLE_ADMIN_DESC = "admin";
+    public static final String ROLE_USER_DESC = "user";
+    public static final String ROLE_TECHNICIAN_DESC = "technician";
     
     public static final int COMPLAINT_STATUS_DONE = 4;
     public static final int COMPLAINT_STATUS_PENDING = 1;

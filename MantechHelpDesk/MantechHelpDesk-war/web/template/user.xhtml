@@ -42,7 +42,7 @@
                         </p:submenu>  
 
                         <p:menuitem value="Articles" action="#{article.readArticle}" icon="ui-icon-signal-diag" ajax="false"
-                                    rendered="${userSession.roleID.roleID != 2}"/>
+                                    rendered="${not empty userSession and userSession.roleID.roleID != 2}"/>
 
                         <p:submenu label="Articles" icon="ui-icon-signal-diag" 
                                    rendered="${not empty userSession and userSession.roleID.roleID == 2}">  

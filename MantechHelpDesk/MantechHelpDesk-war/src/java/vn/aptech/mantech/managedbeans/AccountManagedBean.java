@@ -14,14 +14,17 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 import vn.aptech.mantech.constants.MantechConstants;
 import vn.aptech.mantech.entity.UserAccount;
+import vn.aptech.mantech.security.SecurityRole;
 import vn.aptech.mantech.sessionbeans.DepartmentFacadeLocal;
 import vn.aptech.mantech.sessionbeans.UserAccountFacadeLocal;
 import vn.aptech.mantech.sessionbeans.UserRoleFacadeLocal;
 import vn.aptech.mantech.utils.PasswordUtils;
+import vn.aptech.mantech.utils.RolesUtils;
 
 /**
  *
@@ -178,19 +181,31 @@ public class AccountManagedBean implements Serializable {
         if (account != null && account.getPassword().equals(hashPassword)) {
             session.setAttribute("userSession", account);
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_ADMIN) {
+                Subject subject = (Subject) session.getAttribute(RolesUtils.SUBJECT);
+                subject.getPrincipals().add(
+                        new SecurityRole(MantechConstants.ROLE_ADMIN_DESC));
+                session.setAttribute(RolesUtils.SUBJECT, subject);
                 return "viewLastModifiedComplaints?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_USER) {
+                Subject subject = (Subject) session.getAttribute(RolesUtils.SUBJECT);
+                subject.getPrincipals().add(
+                        new SecurityRole(MantechConstants.ROLE_USER_DESC));
+                session.setAttribute(RolesUtils.SUBJECT, subject);
                 return "viewComplaint?faces-redirect=true";
             }
             if (account.getRoleID().getRoleID() == MantechConstants.ROLE_TECHNICIAN) {
+                Subject subject = (Subject) session.getAttribute(RolesUtils.SUBJECT);
+                subject.getPrincipals().add(
+                        new SecurityRole(MantechConstants.ROLE_TECHNICIAN_DESC));
+                session.setAttribute(RolesUtils.SUBJECT, subject);
                 return "viewComplaintAssignment?faces-redirect=true";
             }
         }
         session.setAttribute("userSession", null);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_ERROR, "Invalid Username or Password!", "Please check again input Username and Password!"));
-        return "index?faces-redirect=true";
+        return "";
     }
 
     public String logout() {
@@ -199,6 +214,7 @@ public class AccountManagedBean implements Serializable {
 
         if (session != null) {
             session.removeAttribute("userSession");
+            session.removeAttribute(RolesUtils.SUBJECT);
             session.invalidate();
         }
         return "index?faces-redirect=true";

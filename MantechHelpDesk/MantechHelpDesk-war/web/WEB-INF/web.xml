@@ -31,4 +31,22 @@
         <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
 
+    <filter>
+        <display-name>Security Filter</display-name>
+        <filter-name>securityFilterListener</filter-name>
+        <filter-class>vn.aptech.mantech.security.SecurityFilterListener</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>securityFilterListener</filter-name>
+        <url-pattern>*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    
+    <error-page>
+        <exception-type>javax.servlet.ServletException</exception-type>
+        <location>/faces/error.xhtml</location>
+    </error-page>
 </web-app>
