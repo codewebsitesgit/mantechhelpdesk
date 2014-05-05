@@ -67,11 +67,11 @@ public class AccountManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username is existed in database.", null));
             return "";
         }
-        if (!userAccountFacade.getAllAccountWithAdmin(0, null, null, curUser.getName()).isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
-            return "";
-        }
+//        if (!userAccountFacade.getAllAccountWithAdmin(0, null, null, curUser.getName()).isEmpty()) {
+//            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
+//                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
+//            return "";
+//        }
         Date birthday = curUser.getBirthday();
         Date now = new Date();
         if (!isBetween(now.getYear() - 65, now.getYear() - 18, birthday.getYear())) {
@@ -93,11 +93,11 @@ public class AccountManagedBean implements Serializable {
     }
 
     public String editUser() {
-        if (!userAccountFacade.getAllAccount(curUser.getAccountID(), curUser.getName()).isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
-            return "";
-        }
+//        if (!userAccountFacade.getAllAccount(curUser.getAccountID(), curUser.getName()).isEmpty()) {
+//            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Name",
+//                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is existed in database.", null));
+//            return "";
+//        }
 
         Date birthday = curUser.getBirthday();
         Date now = new Date();
@@ -402,7 +402,19 @@ public class AccountManagedBean implements Serializable {
     public String displayChangeUserProfile() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);
-        curUser=(UserAccount)session.getAttribute("userSession");
+        curUser = (UserAccount) session.getAttribute("userSession");
         return "changeUserProfile?faces-redirect=true";
+    }
+    
+     public String changeUserProfile() {
+        Date birthday = curUser.getBirthday();
+        Date now = new Date();
+        if (!isBetween(now.getYear() - 65, now.getYear() - 18, birthday.getYear())) {
+            FacesContext.getCurrentInstance().addMessage("insertAccountForm:Birthday",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Age must between 18 and 65.", null));
+            return "";
+        }
+        userAccountFacade.edit(curUser);
+        return "";
     }
 }

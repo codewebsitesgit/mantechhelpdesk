@@ -48,9 +48,7 @@
                         <p:calendar id="Birthday" value="#{account.curUser.birthday}" 
                                     title="Birthday" required="true" 
                                     requiredMessage="The Birthday cannot be blank."
-                                    pattern="yyyy-MM-dd">
-                            <f:convertDateTime pattern="yyyy-MM-dd"/>
-                        </p:calendar>
+                                      pattern="dd/MM/yyyy"/>
                         <p:message for="Birthday" />
 
                         <h:outputLabel value="Gender *:" for="Gender" />
@@ -83,7 +81,7 @@
                         
                         <h:outputText />
 
-                        <p:commandButton value="Edit" action="#{account.displayChangeUserProfile()}" 
+                        <p:commandButton value="Edit" action="#{account.changeUserProfile()}" 
                                          update="panelEditUserAccountID"
                                          icon="ui-icon-check" style="margin: 0">
                             <p:confirm header="Confirmation Dialog" message="Are you sure to edit account?" icon="ui-icon-alert" />   
