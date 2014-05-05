@@ -58,7 +58,7 @@
                         <p:column headerText="Gender">
                             #{item.genderName}
                         </p:column>                       
-                        <p:column headerText="Action">
+                        <p:column headerText="Edit">
                             <p:commandButton value="Edit" action="#{account.editNav()}" 
                                              icon="ui-icon-pencil" style="margin: 0"
                                              ajax="false">
@@ -66,8 +66,21 @@
                                                              value="#{item}" />
                             </p:commandButton>
                         </p:column>
+                        <p:column headerText="Reset Pass">
+                            <p:commandButton value="Reset" action="#{account.resetPassword()}" 
+                                             icon="ui-icon-arrowreturnthick-1-w" style="margin: 0"
+                                             ajax="true" oncomplete="PF('dgResetSucess').show();">
+                                <f:setPropertyActionListener target="#{account.curUser}"
+                                                             value="#{item}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
                 </p:panel>
+                <p:dialog header="Reset Password Success" widgetVar="dgResetSucess" 
+                          showEffect="explode" style="background-color: aliceblue"
+                          modal="true" height="100" width="750">  
+                    <h2>This account have been reset password to "1" !</h2>
+                </p:dialog>
                 <p:dialog header="Accounts details" widgetVar="panelAccountDetail" 
                           showEffect="explode" style="background-color: aliceblue"
                           modal="true" height="400" width="800" id="dialogAccountDetailID">  

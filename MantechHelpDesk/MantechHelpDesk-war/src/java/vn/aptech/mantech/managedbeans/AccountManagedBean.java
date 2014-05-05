@@ -111,6 +111,11 @@ public class AccountManagedBean implements Serializable {
         return "viewAccounts?faces-redirect=true";
     }
 
+    public void resetPassword() {
+        curUser.setPassword(PasswordUtils.hashPassword("1"));
+        userAccountFacade.edit(curUser);
+    }
+
     public static boolean isBetween(int a, int b, int num) {
         return b > a ? num > a && num < b : num > b && num < a;
     }
@@ -405,8 +410,8 @@ public class AccountManagedBean implements Serializable {
         curUser = (UserAccount) session.getAttribute("userSession");
         return "changeUserProfile?faces-redirect=true";
     }
-    
-     public String changeUserProfile() {
+
+    public String changeUserProfile() {
         Date birthday = curUser.getBirthday();
         Date now = new Date();
         if (!isBetween(now.getYear() - 65, now.getYear() - 18, birthday.getYear())) {
